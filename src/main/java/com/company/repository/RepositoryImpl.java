@@ -25,7 +25,7 @@ public class RepositoryImpl implements Repository {
 
 
     @Override
-    public List<User> getAll() throws SQLException {
+    public List<User> getAll() {
         Connection connection = driver.establishConnection();
         List<User> users = null;
         try {
