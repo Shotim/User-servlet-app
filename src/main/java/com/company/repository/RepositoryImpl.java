@@ -2,7 +2,6 @@ package com.company.repository;
 
 import com.company.driver.MySQLDriver;
 import com.company.entity.User;
-import lombok.Setter;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -15,14 +14,15 @@ public class RepositoryImpl implements Repository {
 
     private static final String SELECT_ALL = "SELECT * FROM users";
     private static final String SELECT_ONE_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private static final String SELECT_BY_NAME = "SELECT * FROM users WHERE name = ?";
     private static final String ADD_ONE = "INSERT INTO users(name) VALUES (?) ";
     private static final String DELETE_BY_ID = "DELETE FROM users WHERE id = ?";
     private static final String UPDATE_BY_ID = "UPDATE users SET name = ? WHERE id = ?";
 
     private Statement statement;
     private ResultSet resultSet;
-    @Setter
-    private MySQLDriver driver;
+
+    private MySQLDriver driver = new MySQLDriver();
 
 
     @Override
@@ -66,6 +66,28 @@ public class RepositoryImpl implements Repository {
             cleanResultSetAndStatement();
         }
         return user;
+    }
+
+    @Override
+    public List<User> getByName(String name) {
+        Connection connection = driver.establishConnection();
+        List<User> users = null;
+        try {
+            statement = connection.createStatement();
+            resultSet.updateString(1, name);
+            resultSet = statement.executeQuery(SELECT_BY_NAME);
+
+            while (resultSet.next()) {
+                users.add(
+                        new User(resultSet.getInt("id"),
+                                resultSet.getString("name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
+        return users;
     }
 
     @Override

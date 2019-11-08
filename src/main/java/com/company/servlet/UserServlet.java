@@ -1,6 +1,7 @@
 package com.company.servlet;
 
 import com.company.service.UserService;
+import com.company.service.UserServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -12,10 +13,10 @@ import java.io.PrintWriter;
 
 import static java.lang.Integer.parseInt;
 
-@WebServlet(name = "userServlet", urlPatterns = "users")
+@WebServlet(name = "userServlet", urlPatterns = "/users")
 public class UserServlet extends HttpServlet {
 
-    private UserService service;
+    private UserService service = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

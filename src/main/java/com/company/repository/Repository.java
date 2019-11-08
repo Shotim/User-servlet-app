@@ -10,6 +10,8 @@ public interface Repository {
 
     User getById(int id);
 
+    List<User> getByName(String name);
+
     void addUser(User user);
 
     void deleteById(int id);

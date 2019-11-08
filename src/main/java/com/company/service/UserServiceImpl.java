@@ -2,8 +2,8 @@ package com.company.service;
 
 import com.company.entity.User;
 import com.company.repository.Repository;
+import com.company.repository.RepositoryImpl;
 import com.google.gson.Gson;
-import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.util.List;
@@ -12,8 +12,7 @@ import static java.util.stream.Collectors.toList;
 
 public class UserServiceImpl implements UserService {
 
-    @Setter
-    private Repository repository;
+    private Repository repository = new RepositoryImpl();
 
     private Gson gson = new Gson();
 
@@ -29,8 +28,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String findByName(String name) {
+        return null;
+    }
+
+    @Override
     public void addUser(BufferedReader user) {
-        repository.addUser(gson.fromJson(user,User.class));
+        repository.addUser(gson.fromJson(user, User.class));
     }
 
     @Override
@@ -40,6 +44,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateById(BufferedReader user) {
-
+        repository.updateById(gson.fromJson(user, User.class));
     }
 }
