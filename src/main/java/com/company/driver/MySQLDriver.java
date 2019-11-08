@@ -17,7 +17,6 @@ public class MySQLDriver {
     public Connection establishConnection() {
 
         Properties properties = new Properties();
-
         Connection connection = null;
 
         try {

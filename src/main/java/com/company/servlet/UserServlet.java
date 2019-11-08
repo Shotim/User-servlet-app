@@ -24,7 +24,17 @@ public class UserServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        service.findAll().forEach(out::print);
+
+        String id = request.getParameter("id");
+        String name = request.getParameter("name");
+
+        if (id != null) {
+            out.print(service.findById(parseInt(id)));
+        } else if (name != null) {
+            service.findByName(name).forEach(out::print);
+        } else {
+            service.findAll().forEach(out::print);
+        }
         out.flush();
     }
 
@@ -40,6 +50,6 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        service.deleteById(parseInt(request.getParameter("id")));
+        service.updateById(request.getReader());
     }
 }

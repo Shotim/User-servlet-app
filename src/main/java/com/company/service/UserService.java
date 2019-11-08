@@ -9,7 +9,7 @@ public interface UserService {
 
     String findById(int id);
 
-    String findByName(String name);
+    List<String> findByName(String name);
 
     void addUser(BufferedReader user);
 

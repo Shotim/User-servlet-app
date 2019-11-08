@@ -19,7 +19,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<String> findAll() {
         List<User> users = repository.getAll();
-        return users.stream().map(gson::toJson).collect(toList());
+        return users.stream()
+                .map(gson::toJson)
+                .collect(toList());
     }
 
     @Override
@@ -28,8 +30,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String findByName(String name) {
-        return null;
+    public List<String> findByName(String name) {
+        List<User> users = repository.getByName(name);
+        return users.stream()
+                .map(gson::toJson)
+                .collect(toList());
     }
 
     @Override
