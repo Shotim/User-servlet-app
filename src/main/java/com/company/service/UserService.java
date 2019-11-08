@@ -1,7 +1,6 @@
 package com.company.service;
 
-import com.company.entity.User;
-
+import java.io.BufferedReader;
 import java.util.List;
 
 public interface UserService {
@@ -10,7 +9,9 @@ public interface UserService {
 
     String findById(int id);
 
-    void addUser(User user);
+    void addUser(BufferedReader user);
 
     void deleteById(int id);
+
+    void updateById(BufferedReader user);
 }

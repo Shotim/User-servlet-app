@@ -13,4 +13,6 @@ public interface Repository {
     void addUser(User user);
 
     void deleteById(int id);
+
+    void updateById(User user);
 }

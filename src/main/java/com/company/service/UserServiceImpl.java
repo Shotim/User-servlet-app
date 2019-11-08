@@ -5,6 +5,7 @@ import com.company.repository.Repository;
 import com.google.gson.Gson;
 import lombok.Setter;
 
+import java.io.BufferedReader;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -28,12 +29,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(User user) {
-
+    public void addUser(BufferedReader user) {
+        repository.addUser(gson.fromJson(user,User.class));
     }
 
     @Override
     public void deleteById(int id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public void updateById(BufferedReader user) {
 
     }
 }

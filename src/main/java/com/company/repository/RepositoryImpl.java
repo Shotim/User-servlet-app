@@ -13,10 +13,11 @@ import java.util.List;
 
 public class RepositoryImpl implements Repository {
 
-    private static final String SELECT_ALL_USERS = "SELECT * FROM users";
+    private static final String SELECT_ALL = "SELECT * FROM users";
     private static final String SELECT_ONE_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private static final String ADD_USER = "INSERT INTO users(name) VALUES (?) ";
-    private static final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
+    private static final String ADD_ONE = "INSERT INTO users(name) VALUES (?) ";
+    private static final String DELETE_BY_ID = "DELETE FROM users WHERE id = ?";
+    private static final String UPDATE_BY_ID = "UPDATE users SET name = ? WHERE id = ?";
 
     private Statement statement;
     private ResultSet resultSet;
@@ -30,7 +31,7 @@ public class RepositoryImpl implements Repository {
         List<User> users = null;
         try {
             statement = connection.createStatement();
-            resultSet = statement.executeQuery(SELECT_ALL_USERS);
+            resultSet = statement.executeQuery(SELECT_ALL);
 
             while (resultSet.next()) {
                 users.add(
@@ -52,6 +53,7 @@ public class RepositoryImpl implements Repository {
         User user = null;
         try {
             statement = connection.createStatement();
+            resultSet.updateString(1, Integer.toString(id));
             resultSet = statement.executeQuery(SELECT_ONE_BY_ID);
 
             while (resultSet.next()) {
@@ -72,7 +74,7 @@ public class RepositoryImpl implements Repository {
         try {
             statement = connection.createStatement();
             resultSet.updateString(1, user.getName());
-            statement.executeUpdate(ADD_USER);
+            statement.executeUpdate(ADD_ONE);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -85,7 +87,23 @@ public class RepositoryImpl implements Repository {
         Connection connection = driver.establishConnection();
         try {
             statement = connection.createStatement();
-            resultSet = statement.executeQuery(DELETE_USER_BY_ID);
+            resultSet.updateString(1, Integer.toString(id));
+            resultSet = statement.executeQuery(DELETE_BY_ID);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
+    }
+
+    @Override
+    public void updateById(User user) {
+        Connection connection = driver.establishConnection();
+        try {
+            statement = connection.createStatement();
+            resultSet.updateString(1, user.getName());
+            resultSet.updateString(2, Integer.toString(user.getId()));
+            statement.executeUpdate(UPDATE_BY_ID);
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
