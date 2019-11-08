@@ -50,7 +50,7 @@ public class RepositoryImpl implements Repository {
     @Override
     public User getById(int id) {
         Connection connection = driver.establishConnection();
-        User user = null;
+        User user = new User();
         try {
             statement = connection.createStatement();
             resultSet.updateString(1, Integer.toString(id));
