@@ -27,7 +27,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public List<User> getAll() {
-        Connection connection = driver.establishConnection();
+        Connection connection = driver.getConnection();
         List<User> users = null;
         try {
             statement = connection.createStatement();
@@ -49,7 +49,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public User getById(int id) {
-        Connection connection = driver.establishConnection();
+        Connection connection = driver.getConnection();
         User user = new User();
         try {
             statement = connection.createStatement();
@@ -70,7 +70,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public List<User> getByName(String name) {
-        Connection connection = driver.establishConnection();
+        Connection connection = driver.getConnection();
         List<User> users = null;
         try {
             statement = connection.createStatement();
@@ -92,7 +92,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public void addUser(User user) {
-        Connection connection = driver.establishConnection();
+        Connection connection = driver.getConnection();
         try {
             statement = connection.createStatement();
             resultSet.updateString(1, user.getName());
@@ -106,7 +106,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public void deleteById(int id) {
-        Connection connection = driver.establishConnection();
+        Connection connection = driver.getConnection();
         try {
             statement = connection.createStatement();
             resultSet.updateString(1, Integer.toString(id));
@@ -120,7 +120,7 @@ public class RepositoryImpl implements Repository {
 
     @Override
     public void updateById(User user) {
-        Connection connection = driver.establishConnection();
+        Connection connection = driver.getConnection();
         try {
             statement = connection.createStatement();
             resultSet.updateString(1, user.getName());
