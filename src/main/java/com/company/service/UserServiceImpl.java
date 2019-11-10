@@ -2,22 +2,19 @@ package com.company.service;
 
 import com.company.entity.User;
 import com.company.repository.Repository;
+import com.company.repository.RepositoryImpl;
 import com.google.gson.Gson;
-import lombok.AllArgsConstructor;
-import lombok.Setter;
 
 import java.io.BufferedReader;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Setter
-    private Gson gson;
+    private Gson gson = new Gson();
 
-    private Repository repository;
+    private Repository repository = new RepositoryImpl();
 
     @Override
     public List<String> findAll() {

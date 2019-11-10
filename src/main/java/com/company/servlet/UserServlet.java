@@ -1,11 +1,7 @@
 package com.company.servlet;
 
-import com.company.driver.MySQLDriver;
-import com.company.repository.Repository;
-import com.company.repository.RepositoryImpl;
 import com.company.service.UserService;
 import com.company.service.UserServiceImpl;
-import com.google.gson.Gson;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,15 +16,10 @@ import static java.lang.Integer.parseInt;
 @WebServlet(name = "userServlet", urlPatterns = "/users")
 public class UserServlet extends HttpServlet {
 
-    private Gson gson = new Gson();
-
-    private MySQLDriver driver = new MySQLDriver();
-
-    private Repository repository = new RepositoryImpl(driver);
-
-    private UserService service = new UserServiceImpl(gson, repository);
+    private UserService service = new UserServiceImpl();
 
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
@@ -41,9 +32,11 @@ public class UserServlet extends HttpServlet {
         if (id != null) {
             out.print(service.findById(parseInt(id)));
         } else if (name != null) {
-            service.findByName(name).forEach(out::print);
+            service.findByName(name)
+                    .forEach(out::print);
         } else {
-            service.findAll().forEach(out::print);
+            service.findAll()
+                    .forEach(out::print);
         }
         out.flush();
     }

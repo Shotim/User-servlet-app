@@ -16,7 +16,7 @@ public class MySQLDriver implements com.company.driver.Driver {
     private static Connection connection;
 
     public Connection establishConnection() {
-        try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("db.properties");) {
+        try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("db.properties")) {
 
             Properties properties = new Properties();
 

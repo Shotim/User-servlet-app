@@ -1,5 +1,6 @@
 package com.company.repository;
 
+import com.company.driver.Driver;
 import com.company.driver.MySQLDriver;
 import com.company.entity.User;
 
@@ -22,12 +23,7 @@ public class RepositoryImpl implements Repository {
     private Statement statement;
     private ResultSet resultSet;
 
-    private MySQLDriver driver;
-
-    public RepositoryImpl(MySQLDriver driver) {
-        this.driver = driver;
-    }
-
+    private Driver driver = new MySQLDriver();
 
     @Override
     public List<User> getAll() {
