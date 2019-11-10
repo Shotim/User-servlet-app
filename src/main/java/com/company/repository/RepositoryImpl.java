@@ -22,7 +22,11 @@ public class RepositoryImpl implements Repository {
     private Statement statement;
     private ResultSet resultSet;
 
-    private MySQLDriver driver = new MySQLDriver();
+    private MySQLDriver driver;
+
+    public RepositoryImpl(MySQLDriver driver) {
+        this.driver = driver;
+    }
 
 
     @Override

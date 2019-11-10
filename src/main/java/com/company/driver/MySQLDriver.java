@@ -8,25 +8,27 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Properties;
 
-import static java.lang.Thread.currentThread;
 import static java.sql.DriverManager.getConnection;
 import static java.sql.DriverManager.registerDriver;
 
-public class MySQLDriver {
+public class MySQLDriver implements com.company.driver.Driver {
+
+    private static Connection connection;
 
     public Connection establishConnection() {
+        try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("db.properties");) {
 
-        Properties properties = new Properties();
-        Connection connection = null;
+            Properties properties = new Properties();
 
-        try {
-            ClassLoader loader = currentThread().getContextClassLoader();
-            InputStream input = loader.getResourceAsStream("/resources/db.properties");
-            properties.load(input);
+            if (input != null) {
+                properties.load(input);
+            }
 
             String url = properties.getProperty("url");
+            String user = properties.getProperty("user");
+            String password = properties.getProperty("password");
 
-            connection = getConnection(url, properties);
+            connection = getConnection(url, user, password);
             registerDriver(new Driver());
 
         } catch (IOException | SQLException ex) {
