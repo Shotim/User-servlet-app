@@ -1,8 +1,5 @@
 package com.company.driver;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -31,7 +28,7 @@ public class MySQLDriver implements com.company.driver.Driver {
         } catch (SQLException ex) {
             ex.printStackTrace();
         } catch (Exception ex) {
-           ex.printStackTrace();
+            ex.printStackTrace();
         }
         return connection;
     }

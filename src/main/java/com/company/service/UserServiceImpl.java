@@ -15,7 +15,7 @@ public class UserServiceImpl implements UserService {
     private Gson gson;
     private UserRepository userRepository;
 
-    public UserServiceImpl(){
+    public UserServiceImpl() {
         gson = new Gson();
         userRepository = new UserRepositoryImpl();
     }
