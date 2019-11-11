@@ -14,11 +14,10 @@ public class MySQLDriver implements com.company.driver.Driver {
     public Connection establishConnection() {
 
         Connection connection = null;
-        Logger logger = LoggerFactory.getLogger(MySQLDriver.class);
-        logger.info("Connecting to database...");
         try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("database.properties")) {
 
             Properties properties = new Properties();
+
             properties.load(input);
 
             String url = properties.getProperty("url");
@@ -28,12 +27,11 @@ public class MySQLDriver implements com.company.driver.Driver {
 
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
-            logger.info("Connected to My SQL Database");
 
         } catch (SQLException ex) {
-            logger.error("SQL State: {}\n{}", ex.getSQLState(), ex.getMessage());
+            ex.printStackTrace();
         } catch (Exception ex) {
-            logger.error(ex.getMessage());
+           ex.printStackTrace();
         }
         return connection;
     }
