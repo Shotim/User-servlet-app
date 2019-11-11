@@ -15,5 +15,5 @@ public interface UserService {
 
     void deleteById(int id);
 
-    void updateById(BufferedReader user);
+    void updateById(String id, BufferedReader user);
 }

@@ -122,12 +122,12 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateById(User user) {
+    public void updateById(String id, User user) {
         Connection connection = driver.establishConnection();
         try {
             preparedStatement = connection.prepareStatement(UPDATE_BY_ID);
             preparedStatement.setString(1, user.getName());
-            preparedStatement.setInt(2, user.getId());
+            preparedStatement.setString(2, id);
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

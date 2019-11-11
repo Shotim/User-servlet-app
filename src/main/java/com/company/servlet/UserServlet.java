@@ -53,6 +53,6 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        service.updateById(request.getReader());
+        service.updateById(request.getParameter("id"), request.getReader());
     }
 }

@@ -54,8 +54,8 @@ class UserRepositoryImplTest {
 
     @org.junit.jupiter.api.Test
     void updateById() {
-        User predictable = new User(1,"Tima");
-        repository.updateById(predictable);
+        User predictable = new User(1, "Tima");
+        repository.updateById("1", predictable);
         assertEquals(predictable, repository.getById(predictable.getId()));
     }
 }

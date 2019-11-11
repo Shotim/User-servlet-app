@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(BufferedReader user) {
-        userRepository.updateById(gson.fromJson(user, User.class));
+    public void updateById(String id,BufferedReader user) {
+        userRepository.updateById(id, gson.fromJson(user, User.class));
     }
 }
