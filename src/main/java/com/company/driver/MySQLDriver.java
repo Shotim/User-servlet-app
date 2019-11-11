@@ -11,18 +11,9 @@ import java.util.Properties;
 
 public class MySQLDriver implements com.company.driver.Driver {
 
-    private Connection connection;
-
-    public Connection getConnection() {
-        return this.connection;
-    }
-
-    public MySQLDriver() {
-        connection = this.establishConnection();
-    }
-
     public Connection establishConnection() {
 
+        Connection connection = null;
         Logger logger = LoggerFactory.getLogger(MySQLDriver.class);
         logger.info("Connecting to database...");
         try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("database.properties")) {

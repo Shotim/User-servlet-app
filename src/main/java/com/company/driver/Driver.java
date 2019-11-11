@@ -6,6 +6,4 @@ public interface Driver {
 
     Connection establishConnection();
 
-    Connection getConnection();
-
 }
