@@ -40,11 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                users.add(
-                        new User(resultSet.getInt(ID),
-                                resultSet.getString(NAME)));
-            }
+            users = extractUsersFromResultSet(resultSet);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -60,7 +56,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
+            if (resultSet.next()) {
                 user.setId(resultSet.getInt(ID));
                 user.setName(resultSet.getString(NAME));
             }
@@ -79,11 +75,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
             resultSet = preparedStatement.executeQuery();
 
-            while (resultSet.next()) {
-                users.add(
-                        new User(resultSet.getInt(ID),
-                                resultSet.getString(NAME)));
-            }
+            users = extractUsersFromResultSet(resultSet);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,6 +117,17 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException {
+        List<User> users = new ArrayList<>();
+
+        while (resultSet.next()) {
+            users.add(
+                    new User(resultSet.getInt(ID),
+                            resultSet.getString(NAME)));
+        }
+        return users;
     }
 
 }
