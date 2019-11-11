@@ -4,6 +4,8 @@ import java.sql.Connection;
 
 public interface Driver {
 
+    Connection establishConnection();
+
     Connection getConnection();
 
 }
