@@ -42,10 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            cleanResultSetAndStatement();
         }
-
         return users;
     }
 
@@ -64,8 +61,6 @@ public class UserRepositoryImpl implements UserRepository {
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
-        } finally {
-            cleanResultSetAndStatement();
         }
         return user;
     }
@@ -86,8 +81,6 @@ public class UserRepositoryImpl implements UserRepository {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            cleanResultSetAndStatement();
         }
         return users;
     }
@@ -101,8 +94,6 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            cleanResultSetAndStatement();
         }
     }
 
@@ -115,8 +106,6 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            cleanResultSetAndStatement();
         }
     }
 
@@ -130,27 +119,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
-        } finally {
-            cleanResultSetAndStatement();
         }
     }
 
-    private void cleanResultSetAndStatement() {
-        if (resultSet != null) {
-            try {
-                resultSet.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            resultSet = null;
-        }
-        if (preparedStatement != null) {
-            try {
-                preparedStatement.close();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            preparedStatement = null;
-        }
-    }
 }
