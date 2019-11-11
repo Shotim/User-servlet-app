@@ -4,7 +4,7 @@ import com.company.entity.User;
 
 import java.util.List;
 
-public interface Repository {
+public interface UserRepository {
 
     List<User> getAll();
 
