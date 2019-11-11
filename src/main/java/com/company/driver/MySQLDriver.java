@@ -3,10 +3,9 @@ package com.company.driver;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 import java.util.Properties;
 
-public class MySQLDriver implements com.company.driver.Driver {
+public class MySQLDriver {
 
     public Connection establishConnection() {
 
@@ -15,8 +14,9 @@ public class MySQLDriver implements com.company.driver.Driver {
 
             Properties properties = new Properties();
 
-            properties.load(input);
-
+            if (input != null) {
+                properties.load(input);
+            }
             String url = properties.getProperty("url");
             String user = properties.getProperty("username");
             String password = properties.getProperty("password");
@@ -25,8 +25,6 @@ public class MySQLDriver implements com.company.driver.Driver {
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -1,6 +1,5 @@
 package com.company.repository;
 
-import com.company.driver.Driver;
 import com.company.driver.MySQLDriver;
 import com.company.entity.User;
 
@@ -21,7 +20,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
-    private Driver driver;
+    private MySQLDriver driver;
 
     public UserRepositoryImpl() {
         driver = new MySQLDriver();

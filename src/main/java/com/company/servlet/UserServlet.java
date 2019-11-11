@@ -19,7 +19,6 @@ public class UserServlet extends HttpServlet {
     private UserService service = new UserServiceImpl();
 
     @Override
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
