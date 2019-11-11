@@ -8,11 +8,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
-
 public class UserRepositoryImpl implements UserRepository {
-
     private static final String SELECT_ALL = "SELECT * FROM users";
     private static final String SELECT_ONE_BY_ID = "SELECT * FROM users WHERE id = ?";
     private static final String SELECT_BY_NAME = "SELECT * FROM users WHERE name = ?";
@@ -22,17 +21,17 @@ public class UserRepositoryImpl implements UserRepository {
 
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
+    private Driver driver;
 
-    public UserRepositoryImpl(){
+    public UserRepositoryImpl() {
         driver = new MySQLDriver();
     }
 
-    private Driver driver;
-
     @Override
     public List<User> getAll() {
+
         Connection connection = driver.getConnection();
-        List<User> users = null;
+        List<User> users = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(SELECT_ALL);
             resultSet = preparedStatement.executeQuery();
@@ -53,90 +52,88 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getById(int id) {
-//        Connection connection = driver.getConnection();
-//        User user = new User();
-//        try {
-//            preparedStatement = connection.prepareStatement();
-//            resultSet.updateString(1, Integer.toString(id));
-//            resultSet = preparedStatement.executeQuery(SELECT_ONE_BY_ID);
-//
-//            while (resultSet.next()) {
-//                user.setId(resultSet.getInt("id"));
-//                user.setName(resultSet.getString("name"));
-//            }
-//        } catch (SQLException ex) {
-//            ex.printStackTrace();
-//        } finally {
-//            cleanResultSetAndStatement();
-//        }
-//        return user;
-        return null;
+        Connection connection = driver.getConnection();
+        User user = new User();
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_ONE_BY_ID);
+            preparedStatement.setInt(1, id);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                user.setId(resultSet.getInt("id"));
+                user.setName(resultSet.getString("name"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
+        return user;
     }
 
     @Override
     public List<User> getByName(String name) {
-//        Connection connection = driver.getConnection();
-//        List<User> users = null;
-//        try {
-//            preparedStatement = connection.createStatement();
-//            resultSet.updateString(1, name);
-//            resultSet = preparedStatement.executeQuery(SELECT_BY_NAME);
-//
-//            while (resultSet.next()) {
-//                users.add(
-//                        new User(resultSet.getInt("id"),
-//                                resultSet.getString("name")));
-//            }
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            cleanResultSetAndStatement();
-//        }
-//        return users;
-        return null;
+        Connection connection = driver.getConnection();
+        List<User> users = new ArrayList<>();
+        try {
+            preparedStatement = connection.prepareStatement(SELECT_BY_NAME);
+            preparedStatement.setString(1, name);
+            resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                users.add(
+                        new User(resultSet.getInt("id"),
+                                resultSet.getString("name")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
+        return users;
     }
 
     @Override
     public void addUser(User user) {
-//        Connection connection = driver.getConnection();
-//        try {
-//            preparedStatement = connection.createStatement();
-//            resultSet.updateString(1, user.getName());
-//            preparedStatement.executeUpdate(ADD_ONE);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            cleanResultSetAndStatement();
-//        }
+        Connection connection = driver.getConnection();
+        try {
+            preparedStatement = connection.prepareStatement(ADD_ONE);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
     }
 
     @Override
     public void deleteById(int id) {
-//        Connection connection = driver.getConnection();
-//        try {
-//            preparedStatement = connection.createStatement();
-//            resultSet.updateString(1, Integer.toString(id));
-//            resultSet = preparedStatement.executeQuery(DELETE_BY_ID);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            cleanResultSetAndStatement();
-//        }
+        Connection connection = driver.getConnection();
+        try {
+            preparedStatement = connection.prepareStatement(DELETE_BY_ID);
+            preparedStatement.setInt(1, id);
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
     }
 
     @Override
     public void updateById(User user) {
-//        Connection connection = driver.getConnection();
-//        try {
-//            preparedStatement = connection.createStatement();
-//            resultSet.updateString(1, user.getName());
-//            resultSet.updateString(2, Integer.toString(user.getId()));
-//            preparedStatement.executeUpdate(UPDATE_BY_ID);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        } finally {
-//            cleanResultSetAndStatement();
-//        }
+        Connection connection = driver.getConnection();
+        try {
+            preparedStatement = connection.prepareStatement(UPDATE_BY_ID);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setInt(2, user.getId());
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            cleanResultSetAndStatement();
+        }
     }
 
     private void cleanResultSetAndStatement() {
