@@ -30,7 +30,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public List<User> getAll() {
 
-        Connection connection = driver.getConnection();
+        Connection connection = driver.establishConnection();
         List<User> users = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(SELECT_ALL);
@@ -52,7 +52,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User getById(int id) {
-        Connection connection = driver.getConnection();
+        Connection connection = driver.establishConnection();
         User user = new User();
         try {
             preparedStatement = connection.prepareStatement(SELECT_ONE_BY_ID);
@@ -73,7 +73,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public List<User> getByName(String name) {
-        Connection connection = driver.getConnection();
+        Connection connection = driver.establishConnection();
         List<User> users = new ArrayList<>();
         try {
             preparedStatement = connection.prepareStatement(SELECT_BY_NAME);
@@ -95,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void addUser(User user) {
-        Connection connection = driver.getConnection();
+        Connection connection = driver.establishConnection();
         try {
             preparedStatement = connection.prepareStatement(ADD_ONE);
             preparedStatement.setString(1, user.getName());
@@ -109,7 +109,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteById(int id) {
-        Connection connection = driver.getConnection();
+        Connection connection = driver.establishConnection();
         try {
             preparedStatement = connection.prepareStatement(DELETE_BY_ID);
             preparedStatement.setInt(1, id);
@@ -123,7 +123,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateById(User user) {
-        Connection connection = driver.getConnection();
+        Connection connection = driver.establishConnection();
         try {
             preparedStatement = connection.prepareStatement(UPDATE_BY_ID);
             preparedStatement.setString(1, user.getName());
