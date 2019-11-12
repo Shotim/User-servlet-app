@@ -3,12 +3,15 @@ package com.company.listener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+import javax.servlet.annotation.WebListener;
 
+@WebListener(value = "userServletListener")
 public class UserServletListener implements ServletRequestListener, ServletContextListener {
 
     private Logger logger = LoggerFactory.getLogger(UserServletListener.class);
@@ -29,8 +32,10 @@ public class UserServletListener implements ServletRequestListener, ServletConte
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-
+        ServletContext context = sce.getServletContext();
         logger.info("Context was initialized");
+        logger.info("Attributes: {}", context.getAttributeNames());
+        logger.info("Server info: {}", context.getServerInfo());
     }
 
     @Override
