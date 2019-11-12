@@ -1,0 +1,13 @@
+version: '3.3'
+services:
+  database:
+    image: mysql:8.0.18
+    restart: always
+    environment:
+      MYSQL_ROOT_DB: 'users'
+      MYSQL_USERNAME: 'root'
+      MYSQL_PASSWORD: 'root'
+    ports:
+      - '3306:3306'
+    expose:
+      - '3306'
