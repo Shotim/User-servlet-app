@@ -18,7 +18,9 @@ This project was done to realize how java servlets work. The entity `User` is in
 
 
 #### * Build project:
-```mvn clean install```
+```
+mvn clean install
+```
 
 >If the project will be built result in the command line will be the following:
 ```
