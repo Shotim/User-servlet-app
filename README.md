@@ -1,18 +1,18 @@
-#Restful Application on Servlet API 
-##Information
+# Restful Application on Servlet API 
+## Information
 This project was done to realize how java servlets work. The entity `User` is included in it and simple basic CRUD methods are realized for it.
 
-##Requirements
+## Requirements
 * Java 1.8 or later
 * IDE (Intellij Idea will be more suitable)
 * Maven v3.6.2
 * Tomcat 9.0.27
 * Docker
 
-##Used Technologies
+## Used Technologies
 * Servlet API 4.0.1
 
-##Deployment
+## Deployment
 
 #### * Clone git repository `https://github.com/Shotim/User-servlet-app`
 
