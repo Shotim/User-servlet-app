@@ -16,18 +16,18 @@ import static java.lang.Integer.parseInt;
 @WebServlet(name = "userServlet", urlPatterns = "/users")
 public class UserServlet extends HttpServlet {
 
+    private static final String ID = "id";
+    private static final String NAME = "name";
+
     private UserService service = new UserServiceImpl();
 
     @Override
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
-        response.setContentType("application/json");
-        response.setCharacterEncoding("UTF-8");
 
-        String id = request.getParameter("id");
-        String name = request.getParameter("name");
+        String id = request.getParameter(ID);
+        String name = request.getParameter(NAME);
 
         if (id != null) {
             out.print(service.findById(parseInt(id)));
@@ -48,11 +48,11 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        service.deleteById(parseInt(request.getParameter("id")));
+        service.deleteById(parseInt(request.getParameter(ID)));
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        service.updateById(request.getParameter("id"), request.getReader());
+        service.updateById(request.getParameter(ID), request.getReader());
     }
 }

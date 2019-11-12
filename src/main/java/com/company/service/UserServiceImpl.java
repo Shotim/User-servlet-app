@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
+
     }
 
     @Override
@@ -52,7 +53,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(String id,BufferedReader user) {
+    public void updateById(String id, BufferedReader user) {
         userRepository.updateById(id, gson.fromJson(user, User.class));
     }
 }
