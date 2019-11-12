@@ -2,6 +2,8 @@ package com.company.repository;
 
 import com.company.driver.MySQLDriver;
 import com.company.entity.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -26,9 +28,11 @@ public class UserRepositoryImpl implements UserRepository {
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
     private MySQLDriver driver;
+    private Logger logger;
 
     public UserRepositoryImpl() {
         driver = new MySQLDriver();
+        logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
     }
 
     @Override
@@ -42,7 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             users = extractUsersFromResultSet(resultSet);
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
         }
         return users;
     }
@@ -61,7 +65,7 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setName(resultSet.getString(NAME));
             }
         } catch (SQLException ex) {
-            ex.printStackTrace();
+            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
         }
         return user;
     }
@@ -76,8 +80,8 @@ public class UserRepositoryImpl implements UserRepository {
             resultSet = preparedStatement.executeQuery();
 
             users = extractUsersFromResultSet(resultSet);
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
         }
         return users;
     }
@@ -89,8 +93,8 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement = connection.prepareStatement(ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
         }
     }
 
@@ -101,8 +105,8 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
         }
     }
 
@@ -114,8 +118,8 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException ex) {
+            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
         }
     }
 

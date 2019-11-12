@@ -1,5 +1,8 @@
 package com.company.driver;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,6 +12,7 @@ public class MySQLDriver {
 
     public Connection establishConnection() {
 
+        Logger logger = LoggerFactory.getLogger(MySQLDriver.class);
         Connection connection = null;
         try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("database.properties")) {
 
@@ -24,9 +28,10 @@ public class MySQLDriver {
 
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
+            logger.info("Connection was created");
 
         } catch (Exception ex) {
-            ex.printStackTrace();
+            logger.error(ex.getMessage());
         }
         return connection;
     }

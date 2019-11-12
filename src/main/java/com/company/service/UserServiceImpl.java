@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
+
     }
 
     @Override
