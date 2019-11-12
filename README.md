@@ -1,4 +1,4 @@
-# Restful Application on Servlet API 
+# Restful Application on Servlet API 4.0.1
 ## Information
 This project was done to realize how java servlets work. The entity `User` is included in it and simple basic CRUD methods are realized for it.
 
