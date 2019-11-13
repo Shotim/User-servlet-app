@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface UserRepository {
 
-    List<User> getAll();
+    List<User> findAll();
 
-    User getById(int id);
+    User findById(int id);
 
-    List<User> getByName(String name);
+    List<User> findByName(String name);
 
     void save(User user);
 

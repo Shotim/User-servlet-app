@@ -28,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> getAll() {
+    public List<User> findAll() {
 
         Connection connection = driver.establishConnection();
         List<User> users = new ArrayList<>();
@@ -44,7 +44,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User getById(int id) {
+    public User findById(int id) {
         Connection connection = driver.establishConnection();
         User user = new User();
         try {
@@ -63,7 +63,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> getByName(String name) {
+    public List<User> findByName(String name) {
         Connection connection = driver.establishConnection();
         List<User> users = new ArrayList<>();
         try {
