@@ -1,6 +1,5 @@
 package com.leverx.user.repository;
 
-import com.leverx.constants.SQLQuery;
 import com.leverx.driver.DBConnectionPool;
 import com.leverx.driver.ObjectPool;
 import com.leverx.user.entity.User;
@@ -14,6 +13,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.leverx.constants.SQLQuery.ADD_ONE_USER;
+import static com.leverx.constants.SQLQuery.DELETE_USER_BY_ID;
+import static com.leverx.constants.SQLQuery.SELECT_ALL_USERS;
+import static com.leverx.constants.SQLQuery.SELECT_ONE_USER_BY_ID;
+import static com.leverx.constants.SQLQuery.SELECT_USER_BY_NAME;
+import static com.leverx.constants.SQLQuery.UPDATE_USER_BY_ID;
 import static com.leverx.constants.UserConstants.ID;
 import static com.leverx.constants.UserConstants.NAME;
 
@@ -35,7 +40,7 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = connectionPool.takeOut();
         List<User> users = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ALL_USERS);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             users = extractUsersFromResultSet(resultSet);
@@ -50,7 +55,7 @@ public class UserRepositoryImpl implements UserRepository {
     public User findById(int id) {
         Connection connection = connectionPool.takeOut();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ONE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID);
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -68,7 +73,7 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = connectionPool.takeOut();
         List<User> users = new ArrayList<>();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_USER_BY_NAME);
+            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
             ResultSet resultSet = preparedStatement.executeQuery();
 
@@ -84,7 +89,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void save(User user) {
         Connection connection = connectionPool.takeOut();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.ADD_ONE_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -97,7 +102,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteById(String id) {
         Connection connection = connectionPool.takeOut();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.DELETE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -110,7 +115,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateById(String id, User user) {
         Connection connection = connectionPool.takeOut();
         try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.UPDATE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
