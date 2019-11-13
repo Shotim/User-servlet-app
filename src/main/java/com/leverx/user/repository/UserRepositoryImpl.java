@@ -46,6 +46,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             Collection<User> users = new ArrayList<>();
             users = extractUsersFromResultSet(resultSet);
+            logger.info("Objects from database were received");
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
@@ -64,6 +65,7 @@ public class UserRepositoryImpl implements UserRepository {
 
             User user = extractUsersFromResultSet(resultSet).get(0);
             connectionPool.takeIn(connection);
+            logger.info("Object from database with specific id was received");
             return user;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
@@ -84,6 +86,7 @@ public class UserRepositoryImpl implements UserRepository {
             List<User> users = new ArrayList<>();
             users = extractUsersFromResultSet(resultSet);
             connectionPool.takeIn(connection);
+            logger.info("Objects from database with specific name were received");
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
@@ -100,6 +103,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
             connectionPool.takeIn(connection);
+            logger.info("Object was added to database");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
@@ -115,6 +119,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
             connectionPool.takeIn(connection);
+            logger.info("Object from database was deleted");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
@@ -131,6 +136,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
             connectionPool.takeIn(connection);
+            logger.info("Object in database was updated");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
