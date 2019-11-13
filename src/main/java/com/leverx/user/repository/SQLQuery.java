@@ -1,4 +1,4 @@
-package com.company.user.repository;
+package com.leverx.user.repository;
 
 public class SQLQuery {
     public static final String SELECT_ALL_USERS = "SELECT * FROM users";

@@ -1,4 +1,4 @@
-package com.company.user.filter;
+package com.leverx.user.filter;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

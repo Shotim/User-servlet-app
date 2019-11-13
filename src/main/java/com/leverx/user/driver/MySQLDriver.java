@@ -1,4 +1,4 @@
-package com.company.user.driver;
+package com.leverx.user.driver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

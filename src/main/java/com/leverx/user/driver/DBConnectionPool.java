@@ -1,4 +1,4 @@
-package com.company.user.driver;
+package com.leverx.user.driver;
 
 public class DBConnectionPool {
 }

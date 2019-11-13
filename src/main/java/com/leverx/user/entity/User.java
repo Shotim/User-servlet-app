@@ -1,4 +1,4 @@
-package com.company.user.entity;
+package com.leverx.user.entity;
 
 
 import lombok.AccessLevel;

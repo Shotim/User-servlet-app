@@ -1,7 +1,7 @@
-package com.company.user.repository;
+package com.leverx.user.repository;
 
-import com.company.user.driver.MySQLDriver;
-import com.company.user.entity.User;
+import com.leverx.user.driver.MySQLDriver;
+import com.leverx.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
