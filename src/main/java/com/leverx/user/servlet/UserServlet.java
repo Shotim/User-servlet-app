@@ -14,7 +14,9 @@ import static com.leverx.constants.UserConstants.ID;
 import static com.leverx.utils.ServletUtils.getPathVariable;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
-import static javax.servlet.http.HttpServletResponse.*;
+import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
+import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 @WebServlet(name = "userServlet", urlPatterns = {"/users", "/users/*"})

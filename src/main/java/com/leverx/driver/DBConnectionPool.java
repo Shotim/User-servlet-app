@@ -1,5 +1,6 @@
 package com.leverx.driver;
 
+import com.leverx.objectpool.ObjectPool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
