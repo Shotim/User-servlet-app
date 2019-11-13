@@ -1,7 +1,7 @@
 package com.leverx.user.service;
 
 import com.google.gson.Gson;
-import com.leverx.user.DTOUser;
+import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
