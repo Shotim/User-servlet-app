@@ -14,6 +14,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 public class DataBaseProperties {
 
+    private static final Logger logger = LoggerFactory.getLogger(DataBaseProperties.class);
     @Getter
     private String DRIVER_CLASS_NAME;
     @Getter
@@ -22,7 +23,6 @@ public class DataBaseProperties {
     private String DATABASE_USERNAME;
     @Getter
     private String DATABASE_PASSWORD;
-    private static final Logger logger = LoggerFactory.getLogger(DataBaseProperties.class);
 
     DataBaseProperties() {
         setCredentials();
