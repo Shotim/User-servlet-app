@@ -48,8 +48,9 @@ public class UserRepositoryImpl implements UserRepository {
             users = extractUsersFromResultSet(resultSet);
             return users;
         } catch (SQLException ex) {
-            throwingInternalServerException(connection, ex);
-            return null;
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            connectionPool.takeIn(connection);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -65,8 +66,9 @@ public class UserRepositoryImpl implements UserRepository {
             connectionPool.takeIn(connection);
             return user;
         } catch (SQLException ex) {
-            throwingInternalServerException(connection, ex);
-            return  null;
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            connectionPool.takeIn(connection);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -84,8 +86,9 @@ public class UserRepositoryImpl implements UserRepository {
             connectionPool.takeIn(connection);
             return users;
         } catch (SQLException ex) {
-            throwingInternalServerException(connection, ex);
-            return null;
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            connectionPool.takeIn(connection);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -98,7 +101,9 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
             connectionPool.takeIn(connection);
         } catch (SQLException ex) {
-            throwingInternalServerException(connection, ex);
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            connectionPool.takeIn(connection);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -111,7 +116,9 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
             connectionPool.takeIn(connection);
         } catch (SQLException ex) {
-            throwingInternalServerException(connection, ex);
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            connectionPool.takeIn(connection);
+            throw new InternalServerErrorException();
         }
     }
 
@@ -125,16 +132,11 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.executeUpdate();
             connectionPool.takeIn(connection);
         } catch (SQLException ex) {
-            throwingInternalServerException(connection, ex);
-            return;
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            connectionPool.takeIn(connection);
+            throw new InternalServerErrorException();
         }
 
-    }
-
-    private void throwingInternalServerException(Connection connection, SQLException ex) {
-        logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-        connectionPool.takeIn(connection);
-        throw new InternalServerErrorException();
     }
 
     private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException {
@@ -147,5 +149,4 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return users;
     }
-
 }
