@@ -1,12 +1,20 @@
 version: '3.3'
+volumes:
+  dbdata:
+
 services:
   database:
     image: mysql:8.0.18
+    #TODO
+    command: --init-file /var/lib/init.sql
+    volumes:
+      - dbdata:/var/lib/mysql
     restart: always
     environment:
-      MYSQL_ROOT_DB: 'users'
-      MYSQL_USERNAME: 'root'
+      MYSQL_DATABASE: 'users'
+      MYSQL_USER: 'root'
       MYSQL_PASSWORD: 'root'
+      MYSQL_ROOT_PASSWORD: 'root'
     ports:
       - '3306:3306'
     expose:

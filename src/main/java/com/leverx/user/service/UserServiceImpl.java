@@ -1,12 +1,11 @@
-package com.company.service;
+package com.leverx.user.service;
 
-import com.company.entity.User;
-import com.company.repository.UserRepository;
-import com.company.repository.UserRepositoryImpl;
 import com.google.gson.Gson;
+import com.leverx.user.entity.User;
+import com.leverx.user.repository.UserRepository;
+import com.leverx.user.repository.UserRepositoryImpl;
 
-import java.io.BufferedReader;
-import java.util.List;
+import java.util.Collection;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,8 +20,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> findAll() {
-        List<User> users = userRepository.getAll();
+    public Collection<String> findAll() {
+        Collection<User> users = userRepository.findAll();
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
@@ -31,29 +30,29 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findById(int id) {
-        return gson.toJson(userRepository.getById(id));
+        return gson.toJson(userRepository.findById(id));
     }
 
     @Override
-    public List<String> findByName(String name) {
-        List<User> users = userRepository.getByName(name);
+    public Collection<String> findByName(String name) {
+        Collection<User> users = userRepository.findByName(name);
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
     }
 
     @Override
-    public void addUser(BufferedReader user) {
-        userRepository.addUser(gson.fromJson(user, User.class));
+    public void save(String user) {
+        userRepository.save(gson.fromJson(user, User.class));
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(String id) {
         userRepository.deleteById(id);
     }
 
     @Override
-    public void updateById(String id, BufferedReader user) {
+    public void updateById(String id, String user) {
         userRepository.updateById(id, gson.fromJson(user, User.class));
     }
 }

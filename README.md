@@ -1,4 +1,4 @@
-# Restful Application on Servlet API 
+# Restful Application on Servlet API 4.0.1
 ## Information
 This project was done to realize how java servlets work. The entity `User` is included in it and simple basic CRUD methods are realized for it.
 
@@ -33,5 +33,9 @@ mvn clean install
 ```
 docker-compose up
 ```
-* Configure Tomcat for build and run app
+* Configure Tomcat for build and run app:
+1) Run -> Edit Configurations -> Add New Configuration -> Tomcat Server(Local)
+2) Find and select tomcat directory; Select war file
+3) Run app
+
 * Send GET request `/users` to see the list of already stored users
