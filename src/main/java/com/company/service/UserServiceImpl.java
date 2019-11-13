@@ -43,8 +43,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void addUser(BufferedReader user) {
-        userRepository.addUser(gson.fromJson(user, User.class));
+    public void save(BufferedReader user) {
+        userRepository.save(gson.fromJson(user, User.class));
     }
 
     @Override

@@ -11,7 +11,7 @@ public interface UserService {
 
     List<String> findByName(String name);
 
-    void addUser(BufferedReader user);
+    void save(BufferedReader user);
 
     void deleteById(int id);
 
