@@ -10,15 +10,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.leverx.user.entity.User.ID;
+import static com.leverx.user.servlet.ServletUtils.getPathVariable;
 import static com.leverx.user.servlet.ServletUtils.readJsonBody;
+import static com.leverx.user.servlet.ServletUtils.variableIsANumber;
 import static java.lang.Integer.parseInt;
 
-@WebServlet(name = "userServlet", urlPatterns = "/users")
+@WebServlet(name = "userServlet", urlPatterns = {"/users", "/users/*"})
 public class UserServlet extends HttpServlet {
 
-    private static final String ID = "id";
-    private static final String NAME = "name";
-
+    private static final String PATH = "users";
     private UserService service = new UserServiceImpl();
 
     @Override
@@ -26,16 +27,16 @@ public class UserServlet extends HttpServlet {
 
         PrintWriter out = response.getWriter();
 
-        String id = request.getParameter(ID);
-        String name = request.getParameter(NAME);
-
-        if (id != null) {
-            out.print(service.findById(parseInt(id)));
-        } else if (name != null) {
-            service.findByName(name)
-                    .forEach(out::print);
-        } else {
+        var url = request.getRequestURL();
+        var pathVariable = getPathVariable(url);
+        if (PATH.equals(pathVariable)) {
             service.findAll()
+                    .forEach(out::print);
+        } else if (variableIsANumber(pathVariable)) {
+            var id = parseInt(pathVariable);
+            out.print(service.findById(id));
+        } else {
+            service.findByName(pathVariable)
                     .forEach(out::print);
         }
         out.flush();
@@ -47,7 +48,7 @@ public class UserServlet extends HttpServlet {
     }
 
     @Override
-    protected void doDelete(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
         service.deleteById(request.getParameter(ID));
     }
 

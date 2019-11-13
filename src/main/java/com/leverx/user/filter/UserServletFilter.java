@@ -8,7 +8,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
-@WebFilter(filterName = "userServletFilter", urlPatterns = "/users")
+@WebFilter(filterName = "userServletFilter", urlPatterns = {"/users", "/users/*"})
 public class UserServletFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
