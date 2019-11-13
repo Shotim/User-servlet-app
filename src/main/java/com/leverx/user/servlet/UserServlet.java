@@ -13,8 +13,8 @@ import java.io.PrintWriter;
 import static com.leverx.user.entity.UserConstants.ID;
 import static com.leverx.user.servlet.ServletUtils.getPathVariable;
 import static com.leverx.user.servlet.ServletUtils.readJsonBody;
-import static com.leverx.user.servlet.ServletUtils.variableIsANumber;
 import static java.lang.Integer.parseInt;
+import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 @WebServlet(name = "userServlet", urlPatterns = {"/users", "/users/*"})
 public class UserServlet extends HttpServlet {
@@ -32,7 +32,7 @@ public class UserServlet extends HttpServlet {
         if (PATH.equals(pathVariable)) {
             service.findAll()
                     .forEach(out::print);
-        } else if (variableIsANumber(pathVariable)) {
+        } else if (isParsable(pathVariable)) {
             var id = parseInt(pathVariable);
             out.print(service.findById(id));
         } else {
