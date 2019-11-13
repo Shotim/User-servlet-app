@@ -3,36 +3,34 @@ package com.leverx.user.driver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.util.Properties;
+import java.sql.SQLException;
 
 public class MySQLDriver {
 
+    private static final Logger logger = LoggerFactory.getLogger(MySQLDriver.class);
+    private DataBaseProperties properties = new DataBaseProperties();
+
     public Connection establishConnection() {
 
-        Logger logger = LoggerFactory.getLogger(MySQLDriver.class);
-        Connection connection = null;
-        try (InputStream input = MySQLDriver.class.getClassLoader().getResourceAsStream("database.properties")) {
+        try {
+            Connection connection = null;
 
-            Properties properties = new Properties();
-
-            if (input != null) {
-                properties.load(input);
-            }
-            String url = properties.getProperty("url");
-            String user = properties.getProperty("username");
-            String password = properties.getProperty("password");
-            String driver = properties.getProperty("driver");
+            var url = properties.getDATABASE_URL();
+            var user = properties.getDATABASE_USERNAME();
+            var password = properties.getDATABASE_PASSWORD();
+            var driver = properties.getDRIVER_CLASS_NAME();
 
             Class.forName(driver);
             connection = DriverManager.getConnection(url, user, password);
             logger.info("Connection was created");
-
-        } catch (Exception ex) {
+            return connection;
+        } catch (ClassNotFoundException ex) {
             logger.error(ex.getMessage());
+        } catch (SQLException ex) {
+            logger.error("SQL state: {}\n{}", ex.getSQLState(), ex.getMessage());
         }
-        return connection;
+        return null;
     }
 }
