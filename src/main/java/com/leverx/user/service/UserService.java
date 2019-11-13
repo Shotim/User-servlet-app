@@ -1,6 +1,5 @@
 package com.leverx.user.service;
 
-import java.io.BufferedReader;
 import java.util.List;
 
 public interface UserService {
@@ -11,9 +10,9 @@ public interface UserService {
 
     List<String> findByName(String name);
 
-    void save(BufferedReader user);
+    void save(String user);
 
-    void deleteById(int id);
+    void deleteById(String id);
 
-    void updateById(String id, BufferedReader user);
+    void updateById(String id, String user);
 }

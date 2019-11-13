@@ -92,11 +92,11 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void deleteById(int id) {
+    public void deleteById(String id) {
         Connection connection = driver.establishConnection();
         try {
             preparedStatement = connection.prepareStatement(SQLQuery.DELETE_USER_BY_ID);
-            preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
+            preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
