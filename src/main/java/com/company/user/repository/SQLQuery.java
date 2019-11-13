@@ -1,4 +1,4 @@
-package com.company.repository;
+package com.company.user.repository;
 
 public class SQLQuery {
     public static final String SELECT_ALL_USERS = "SELECT * FROM users";

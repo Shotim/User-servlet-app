@@ -1,4 +1,4 @@
-package com.company.driver;
+package com.company.user.driver;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -1,4 +1,4 @@
-package com.company.listener;
+package com.company.servlet.listener;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,9 +12,9 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.annotation.WebListener;
 
 @WebListener(value = "userServletListener")
-public class UserServletListener implements ServletRequestListener, ServletContextListener {
+public class ServletListener implements ServletRequestListener, ServletContextListener {
 
-    private Logger logger = LoggerFactory.getLogger(UserServletListener.class);
+    private Logger logger = LoggerFactory.getLogger(ServletListener.class);
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {

@@ -1,8 +1,8 @@
-package com.company.service;
+package com.company.user.service;
 
-import com.company.entity.User;
-import com.company.repository.UserRepository;
-import com.company.repository.UserRepositoryImpl;
+import com.company.user.entity.User;
+import com.company.user.repository.UserRepository;
+import com.company.user.repository.UserRepositoryImpl;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

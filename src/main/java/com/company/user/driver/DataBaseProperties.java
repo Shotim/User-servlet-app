@@ -1,4 +1,4 @@
-package com.company.driver;
+package com.company.user.driver;
 
 public class DataBaseProperties {
 }

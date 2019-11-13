@@ -1,7 +1,7 @@
-package com.company.repository;
+package com.company.user.repository;
 
-import com.company.driver.MySQLDriver;
-import com.company.entity.User;
+import com.company.user.driver.MySQLDriver;
+import com.company.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

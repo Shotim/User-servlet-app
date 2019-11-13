@@ -1,4 +1,4 @@
-package com.company.service;
+package com.company.user.service;
 
 import java.io.BufferedReader;
 import java.util.List;
