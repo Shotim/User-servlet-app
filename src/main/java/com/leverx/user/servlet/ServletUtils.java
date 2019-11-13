@@ -24,14 +24,4 @@ public class ServletUtils {
         var pathVariable = splittedBySlashURL[lastElementIndex];
         return pathVariable;
     }
-
-    public static boolean variableIsANumber(String pathVariable) {
-        try {
-            Integer.parseInt(pathVariable);
-            return true;
-        } catch (NumberFormatException ex) {
-            logger.error(ex.getMessage());
-            return false;
-        }
-    }
 }
