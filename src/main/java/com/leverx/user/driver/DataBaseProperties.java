@@ -16,13 +16,13 @@ public class DataBaseProperties {
 
     private static final Logger logger = LoggerFactory.getLogger(DataBaseProperties.class);
     @Getter
-    private String DRIVER_CLASS_NAME;
+    private String driverClassName;
     @Getter
-    private String DATABASE_URL;
+    private String databaseUrl;
     @Getter
-    private String DATABASE_USERNAME;
+    private String databaseUsername;
     @Getter
-    private String DATABASE_PASSWORD;
+    private String databasePassword;
 
     DataBaseProperties() {
         setCredentials();
@@ -32,10 +32,10 @@ public class DataBaseProperties {
         Properties properties = new Properties();
         try (InputStream input = DataBaseProperties.class.getClassLoader().getResourceAsStream("database.properties")) {
             properties.load(input);
-            DRIVER_CLASS_NAME = properties.getProperty("driver");
-            DATABASE_URL = properties.getProperty("url");
-            DATABASE_USERNAME = properties.getProperty("username");
-            DATABASE_PASSWORD = properties.getProperty("password");
+            driverClassName = properties.getProperty("driver");
+            databaseUrl = properties.getProperty("url");
+            databaseUsername = properties.getProperty("username");
+            databasePassword = properties.getProperty("password");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

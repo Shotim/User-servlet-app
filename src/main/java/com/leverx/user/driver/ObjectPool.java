@@ -8,18 +8,19 @@ public abstract class ObjectPool<T> {
     private Hashtable<T, Long> inUse, available;
     private long deadTime;
 
-    ObjectPool() {
+    public ObjectPool() {
+        deadTime = 10000;
         inUse = new Hashtable<>();
         available = new Hashtable<>();
     }
 
-    abstract T create();
+    public abstract T create();
 
-    abstract boolean validate(T object);
+    public abstract boolean validate(T object);
 
-    abstract void dead(T object);
+    public abstract void dead(T object);
 
-    synchronized T takeOut() {
+    public synchronized T takeOut() {
         long now = System.currentTimeMillis();
         T object;
         if (available.size() > 0) {
@@ -48,7 +49,7 @@ public abstract class ObjectPool<T> {
         return (object);
     }
 
-    synchronized void takeIn(T t) {
+    public synchronized void takeIn(T t) {
         inUse.remove(t);
         available.put(t, System.currentTimeMillis());
     }
