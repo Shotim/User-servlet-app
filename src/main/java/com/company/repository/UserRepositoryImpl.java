@@ -13,26 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UserRepositoryImpl implements UserRepository {
-    private static final String SELECT_ALL_USERS = "SELECT * FROM users";
-    private static final String SELECT_ONE_USER_BY_ID = "SELECT * FROM users WHERE id = ?";
-    private static final String SELECT_USER_BY_NAME = "SELECT * FROM users WHERE name = ?";
-    private static final String ADD_ONE_USER = "INSERT INTO users(name) VALUES (?) ";
-    private static final String DELETE_USER_BY_ID = "DELETE FROM users WHERE id = ?";
-    private static final String UPDATE_USER_BY_ID = "UPDATE users SET name = ? WHERE id = ?";
 
     private static final String ID = "id";
     private static final String NAME = "name";
     private static final int FIRST_QUERY_ARGUMENT = 1;
     private static final int SECOND_QUERY_ARGUMENT = 2;
-
+    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
     private PreparedStatement preparedStatement;
     private ResultSet resultSet;
     private MySQLDriver driver;
-    private Logger logger;
 
     public UserRepositoryImpl() {
         driver = new MySQLDriver();
-        logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
     }
 
     @Override
@@ -41,12 +33,12 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = driver.establishConnection();
         List<User> users = new ArrayList<>();
         try {
-            preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
+            preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ALL_USERS);
             resultSet = preparedStatement.executeQuery();
 
             users = extractUsersFromResultSet(resultSet);
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
         return users;
     }
@@ -56,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = driver.establishConnection();
         User user = new User();
         try {
-            preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID);
+            preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ONE_USER_BY_ID);
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             resultSet = preparedStatement.executeQuery();
 
@@ -65,7 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
                 user.setName(resultSet.getString(NAME));
             }
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
         return user;
     }
@@ -75,26 +67,26 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = driver.establishConnection();
         List<User> users = new ArrayList<>();
         try {
-            preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
+            preparedStatement = connection.prepareStatement(SQLQuery.SELECT_USER_BY_NAME);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
             resultSet = preparedStatement.executeQuery();
 
             users = extractUsersFromResultSet(resultSet);
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
         return users;
     }
 
     @Override
-    public void addUser(User user) {
+    public void save(User user) {
         Connection connection = driver.establishConnection();
         try {
-            preparedStatement = connection.prepareStatement(ADD_ONE_USER);
+            preparedStatement = connection.prepareStatement(SQLQuery.ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
     }
 
@@ -102,11 +94,11 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteById(int id) {
         Connection connection = driver.establishConnection();
         try {
-            preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
+            preparedStatement = connection.prepareStatement(SQLQuery.DELETE_USER_BY_ID);
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
     }
 
@@ -114,12 +106,12 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateById(String id, User user) {
         Connection connection = driver.establishConnection();
         try {
-            preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID);
+            preparedStatement = connection.prepareStatement(SQLQuery.UPDATE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}",ex.getSQLState(),ex.getMessage());
+            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
     }
 

@@ -1,7 +1,5 @@
 package com.company.repository;
 
-import lombok.Data;
-
 public class SQLQuery {
     public static final String SELECT_ALL_USERS = "SELECT * FROM users";
     public static final String SELECT_ONE_USER_BY_ID = "SELECT * FROM users WHERE id = ?";

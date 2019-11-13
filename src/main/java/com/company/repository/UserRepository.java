@@ -12,7 +12,7 @@ public interface UserRepository {
 
     List<User> getByName(String name);
 
-    void addUser(User user);
+    void save(User user);
 
     void deleteById(int id);
 
