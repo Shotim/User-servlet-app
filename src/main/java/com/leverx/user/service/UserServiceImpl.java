@@ -22,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> findAll() {
-        List<User> users = userRepository.getAll();
+        List<User> users = userRepository.findAll();
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
@@ -31,12 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String findById(int id) {
-        return gson.toJson(userRepository.getById(id));
+        return gson.toJson(userRepository.findById(id));
     }
 
     @Override
     public List<String> findByName(String name) {
-        List<User> users = userRepository.getByName(name);
+        List<User> users = userRepository.findByName(name);
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
