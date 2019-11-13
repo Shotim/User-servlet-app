@@ -6,6 +6,7 @@ import com.leverx.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -39,17 +40,17 @@ public class UserRepositoryImpl implements UserRepository {
     public Collection<User> findAll() {
 
         Connection connection = connectionPool.takeOut();
-        Collection<User> users = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            Collection<User> users = new ArrayList<>();
             users = extractUsersFromResultSet(resultSet);
+            return users;
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            throwingInternalServerException(connection, ex);
+            return null;
         }
-        connectionPool.takeIn(connection);
-        return users;
     }
 
     @Override
@@ -61,29 +62,31 @@ public class UserRepositoryImpl implements UserRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             User user = extractUsersFromResultSet(resultSet).get(0);
+            connectionPool.takeIn(connection);
             return user;
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            throwingInternalServerException(connection, ex);
+            return  null;
         }
-        connectionPool.takeIn(connection);
-        return null;
     }
 
     @Override
     public Collection<User> findByName(String name) {
         Connection connection = connectionPool.takeOut();
-        List<User> users = new ArrayList<>();
+
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
             ResultSet resultSet = preparedStatement.executeQuery();
 
+            List<User> users = new ArrayList<>();
             users = extractUsersFromResultSet(resultSet);
+            connectionPool.takeIn(connection);
+            return users;
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            throwingInternalServerException(connection, ex);
+            return null;
         }
-        connectionPool.takeIn(connection);
-        return users;
     }
 
     @Override
@@ -93,10 +96,10 @@ public class UserRepositoryImpl implements UserRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
+            connectionPool.takeIn(connection);
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            throwingInternalServerException(connection, ex);
         }
-        connectionPool.takeIn(connection);
     }
 
     @Override
@@ -106,10 +109,10 @@ public class UserRepositoryImpl implements UserRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
+            connectionPool.takeIn(connection);
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            throwingInternalServerException(connection, ex);
         }
-        connectionPool.takeIn(connection);
     }
 
     @Override
@@ -120,10 +123,18 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
+            connectionPool.takeIn(connection);
         } catch (SQLException ex) {
-            logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
+            throwingInternalServerException(connection, ex);
+            return;
         }
+
+    }
+
+    private void throwingInternalServerException(Connection connection, SQLException ex) {
+        logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         connectionPool.takeIn(connection);
+        throw new InternalServerErrorException();
     }
 
     private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException {
