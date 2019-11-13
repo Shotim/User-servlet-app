@@ -1,14 +1,14 @@
 package com.leverx.user.service;
 
-import java.util.List;
+import java.util.Collection;
 
 public interface UserService {
 
-    List<String> findAll();
+    Collection<String> findAll();
 
     String findById(int id);
 
-    List<String> findByName(String name);
+    Collection<String> findByName(String name);
 
     void save(String user);
 

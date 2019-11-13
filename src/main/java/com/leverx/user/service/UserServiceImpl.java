@@ -6,7 +6,6 @@ import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 
 import java.util.Collection;
-import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
@@ -21,7 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> findAll() {
+    public Collection<String> findAll() {
         Collection<User> users = userRepository.findAll();
         return users.stream()
                 .map(gson::toJson)
@@ -35,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<String> findByName(String name) {
+    public Collection<String> findByName(String name) {
         Collection<User> users = userRepository.findByName(name);
         return users.stream()
                 .map(gson::toJson)
