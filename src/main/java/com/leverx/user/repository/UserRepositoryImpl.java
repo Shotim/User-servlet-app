@@ -20,9 +20,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     private static final int FIRST_QUERY_ARGUMENT = 1;
     private static final int SECOND_QUERY_ARGUMENT = 2;
+
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
-    private PreparedStatement preparedStatement;
-    private ResultSet resultSet;
     private ObjectPool<Connection> connectionPool;
 
     public UserRepositoryImpl() {
@@ -35,8 +34,8 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = connectionPool.takeOut();
         List<User> users = new ArrayList<>();
         try {
-            preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ALL_USERS);
-            resultSet = preparedStatement.executeQuery();
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ALL_USERS);
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             users = extractUsersFromResultSet(resultSet);
         } catch (SQLException ex) {
@@ -49,21 +48,18 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public User findById(int id) {
         Connection connection = connectionPool.takeOut();
-        User user = new User();
         try {
-            preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ONE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_ONE_USER_BY_ID);
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
-            if (resultSet.next()) {
-                user.setId(resultSet.getInt(ID));
-                user.setName(resultSet.getString(NAME));
-            }
+            User user = extractUsersFromResultSet(resultSet).get(0);
+            return user;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
         }
         connectionPool.takeIn(connection);
-        return user;
+        return null;
     }
 
     @Override
@@ -71,9 +67,9 @@ public class UserRepositoryImpl implements UserRepository {
         Connection connection = connectionPool.takeOut();
         List<User> users = new ArrayList<>();
         try {
-            preparedStatement = connection.prepareStatement(SQLQuery.SELECT_USER_BY_NAME);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.SELECT_USER_BY_NAME);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
-            resultSet = preparedStatement.executeQuery();
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             users = extractUsersFromResultSet(resultSet);
         } catch (SQLException ex) {
@@ -87,7 +83,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void save(User user) {
         Connection connection = connectionPool.takeOut();
         try {
-            preparedStatement = connection.prepareStatement(SQLQuery.ADD_ONE_USER);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -100,7 +96,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteById(String id) {
         Connection connection = connectionPool.takeOut();
         try {
-            preparedStatement = connection.prepareStatement(SQLQuery.DELETE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.DELETE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
         } catch (SQLException ex) {
@@ -113,7 +109,7 @@ public class UserRepositoryImpl implements UserRepository {
     public void updateById(String id, User user) {
         Connection connection = connectionPool.takeOut();
         try {
-            preparedStatement = connection.prepareStatement(SQLQuery.UPDATE_USER_BY_ID);
+            PreparedStatement preparedStatement = connection.prepareStatement(SQLQuery.UPDATE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
