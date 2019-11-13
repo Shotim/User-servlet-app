@@ -5,6 +5,7 @@ import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
@@ -21,7 +22,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> findAll() {
-        List<User> users = userRepository.findAll();
+        Collection<User> users = userRepository.findAll();
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<String> findByName(String name) {
-        List<User> users = userRepository.findByName(name);
+        Collection<User> users = userRepository.findByName(name);
         return users.stream()
                 .map(gson::toJson)
                 .collect(toList());

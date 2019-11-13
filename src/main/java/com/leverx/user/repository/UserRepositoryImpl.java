@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static com.leverx.constants.SQLQuery.ADD_ONE_USER;
@@ -35,10 +36,10 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findAll() {
+    public Collection<User> findAll() {
 
         Connection connection = connectionPool.takeOut();
-        List<User> users = new ArrayList<>();
+        Collection<User> users = new ArrayList<>();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -69,7 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public List<User> findByName(String name) {
+    public Collection<User> findByName(String name) {
         Connection connection = connectionPool.takeOut();
         List<User> users = new ArrayList<>();
         try {
