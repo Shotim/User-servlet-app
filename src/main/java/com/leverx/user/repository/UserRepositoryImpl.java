@@ -1,7 +1,7 @@
 package com.leverx.user.repository;
 
-import com.leverx.user.driver.DBConnectionPool;
-import com.leverx.user.driver.ObjectPool;
+import com.leverx.driver.DBConnectionPool;
+import com.leverx.driver.ObjectPool;
 import com.leverx.user.entity.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

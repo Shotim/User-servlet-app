@@ -1,4 +1,4 @@
-package com.leverx.user.driver;
+package com.leverx.driver;
 
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;

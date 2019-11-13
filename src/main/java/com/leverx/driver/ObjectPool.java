@@ -1,4 +1,4 @@
-package com.leverx.user.driver;
+package com.leverx.driver;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
