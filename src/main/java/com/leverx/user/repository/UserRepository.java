@@ -1,6 +1,6 @@
 package com.leverx.user.repository;
 
-import com.leverx.user.DTOUser;
+import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
 
 import java.util.Collection;

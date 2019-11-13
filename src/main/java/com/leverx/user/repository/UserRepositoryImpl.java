@@ -2,7 +2,7 @@ package com.leverx.user.repository;
 
 import com.leverx.database.DBConnectionPool;
 import com.leverx.objectpool.ObjectPool;
-import com.leverx.user.DTOUser;
+import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
 import org.slf4j.Logger;
 
