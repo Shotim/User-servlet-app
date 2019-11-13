@@ -18,6 +18,7 @@ public class DBConnectionPool extends ObjectPool<Connection> {
         } catch (ClassNotFoundException e) {
             logger.error(e.getMessage());
         }
+        logger.info("DataBase connection pool was created");
     }
 
     @Override
@@ -26,7 +27,9 @@ public class DBConnectionPool extends ObjectPool<Connection> {
             var url = properties.getDatabaseUrl();
             var user = properties.getDatabaseUsername();
             var password = properties.getDatabasePassword();
-            return DriverManager.getConnection(url, user, password);
+            Connection connection = DriverManager.getConnection(url, user, password);
+            logger.info("Connection created");
+            return connection;
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
             return null;
@@ -36,7 +39,9 @@ public class DBConnectionPool extends ObjectPool<Connection> {
     @Override
     public boolean validate(Connection object) {
         try {
-            return !object.isClosed();
+            boolean isValid = !object.isClosed();
+            logger.info("Connection was validated");
+            return isValid;
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
             return false;
@@ -47,6 +52,7 @@ public class DBConnectionPool extends ObjectPool<Connection> {
     public void dead(Connection object) {
         try {
             object.close();
+            logger.info("Connection was closed");
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
         }
