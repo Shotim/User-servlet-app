@@ -1,10 +1,10 @@
 package com.leverx.user.repository;
 
-import com.leverx.driver.DBConnectionPool;
+import com.leverx.database.DBConnectionPool;
 import com.leverx.objectpool.ObjectPool;
+import com.leverx.user.DTOUser;
 import com.leverx.user.entity.User;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
@@ -23,13 +23,14 @@ import static com.leverx.constants.SQLQuery.SELECT_USER_BY_NAME;
 import static com.leverx.constants.SQLQuery.UPDATE_USER_BY_ID;
 import static com.leverx.constants.UserConstants.ID;
 import static com.leverx.constants.UserConstants.NAME;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserRepositoryImpl implements UserRepository {
 
     private static final int FIRST_QUERY_ARGUMENT = 1;
     private static final int SECOND_QUERY_ARGUMENT = 2;
 
-    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
+    private static final Logger logger = getLogger(UserRepositoryImpl.class);
     private ObjectPool<Connection> connectionPool;
 
     public UserRepositoryImpl() {
@@ -96,7 +97,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(User user) {
+    public void save(DTOUser user) {
         Connection connection = connectionPool.takeOut();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_ONE_USER);
@@ -128,7 +129,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateById(String id, User user) {
+    public void updateById(String id, DTOUser user) {
         Connection connection = connectionPool.takeOut();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID);
@@ -154,5 +155,9 @@ public class UserRepositoryImpl implements UserRepository {
                             resultSet.getString(NAME)));
         }
         return users;
+    }
+
+    private User extractFirstUserFromResultSet(ResultSet resultSet) throws SQLException {
+        return extractUsersFromResultSet(resultSet).get(0);
     }
 }

@@ -1,13 +1,12 @@
 package com.leverx.user.service;
 
 import com.google.gson.Gson;
+import com.leverx.user.DTOUser;
 import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 
 import java.util.Collection;
-
-import static java.util.stream.Collectors.toList;
 
 public class UserServiceImpl implements UserService {
 
@@ -20,30 +19,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Collection<String> findAll() {
-        Collection<User> users = userRepository.findAll();
-        return users.stream()
-                .map(gson::toJson)
-                .collect(toList());
-
+    public Collection<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override
-    public String findById(int id) {
-        return gson.toJson(userRepository.findById(id));
+    public User findById(int id) {
+        return userRepository.findById(id);
     }
 
     @Override
-    public Collection<String> findByName(String name) {
-        Collection<User> users = userRepository.findByName(name);
-        return users.stream()
-                .map(gson::toJson)
-                .collect(toList());
+    public Collection<User> findByName(String name) {
+        return userRepository.findByName(name);
     }
 
     @Override
-    public void save(String user) {
-        userRepository.save(gson.fromJson(user, User.class));
+    public void save(DTOUser user) {
+        userRepository.save(user);
     }
 
     @Override
@@ -52,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(String id, String user) {
-        userRepository.updateById(id, gson.fromJson(user, User.class));
+    public void updateById(String id, DTOUser user) {
+        userRepository.updateById(id, user);
     }
 }

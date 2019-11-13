@@ -1,18 +1,21 @@
 package com.leverx.user.service;
 
+import com.leverx.user.DTOUser;
+import com.leverx.user.entity.User;
+
 import java.util.Collection;
 
 public interface UserService {
 
-    Collection<String> findAll();
+    Collection<User> findAll();
 
-    String findById(int id);
+    User findById(int id);
 
-    Collection<String> findByName(String name);
+    Collection<User> findByName(String name);
 
-    void save(String user);
+    void save(DTOUser user);
 
     void deleteById(String id);
 
-    void updateById(String id, String user);
+    void updateById(String id, DTOUser user);
 }

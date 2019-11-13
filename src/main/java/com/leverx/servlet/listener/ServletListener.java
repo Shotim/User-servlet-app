@@ -1,7 +1,6 @@
 package com.leverx.servlet.listener;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -11,10 +10,12 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 import javax.servlet.annotation.WebListener;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 @WebListener(value = "userServletListener")
 public class ServletListener implements ServletRequestListener, ServletContextListener {
 
-    private Logger logger = LoggerFactory.getLogger(ServletListener.class);
+    private Logger logger = getLogger(ServletListener.class);
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {

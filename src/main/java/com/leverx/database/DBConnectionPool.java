@@ -1,15 +1,16 @@
-package com.leverx.driver;
+package com.leverx.database;
 
 import com.leverx.objectpool.ObjectPool;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
 public class DBConnectionPool extends ObjectPool<Connection> {
-    private static final Logger logger = LoggerFactory.getLogger(DBConnectionPool.class);
+    private static final Logger logger = getLogger(DBConnectionPool.class);
     private DataBaseProperties properties = new DataBaseProperties();
 
     public DBConnectionPool() {
@@ -28,7 +29,7 @@ public class DBConnectionPool extends ObjectPool<Connection> {
             var url = properties.getDatabaseUrl();
             var user = properties.getDatabaseUsername();
             var password = properties.getDatabasePassword();
-            Connection connection = DriverManager.getConnection(url, user, password);
+            var connection = DriverManager.getConnection(url, user, password);
             logger.info("Connection created");
             return connection;
         } catch (SQLException e) {
