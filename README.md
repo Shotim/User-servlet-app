@@ -33,5 +33,9 @@ mvn clean install
 ```
 docker-compose up
 ```
-* Configure Tomcat for build and run app
+* Configure Tomcat for build and run app:
+1) Run -> Edit Configurations -> Add New Configuration -> Tomcat Server(Local)
+2) Find and select tomcat directory; Select war file
+3) Run app
+
 * Send GET request `/users` to see the list of already stored users
