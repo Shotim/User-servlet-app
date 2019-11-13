@@ -1,4 +1,4 @@
-package com.leverx.user.entity;
+package com.leverx.constants;
 
 public class UserConstants {
     public static final String ID = "id";

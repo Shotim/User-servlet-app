@@ -1,5 +1,6 @@
 package com.leverx.user.repository;
 
+import com.leverx.constants.SQLQuery;
 import com.leverx.driver.DBConnectionPool;
 import com.leverx.driver.ObjectPool;
 import com.leverx.user.entity.User;
@@ -13,8 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.leverx.user.entity.UserConstants.ID;
-import static com.leverx.user.entity.UserConstants.NAME;
+import static com.leverx.constants.UserConstants.ID;
+import static com.leverx.constants.UserConstants.NAME;
 
 public class UserRepositoryImpl implements UserRepository {
 
