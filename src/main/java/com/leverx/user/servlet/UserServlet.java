@@ -11,8 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import static com.leverx.constants.UserConstants.ID;
-import static com.leverx.user.servlet.ServletUtils.getPathVariable;
-import static com.leverx.user.servlet.ServletUtils.readJsonBody;
+import static com.leverx.utils.ServletUtils.getPathVariable;
+import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
