@@ -13,8 +13,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.leverx.user.entity.User.ID;
-import static com.leverx.user.entity.User.NAME;
+import static com.leverx.user.entity.UserConstants.ID;
+import static com.leverx.user.entity.UserConstants.NAME;
 
 public class UserRepositoryImpl implements UserRepository {
 
