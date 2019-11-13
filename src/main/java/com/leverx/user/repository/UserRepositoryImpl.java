@@ -12,10 +12,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.leverx.user.entity.User.ID;
+import static com.leverx.user.entity.User.NAME;
+
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final String ID = "id";
-    private static final String NAME = "name";
     private static final int FIRST_QUERY_ARGUMENT = 1;
     private static final int SECOND_QUERY_ARGUMENT = 2;
     private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
