@@ -32,6 +32,7 @@ public class UserServlet extends HttpServlet {
 
         var url = request.getRequestURL();
         var pathVariable = getPathVariable(url);
+        //TODO
         if (PATH.equals(pathVariable)) {
             service.findAll()
                     .forEach(out::print);
