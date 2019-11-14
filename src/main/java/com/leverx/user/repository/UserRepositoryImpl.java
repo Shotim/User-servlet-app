@@ -14,12 +14,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.leverx.constants.SQLQuery.ADD_ONE_USER;
-import static com.leverx.constants.SQLQuery.DELETE_USER_BY_ID;
-import static com.leverx.constants.SQLQuery.SELECT_ALL_USERS;
-import static com.leverx.constants.SQLQuery.SELECT_ONE_USER_BY_ID;
-import static com.leverx.constants.SQLQuery.SELECT_USER_BY_NAME;
-import static com.leverx.constants.SQLQuery.UPDATE_USER_BY_ID;
+import static com.leverx.user.repository.SQLQuery.ADD_ONE_USER;
+import static com.leverx.user.repository.SQLQuery.DELETE_USER_BY_ID;
+import static com.leverx.user.repository.SQLQuery.SELECT_ALL_USERS;
+import static com.leverx.user.repository.SQLQuery.SELECT_ONE_USER_BY_ID;
+import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
+import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
 import static com.leverx.constants.UserConstants.ID;
 import static com.leverx.constants.UserConstants.NAME;
 import static org.slf4j.LoggerFactory.getLogger;
