@@ -8,10 +8,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
 
 import static com.leverx.constants.UserConstants.ID;
-import static com.leverx.utils.ServletUtils.getPathVariable;
+import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToDTOUser;
+import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
+import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -28,20 +29,25 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        PrintWriter out = response.getWriter();
+        var out = response.getWriter();
 
-        var url = request.getRequestURL();
-        var pathVariable = getPathVariable(url);
-        //TODO
+        var pathVariable = getPathVariableFromRequest(request);
+        //TODO Find solution to replase if,else,else statement
         if (PATH.equals(pathVariable)) {
-            service.findAll()
-                    .forEach(out::print);
+            var users = service.findAll();
+            var jsonUsers = convertToJson(users);
+            jsonUsers.forEach(out::print);
         } else if (isParsable(pathVariable)) {
             var id = parseInt(pathVariable);
-            out.print(service.findById(id));
+            var user = service.findById(id);
+            var jsonUser = convertToJson(user);
+            out.print(jsonUser);
         } else {
             service.findByName(pathVariable)
                     .forEach(out::print);
+            var users = service.findByName(pathVariable);
+            var jsonUsers = convertToJson(users);
+            jsonUsers.forEach(out::print);
         }
         out.flush();
         response.setStatus(SC_OK);
@@ -49,21 +55,25 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        service.save(readJsonBody(request));
+        var jsonDTOUser = readJsonBody(request);
+        var userDTO = convertFromJsonToDTOUser(jsonDTOUser);
+        service.save(userDTO);
         response.setStatus(SC_CREATED);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
+        var id = getPathVariableFromRequest(request);
         service.deleteById(request.getParameter(ID));
         response.setStatus(SC_NO_CONTENT);
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String id = request.getParameter(ID);
-        String user = readJsonBody(request);
-        service.updateById(id, user);
+        var id = getPathVariableFromRequest(request);
+        var jsonUser = readJsonBody(request);
+        var userDTO = convertFromJsonToDTOUser(jsonUser);
+        service.updateById(id, userDTO);
         response.setStatus(SC_CREATED);
     }
 }
