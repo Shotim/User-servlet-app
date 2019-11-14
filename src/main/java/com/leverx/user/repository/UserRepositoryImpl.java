@@ -64,7 +64,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            User user = extractUsersFromResultSet(resultSet).get(0);
+            User user = extractFirstUserFromResultSet(resultSet);
             connectionPool.takeIn(connection);
             logger.info("Object from database with specific id was received");
             return user;
