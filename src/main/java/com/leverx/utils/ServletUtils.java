@@ -20,6 +20,7 @@ public class ServletUtils {
         return getPathVariableFromUrl(url);
     }
 
+    //TODO redo method with Optional<Integer>
     public static String getPathVariableFromUrl(StringBuffer url) {
         String[] splittedBySlashURL = url.toString().split(SEPARATOR);
         var lastElementIndex = splittedBySlashURL.length - 1;
