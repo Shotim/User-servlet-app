@@ -1,4 +1,6 @@
-package com.leverx.user.entity;
+package com.leverx.user.validation;
+
+import com.leverx.user.entity.DTOUser;
 
 public class UserValidation {
 
