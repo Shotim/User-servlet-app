@@ -5,6 +5,7 @@ import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
 import org.slf4j.Logger;
 
+import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -50,8 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            //throw new InternalServerErrorException();
-            return null;
+            throw new InternalServerErrorException();
         } finally {
             connectionPool.finishSession(connection);
         }
@@ -70,9 +70,8 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            //throw new InternalServerErrorException();
-            return null;
-        }finally {
+            throw new InternalServerErrorException();
+        } finally {
             connectionPool.finishSession(connection);
         }
     }
@@ -92,9 +91,8 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            //throw new InternalServerErrorException();
-            return null;
-        }finally {
+            throw new InternalServerErrorException();
+        } finally {
             connectionPool.finishSession(connection);
         }
     }
@@ -109,8 +107,8 @@ public class UserRepositoryImpl implements UserRepository {
             logger.info("Object was added to database");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            //throw new InternalServerErrorException();
-        }finally {
+            throw new InternalServerErrorException();
+        } finally {
             connectionPool.finishSession(connection);
         }
     }
@@ -125,8 +123,8 @@ public class UserRepositoryImpl implements UserRepository {
             logger.info("Object from database was deleted");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            //throw new InternalServerErrorException();
-        }finally {
+            throw new InternalServerErrorException();
+        } finally {
             connectionPool.finishSession(connection);
         }
     }
@@ -142,8 +140,8 @@ public class UserRepositoryImpl implements UserRepository {
             logger.info("Object in database was updated");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            //throw new InternalServerErrorException();
-        }finally {
+            throw new InternalServerErrorException();
+        } finally {
             connectionPool.finishSession(connection);
         }
 
