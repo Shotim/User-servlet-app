@@ -1,7 +1,6 @@
 package com.leverx.user.repository;
 
 import com.leverx.database.DBConnectionPool;
-import com.leverx.objectpool.ObjectPool;
 import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
 import org.slf4j.Logger;
@@ -30,7 +29,7 @@ public class UserRepositoryImpl implements UserRepository {
     private static final int SECOND_QUERY_ARGUMENT = 2;
 
     private static final Logger logger = getLogger(UserRepositoryImpl.class);
-    private ObjectPool<Connection> connectionPool;
+    private final DBConnectionPool connectionPool;
 
     public UserRepositoryImpl() {
         connectionPool = new DBConnectionPool();
@@ -39,7 +38,7 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Collection<User> findAll() {
 
-        Connection connection = connectionPool.takeOut();
+        Connection connection = connectionPool.startSession();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -50,7 +49,7 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
             return null;
         }
@@ -58,19 +57,19 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findById(int id) {
-        Connection connection = connectionPool.takeOut();
+        Connection connection = connectionPool.startSession();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID);
             preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
             ResultSet resultSet = preparedStatement.executeQuery();
 
             User user = extractFirstUserFromResultSet(resultSet);
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             logger.info("Object from database with specific id was received");
             return user;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
             return null;
         }
@@ -78,7 +77,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Collection<User> findByName(String name) {
-        Connection connection = connectionPool.takeOut();
+        Connection connection = connectionPool.startSession();
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
@@ -87,12 +86,12 @@ public class UserRepositoryImpl implements UserRepository {
 
             List<User> users = new ArrayList<>();
             users = extractUsersFromResultSet(resultSet);
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             logger.info("Objects from database with specific name were received");
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
             return null;
         }
@@ -100,49 +99,49 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(DTOUser user) {
-        Connection connection = connectionPool.takeOut();
+        Connection connection = connectionPool.startSession();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             logger.info("Object was added to database");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
         }
     }
 
     @Override
     public void deleteById(String id) {
-        Connection connection = connectionPool.takeOut();
+        Connection connection = connectionPool.startSession();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             logger.info("Object from database was deleted");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
         }
     }
 
     @Override
     public void updateById(String id, DTOUser user) {
-        Connection connection = connectionPool.takeOut();
+        Connection connection = connectionPool.startSession();
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             logger.info("Object in database was updated");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
+            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
         }
 
