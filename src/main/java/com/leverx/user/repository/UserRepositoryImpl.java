@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.leverx.constants.UserConstants.ID;
-import static com.leverx.constants.UserConstants.NAME;
+import static com.leverx.constants.UserFields.ID;
+import static com.leverx.constants.UserFields.NAME;
 import static com.leverx.user.repository.SQLQuery.ADD_ONE_USER;
 import static com.leverx.user.repository.SQLQuery.DELETE_USER_BY_ID;
 import static com.leverx.user.repository.SQLQuery.SELECT_ALL_USERS;
