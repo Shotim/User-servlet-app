@@ -9,10 +9,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.leverx.constants.UserFields.ID;
-import static com.leverx.user.validation.UserValidation.isValidName;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToDTOUser;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
+import static com.leverx.user.validation.UserValidation.isValidName;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
@@ -34,7 +33,7 @@ public class UserServlet extends HttpServlet {
         var out = response.getWriter();
 
         var pathVariable = getPathVariableFromRequest(request);
-        //TODO Find solution to replase if,else,else statement
+        //TODO Find solution to replace if,else,else statement
         if (PATH.equals(pathVariable)) {
             var users = service.findAll();
             var jsonUsers = convertToJson(users);
@@ -62,14 +61,15 @@ public class UserServlet extends HttpServlet {
         if (isValidName(userDTO)) {
             service.save(userDTO);
             response.setStatus(SC_CREATED);
+        } else {
+            response.setStatus(SC_BAD_REQUEST);
         }
-        response.setStatus(SC_BAD_REQUEST);
     }
 
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
         var id = getPathVariableFromRequest(request);
-        service.deleteById(request.getParameter(ID));
+        service.deleteById(id);
         response.setStatus(SC_NO_CONTENT);
     }
 
@@ -78,7 +78,11 @@ public class UserServlet extends HttpServlet {
         var id = getPathVariableFromRequest(request);
         var jsonUser = readJsonBody(request);
         var userDTO = convertFromJsonToDTOUser(jsonUser);
-        service.updateById(id, userDTO);
-        response.setStatus(SC_CREATED);
+        if (isValidName(userDTO)) {
+            service.updateById(id, userDTO);
+            response.setStatus(SC_CREATED);
+        } else {
+            response.setStatus(SC_BAD_REQUEST);
+        }
     }
 }
