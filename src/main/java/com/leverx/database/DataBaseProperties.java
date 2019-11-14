@@ -15,6 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class DataBaseProperties {
 
     private static final Logger logger = getLogger(DataBaseProperties.class);
+    public static final String PROPERTY_FILE = "database.properties";
     @Getter
     private String driverClassName;
     @Getter
@@ -26,12 +27,14 @@ public class DataBaseProperties {
 
     public DataBaseProperties() {
         var properties = new Properties();
-        try (InputStream input = DataBaseProperties.class.getClassLoader().getResourceAsStream("database.properties")) {
+        try (InputStream input = DataBaseProperties.class.getClassLoader().getResourceAsStream(PROPERTY_FILE)) {
             properties.load(input);
+            logger.debug("Property file with name {} exists", PROPERTY_FILE);
             driverClassName = properties.getProperty("db.driver");
             databaseUrl = properties.getProperty("db.url");
             databaseUsername = properties.getProperty("db.username");
             databasePassword = properties.getProperty("db.password");
+            logger.debug("Credentials were received");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

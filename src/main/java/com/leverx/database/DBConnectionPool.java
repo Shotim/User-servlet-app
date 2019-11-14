@@ -29,6 +29,7 @@ public class DBConnectionPool {
                         .generate(DBConnectionPool::createConnection)
                         .limit(MAX_POOL_CONNECTION_AMOUNT)
                         .collect(toList()));
+        logger.debug("DBConnectionPool instance was created");
     }
 
     private static Connection createConnection() {
@@ -55,11 +56,13 @@ public class DBConnectionPool {
         }
         var connection = connectionOutOfUsage.get(FIRST);
         connectionInUse.add(connection);
+        logger.debug("Connection was received from pool");
         return connection;
     }
 
     public void finishSession(Connection connection) {
         connectionInUse.remove(connection);
         connectionOutOfUsage.add(connection);
+        logger.debug("Connection was returned to pool");
     }
 }
