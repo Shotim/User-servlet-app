@@ -25,10 +25,6 @@ public class DataBaseProperties {
     private String databasePassword;
 
     public DataBaseProperties() {
-        setCredentials();
-    }
-
-    private void setCredentials() {
         var properties = new Properties();
         try (InputStream input = DataBaseProperties.class.getClassLoader().getResourceAsStream("database.properties")) {
             properties.load(input);
