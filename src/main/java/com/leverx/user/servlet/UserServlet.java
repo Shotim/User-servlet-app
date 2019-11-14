@@ -9,12 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import static com.leverx.constants.UserConstants.ID;
+import static com.leverx.constants.UserFields.ID;
+import static com.leverx.user.validation.UserValidation.isValidName;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToDTOUser;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -57,8 +59,11 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonDTOUser = readJsonBody(request);
         var userDTO = convertFromJsonToDTOUser(jsonDTOUser);
-        service.save(userDTO);
-        response.setStatus(SC_CREATED);
+        if (isValidName(userDTO)) {
+            service.save(userDTO);
+            response.setStatus(SC_CREATED);
+        }
+        response.setStatus(SC_BAD_REQUEST);
     }
 
     @Override
