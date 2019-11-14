@@ -17,13 +17,11 @@ public class DBConnectionPool {
 
     public static final int FIRST = 0;
     public static final int ZERO = 0;
+    private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
+    private static final Logger logger = getLogger(DBConnectionPool.class);
+    private static DataBaseProperties properties = new DataBaseProperties();
     private List<Connection> connectionInUse;
     private List<Connection> connectionOutOfUsage;
-
-    private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
-
-    private static DataBaseProperties properties = new DataBaseProperties();
-    private static final Logger logger = getLogger(DBConnectionPool.class);
 
     public DBConnectionPool() {
         connectionInUse = synchronizedList(new ArrayList<Connection>());
@@ -46,14 +44,14 @@ public class DBConnectionPool {
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
 
-        } catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             logger.error(e.getMessage());
         }
         return null;
     }
 
     public Connection startSession() {
-        while (connectionOutOfUsage.size() == ZERO) {
+        while (connectionOutOfUsage.isEmpty()) {
             logger.info("Wait for connection");
         }
         var connection = connectionOutOfUsage.get(FIRST);
