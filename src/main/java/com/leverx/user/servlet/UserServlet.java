@@ -37,7 +37,7 @@ public class UserServlet extends HttpServlet {
         if (PATH.equals(pathVariable)) {
             var users = service.findAll();
             var jsonUsers = convertToJson(users);
-            jsonUsers.forEach(out::print);
+            jsonUsers.forEach(out::println);
         } else if (isParsable(pathVariable)) {
             var id = parseInt(pathVariable);
             var user = service.findById(id);
@@ -45,10 +45,10 @@ public class UserServlet extends HttpServlet {
             out.print(jsonUser);
         } else {
             service.findByName(pathVariable)
-                    .forEach(out::print);
+                    .forEach(out::println);
             var users = service.findByName(pathVariable);
             var jsonUsers = convertToJson(users);
-            jsonUsers.forEach(out::print);
+            jsonUsers.forEach(out::println);
         }
         out.flush();
         response.setStatus(SC_OK);
