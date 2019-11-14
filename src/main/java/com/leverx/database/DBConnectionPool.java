@@ -15,8 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
-    public static final int FIRST = 0;
-    public static final int ZERO = 0;
+    private static final int FIRST = 0;
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
     private static final Logger logger = getLogger(DBConnectionPool.class);
     private static DataBaseProperties properties = new DataBaseProperties();
@@ -25,11 +24,11 @@ public class DBConnectionPool {
 
     public DBConnectionPool() {
         connectionInUse = synchronizedList(new ArrayList<Connection>());
-        connectionOutOfUsage = Stream
-                .generate(DBConnectionPool::createConnection)
-                .limit(MAX_POOL_CONNECTION_AMOUNT)
-                .collect(toList());
-        connectionOutOfUsage = synchronizedList(connectionOutOfUsage);
+        connectionOutOfUsage = synchronizedList(
+                Stream
+                        .generate(DBConnectionPool::createConnection)
+                        .limit(MAX_POOL_CONNECTION_AMOUNT)
+                        .collect(toList()));
     }
 
     private static Connection createConnection() {

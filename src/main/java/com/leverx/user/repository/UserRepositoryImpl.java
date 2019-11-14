@@ -23,6 +23,7 @@ import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
 import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
 import static org.slf4j.LoggerFactory.getLogger;
 
+//TODO Should be refactored all methods
 public class UserRepositoryImpl implements UserRepository {
 
     private static final int FIRST_QUERY_ARGUMENT = 1;
@@ -49,9 +50,10 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
             return null;
+        } finally {
+            connectionPool.finishSession(connection);
         }
     }
 
@@ -64,14 +66,14 @@ public class UserRepositoryImpl implements UserRepository {
             ResultSet resultSet = preparedStatement.executeQuery();
 
             User user = extractFirstUserFromResultSet(resultSet);
-            connectionPool.finishSession(connection);
             logger.info("Object from database with specific id was received");
             return user;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
             return null;
+        }finally {
+            connectionPool.finishSession(connection);
         }
     }
 
@@ -86,14 +88,14 @@ public class UserRepositoryImpl implements UserRepository {
 
             List<User> users = new ArrayList<>();
             users = extractUsersFromResultSet(resultSet);
-            connectionPool.finishSession(connection);
             logger.info("Objects from database with specific name were received");
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
             return null;
+        }finally {
+            connectionPool.finishSession(connection);
         }
     }
 
@@ -104,12 +106,12 @@ public class UserRepositoryImpl implements UserRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(ADD_ONE_USER);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.executeUpdate();
-            connectionPool.finishSession(connection);
             logger.info("Object was added to database");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
+        }finally {
+            connectionPool.finishSession(connection);
         }
     }
 
@@ -120,12 +122,12 @@ public class UserRepositoryImpl implements UserRepository {
             PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
-            connectionPool.finishSession(connection);
             logger.info("Object from database was deleted");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
+        }finally {
+            connectionPool.finishSession(connection);
         }
     }
 
@@ -137,12 +139,12 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
             preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
             preparedStatement.executeUpdate();
-            connectionPool.finishSession(connection);
             logger.info("Object in database was updated");
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.finishSession(connection);
             //throw new InternalServerErrorException();
+        }finally {
+            connectionPool.finishSession(connection);
         }
 
     }
