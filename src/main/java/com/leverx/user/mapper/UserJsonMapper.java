@@ -23,6 +23,6 @@ public class UserJsonMapper {
     }
 
     public static DTOUser convertFromJsonToDTOUser(String user) {
-        return gson.fromJson(user,DTOUser.class);
+        return gson.fromJson(user, DTOUser.class);
     }
 }
