@@ -24,7 +24,7 @@ public class DataBaseProperties {
     @Getter
     private String databasePassword;
 
-    DataBaseProperties() {
+    public DataBaseProperties() {
         setCredentials();
     }
 
@@ -32,10 +32,10 @@ public class DataBaseProperties {
         var properties = new Properties();
         try (InputStream input = DataBaseProperties.class.getClassLoader().getResourceAsStream("database.properties")) {
             properties.load(input);
-            driverClassName = properties.getProperty("driver");
-            databaseUrl = properties.getProperty("url");
-            databaseUsername = properties.getProperty("username");
-            databasePassword = properties.getProperty("password");
+            driverClassName = properties.getProperty("db.driver");
+            databaseUrl = properties.getProperty("db.url");
+            databaseUsername = properties.getProperty("db.username");
+            databasePassword = properties.getProperty("db.password");
         } catch (IOException e) {
             logger.error(e.getMessage());
         }

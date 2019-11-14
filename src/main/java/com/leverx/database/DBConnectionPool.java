@@ -1,6 +1,5 @@
-package com.leverx.objectpool;
+package com.leverx.database;
 
-import com.leverx.database.DataBaseProperties;
 import org.slf4j.Logger;
 
 import java.sql.Connection;
@@ -14,27 +13,30 @@ import static java.util.Collections.synchronizedList;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class ObjectPool {
+public class DBConnectionPool {
 
+    public static final int FIRST = 0;
+    public static final int ZERO = 0;
     private List<Connection> connectionInUse;
     private List<Connection> connectionOutOfUsage;
 
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
 
-    private DataBaseProperties properties = new DataBaseProperties();
-    private static final Logger logger = getLogger(ObjectPool.class);
+    private static DataBaseProperties properties = new DataBaseProperties();
+    private static final Logger logger = getLogger(DBConnectionPool.class);
 
-    public ObjectPool() {
+    public DBConnectionPool() {
         connectionInUse = synchronizedList(new ArrayList<Connection>());
         connectionOutOfUsage = Stream
-                .generate(this::createConnection)
+                .generate(DBConnectionPool::createConnection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .collect(toList());
         connectionOutOfUsage = synchronizedList(connectionOutOfUsage);
     }
 
-    private Connection createConnection() {
+    private static Connection createConnection() {
         try {
+            Class.forName(properties.getDriverClassName());
             var url = properties.getDatabaseUrl();
             var user = properties.getDatabaseUsername();
             var password = properties.getDatabasePassword();
@@ -43,19 +45,24 @@ public class ObjectPool {
             return connection;
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
-            return null;
+
+        } catch (ClassNotFoundException e){
+            logger.error(e.getMessage());
         }
+        return null;
     }
 
     public Connection startSession() {
-        var connection = connectionOutOfUsage.get(0);
+        while (connectionOutOfUsage.size() == ZERO) {
+            logger.info("Wait for connection");
+        }
+        var connection = connectionOutOfUsage.get(FIRST);
         connectionInUse.add(connection);
         return connection;
     }
 
-    public void endSession(Connection connection) {
+    public void finishSession(Connection connection) {
         connectionInUse.remove(connection);
         connectionOutOfUsage.add(connection);
     }
-
 }
