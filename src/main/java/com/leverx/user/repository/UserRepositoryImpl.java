@@ -6,7 +6,6 @@ import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
 import org.slf4j.Logger;
 
-import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -52,7 +51,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
-            throw new InternalServerErrorException();
+            //throw new InternalServerErrorException();
+            return null;
         }
     }
 
@@ -71,7 +71,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
-            throw new InternalServerErrorException();
+            //throw new InternalServerErrorException();
+            return null;
         }
     }
 
@@ -92,7 +93,8 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
-            throw new InternalServerErrorException();
+            //throw new InternalServerErrorException();
+            return null;
         }
     }
 
@@ -108,7 +110,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
-            throw new InternalServerErrorException();
+            //throw new InternalServerErrorException();
         }
     }
 
@@ -124,7 +126,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
-            throw new InternalServerErrorException();
+            //throw new InternalServerErrorException();
         }
     }
 
@@ -141,7 +143,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             connectionPool.takeIn(connection);
-            throw new InternalServerErrorException();
+            //throw new InternalServerErrorException();
         }
 
     }
