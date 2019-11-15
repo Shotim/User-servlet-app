@@ -23,6 +23,7 @@ import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
 import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
 import static org.slf4j.LoggerFactory.getLogger;
 
+//TODO change UserDto to User
 public class UserRepositoryImpl implements UserRepository {
 
     private static final Logger logger = getLogger(UserRepositoryImpl.class);

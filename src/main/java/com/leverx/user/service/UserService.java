@@ -5,6 +5,7 @@ import com.leverx.user.entity.UserDto;
 
 import java.util.Collection;
 
+//TODO change UserDto to User
 public interface UserService {
 
     Collection<User> findAll();
