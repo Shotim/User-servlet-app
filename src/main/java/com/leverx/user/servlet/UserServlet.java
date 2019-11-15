@@ -2,6 +2,8 @@ package com.leverx.user.servlet;
 
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,6 +28,7 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 public class UserServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "users";
+    private static final Logger logger = LoggerFactory.getLogger(UserServlet.class);
     private UserService service = new UserServiceImpl();
 
     @Override
@@ -36,9 +39,9 @@ public class UserServlet extends HttpServlet {
         var pathVariable = getPathVariableFromRequest(request);
 
         if (ORIGIN_PATH.equals(pathVariable)) {
-            transferAllUsersToResponse(responseWriter);
+            printAllUsersToResponseBody(responseWriter);
         } else {
-            transferUsersBySpecificParameterToResponse(responseWriter, pathVariable);
+            printUsersBySpecificParameterToResponseBody(responseWriter, pathVariable);
         }
         responseWriter.flush();
         response.setStatus(SC_OK);
@@ -52,7 +55,7 @@ public class UserServlet extends HttpServlet {
             service.save(userDTO);
             response.setStatus(SC_CREATED);
         } else {
-            response.setStatus(SC_BAD_REQUEST);
+            delegateErrorMessage(response);
         }
     }
 
@@ -70,36 +73,44 @@ public class UserServlet extends HttpServlet {
         var userDTO = convertFromJsonToDTOUser(jsonUser);
         if (isValidName(userDTO)) {
             service.updateById(id, userDTO);
-            response.setStatus(SC_CREATED);
+            response.setStatus(SC_OK);
         } else {
-            response.setStatus(SC_BAD_REQUEST);
+            delegateErrorMessage(response);
         }
     }
 
-    private void transferAllUsersToResponse(PrintWriter writer){
+    private void printAllUsersToResponseBody(PrintWriter writer) {
         var users = service.findAll();
         var jsonUsers = convertToJson(users);
         jsonUsers.forEach(writer::println);
+        logger.info("Was received {} users", users.size());
     }
 
-    private void transferUsersBySpecificParameterToResponse(PrintWriter writer, String pathVariable) {
+    private void printUsersBySpecificParameterToResponseBody(PrintWriter writer, String pathVariable) {
         if (isParsable(pathVariable)) {
-            transferUserByIdToResponse(writer,pathVariable);
+            printUserByIdToResponseBody(writer, pathVariable);
         } else {
-            transferUsersByNameToResponse(writer, pathVariable);
+            printUsersByNameToResponseBody(writer, pathVariable);
         }
     }
 
-    private void transferUserByIdToResponse(PrintWriter writer, String pathVariable){
+    private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
         var user = service.findById(id);
         var jsonUser = convertToJson(user);
         writer.print(jsonUser);
+        logger.info("");
     }
 
-    private void transferUsersByNameToResponse(PrintWriter writer, String pathVariable){
+    private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = service.findByName(pathVariable);
         var jsonUsers = convertToJson(users);
         jsonUsers.forEach(writer::println);
+    }
+
+    private void delegateErrorMessage(HttpServletResponse response) {
+        response.setStatus(SC_BAD_REQUEST);
+        logger.error("The name has more than 60 symbols");
+        throw new IllegalArgumentException();
     }
 }

@@ -7,6 +7,6 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @FieldDefaults(level = PRIVATE)
-public class DTOUser {
+public class UserDto {
     String name;
 }

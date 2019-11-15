@@ -1,8 +1,8 @@
 package com.leverx.user.repository;
 
 import com.leverx.database.DBConnectionPool;
-import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
+import com.leverx.user.entity.UserDto;
 import org.slf4j.Logger;
 
 import javax.ws.rs.InternalServerErrorException;
@@ -102,7 +102,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(DTOUser user) {
+    public void save(UserDto user) {
         Connection connection = establishConnection();
 
         try (var preparedStatement = connection.prepareStatement(ADD_ONE_USER)) {
@@ -138,7 +138,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateById(String id, DTOUser user) {
+    public void updateById(String id, UserDto user) {
         Connection connection = establishConnection();
 
         try (var preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID)) {

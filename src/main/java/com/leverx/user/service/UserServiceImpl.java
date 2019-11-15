@@ -1,8 +1,8 @@
 package com.leverx.user.service;
 
 import com.google.gson.Gson;
-import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
+import com.leverx.user.entity.UserDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 
@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(DTOUser user) {
+    public void save(UserDto user) {
         userRepository.save(user);
     }
 
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(String id, DTOUser user) {
+    public void updateById(String id, UserDto user) {
         userRepository.updateById(id, user);
     }
 }

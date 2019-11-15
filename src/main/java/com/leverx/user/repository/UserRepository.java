@@ -1,7 +1,7 @@
 package com.leverx.user.repository;
 
-import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
+import com.leverx.user.entity.UserDto;
 
 import java.util.Collection;
 
@@ -13,9 +13,9 @@ public interface UserRepository {
 
     Collection<User> findByName(String name);
 
-    void save(DTOUser user);
+    void save(UserDto user);
 
     void deleteById(String id);
 
-    void updateById(String id, DTOUser user);
+    void updateById(String id, UserDto user);
 }

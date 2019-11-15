@@ -1,8 +1,8 @@
 package com.leverx.user.mapper;
 
 import com.google.gson.Gson;
-import com.leverx.user.entity.DTOUser;
 import com.leverx.user.entity.User;
+import com.leverx.user.entity.UserDto;
 
 import java.util.Collection;
 
@@ -22,7 +22,7 @@ public class UserJsonMapper {
                 .collect(toList());
     }
 
-    public static DTOUser convertFromJsonToDTOUser(String user) {
-        return gson.fromJson(user, DTOUser.class);
+    public static UserDto convertFromJsonToDTOUser(String user) {
+        return gson.fromJson(user, UserDto.class);
     }
 }

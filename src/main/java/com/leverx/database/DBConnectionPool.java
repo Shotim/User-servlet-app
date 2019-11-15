@@ -15,7 +15,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
-    private static final int FIRST = 0;
+    private static final int LIST_FIRST_ELEMENT = 0;
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
     private static final Logger logger = getLogger(DBConnectionPool.class);
     private static DataBaseProperties properties = new DataBaseProperties();
@@ -34,13 +34,15 @@ public class DBConnectionPool {
 
     private static Connection createConnection() {
         try {
-            Class.forName(properties.getDriverClassName());
+            Class<?> aClass = Class.forName(properties.getDriverClassName());
             var url = properties.getDatabaseUrl();
             var user = properties.getDatabaseUsername();
             var password = properties.getDatabasePassword();
-            var connection = getConnection(url, user, password);
-            logger.info("Connection created");
-            return connection;
+
+            try (var connection = getConnection(url, user, password)) {
+                logger.info("Connection created");
+                return connection;
+            }
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
 
@@ -54,7 +56,7 @@ public class DBConnectionPool {
         while (connectionOutOfUsage.isEmpty()) {
             logger.info("Wait for connection");
         }
-        var connection = connectionOutOfUsage.get(FIRST);
+        var connection = connectionOutOfUsage.get(LIST_FIRST_ELEMENT);
         connectionInUse.add(connection);
         logger.debug("Connection was received from pool");
         return connection;
