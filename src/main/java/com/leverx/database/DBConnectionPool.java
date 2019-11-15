@@ -44,10 +44,9 @@ public class DBConnectionPool {
             return connection;
 
         } catch (SQLException e) {
-            logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
-
+            logger.error("Can't create connection to jdbc Driver. Credentials are wrong");
         } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage());
+            logger.error("Can't find path to properties file");
         }
         return null;
     }
