@@ -31,16 +31,16 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        var out = response.getWriter();
+        var responseWriter = response.getWriter();
 
         var pathVariable = getPathVariableFromRequest(request);
 
         if (ORIGIN_PATH.equals(pathVariable)) {
-            transferAllUsersToResponse(out);
+            transferAllUsersToResponse(responseWriter);
         } else {
-            transferUsersBySpecificParameterToResponse(out, pathVariable);
+            transferUsersBySpecificParameterToResponse(responseWriter, pathVariable);
         }
-        out.flush();
+        responseWriter.flush();
         response.setStatus(SC_OK);
     }
 
@@ -76,30 +76,30 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    private void transferAllUsersToResponse(PrintWriter out){
+    private void transferAllUsersToResponse(PrintWriter writer){
         var users = service.findAll();
         var jsonUsers = convertToJson(users);
-        jsonUsers.forEach(out::println);
+        jsonUsers.forEach(writer::println);
     }
 
-    private void transferUsersBySpecificParameterToResponse(PrintWriter out, String pathVariable) {
+    private void transferUsersBySpecificParameterToResponse(PrintWriter writer, String pathVariable) {
         if (isParsable(pathVariable)) {
-            transferUserByIdToResponse(out,pathVariable);
+            transferUserByIdToResponse(writer,pathVariable);
         } else {
-            transferUsersByNameToResponse(out, pathVariable);
+            transferUsersByNameToResponse(writer, pathVariable);
         }
     }
 
-    private void transferUserByIdToResponse(PrintWriter out, String pathVariable){
+    private void transferUserByIdToResponse(PrintWriter writer, String pathVariable){
         var id = parseInt(pathVariable);
         var user = service.findById(id);
         var jsonUser = convertToJson(user);
-        out.print(jsonUser);
+        writer.print(jsonUser);
     }
 
-    private void transferUsersByNameToResponse(PrintWriter out, String pathVariable){
+    private void transferUsersByNameToResponse(PrintWriter writer, String pathVariable){
         var users = service.findByName(pathVariable);
         var jsonUsers = convertToJson(users);
-        jsonUsers.forEach(out::println);
+        jsonUsers.forEach(writer::println);
     }
 }
