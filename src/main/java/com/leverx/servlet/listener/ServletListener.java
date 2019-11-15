@@ -8,11 +8,9 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
-import javax.servlet.annotation.WebListener;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
-@WebListener(value = "userServletListener")
 public class ServletListener implements ServletRequestListener, ServletContextListener {
 
     private Logger logger = getLogger(ServletListener.class);

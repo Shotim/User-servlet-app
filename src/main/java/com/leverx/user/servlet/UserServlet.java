@@ -5,7 +5,6 @@ import com.leverx.user.service.UserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +23,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
-@WebServlet(name = "userServlet", urlPatterns = {"/users", "/users/*"})
+
 public class UserServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "users";

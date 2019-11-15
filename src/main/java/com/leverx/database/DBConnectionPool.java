@@ -34,15 +34,15 @@ public class DBConnectionPool {
 
     private static Connection createConnection() {
         try {
-            Class<?> aClass = Class.forName(properties.getDriverClassName());
+            Class.forName(properties.getDriverClassName());
             var url = properties.getDatabaseUrl();
             var user = properties.getDatabaseUsername();
             var password = properties.getDatabasePassword();
 
-            try (var connection = getConnection(url, user, password)) {
-                logger.info("Connection created");
-                return connection;
-            }
+            var connection = getConnection(url, user, password);
+            logger.info("Connection created");
+            return connection;
+
         } catch (SQLException e) {
             logger.error("SQL state: {}\n{}", e.getSQLState(), e.getMessage());
 
