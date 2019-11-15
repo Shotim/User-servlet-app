@@ -1,36 +1,34 @@
 package com.leverx.user.repository;
 
-import com.leverx.driver.DBConnectionPool;
-import com.leverx.objectpool.ObjectPool;
+import com.leverx.database.DBConnectionPool;
 import com.leverx.user.entity.User;
+import com.leverx.user.entity.UserDto;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.leverx.constants.SQLQuery.ADD_ONE_USER;
-import static com.leverx.constants.SQLQuery.DELETE_USER_BY_ID;
-import static com.leverx.constants.SQLQuery.SELECT_ALL_USERS;
-import static com.leverx.constants.SQLQuery.SELECT_ONE_USER_BY_ID;
-import static com.leverx.constants.SQLQuery.SELECT_USER_BY_NAME;
-import static com.leverx.constants.SQLQuery.UPDATE_USER_BY_ID;
-import static com.leverx.constants.UserConstants.ID;
-import static com.leverx.constants.UserConstants.NAME;
+import static com.leverx.constants.UserFields.ID;
+import static com.leverx.constants.UserFields.NAME;
+import static com.leverx.user.repository.SQLQuery.ADD_ONE_USER;
+import static com.leverx.user.repository.SQLQuery.DELETE_USER_BY_ID;
+import static com.leverx.user.repository.SQLQuery.SELECT_ALL_USERS;
+import static com.leverx.user.repository.SQLQuery.SELECT_ONE_USER_BY_ID;
+import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
+import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
+import static org.slf4j.LoggerFactory.getLogger;
 
+//TODO change UserDto to User
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final int FIRST_QUERY_ARGUMENT = 1;
-    private static final int SECOND_QUERY_ARGUMENT = 2;
-
-    private static final Logger logger = LoggerFactory.getLogger(UserRepositoryImpl.class);
-    private ObjectPool<Connection> connectionPool;
+    private static final Logger logger = getLogger(UserRepositoryImpl.class);
+    private static final int FIRST = 0;
+    private final DBConnectionPool connectionPool;
 
     public UserRepositoryImpl() {
         connectionPool = new DBConnectionPool();
@@ -38,109 +36,124 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Collection<User> findAll() {
+        Connection connection = establishConnection();
 
-        Connection connection = connectionPool.takeOut();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (var preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
+             var resultSet = preparedStatement.executeQuery()) {
 
-            Collection<User> users = new ArrayList<>();
-            users = extractUsersFromResultSet(resultSet);
-            logger.info("Objects from database were received");
+            var users = extractUsersFromResultSet(resultSet);
+            logger.debug("Found {} users", users.size());
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
             throw new InternalServerErrorException();
+
+        } finally {
+            connectionPool.finishSession(connection);
         }
     }
 
     @Override
     public User findById(int id) {
-        Connection connection = connectionPool.takeOut();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID);
-            preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        Connection connection = establishConnection();
 
-            User user = extractUsersFromResultSet(resultSet).get(0);
-            connectionPool.takeIn(connection);
-            logger.info("Object from database with specific id was received");
-            return user;
+        try (var preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID)) {
+
+            preparedStatement.setInt(1, id);
+
+            try (var resultSet = preparedStatement.executeQuery()) {
+
+                var user = extractFirstUserFromResultSet(resultSet);
+                logger.debug("User from database with id = {} was received", user.getId());
+                return user;
+            }
+
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
             throw new InternalServerErrorException();
+
+        } finally {
+            connectionPool.finishSession(connection);
         }
     }
 
     @Override
     public Collection<User> findByName(String name) {
-        Connection connection = connectionPool.takeOut();
+        Connection connection = establishConnection();
 
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME);
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
-            ResultSet resultSet = preparedStatement.executeQuery();
+        try (var preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME)) {
 
-            List<User> users = new ArrayList<>();
-            users = extractUsersFromResultSet(resultSet);
-            connectionPool.takeIn(connection);
-            logger.info("Objects from database with specific name were received");
-            return users;
+            preparedStatement.setString(1, name);
+
+            try (var resultSet = preparedStatement.executeQuery()) {
+
+                var users = extractUsersFromResultSet(resultSet);
+                logger.debug("{} users from database with name = {} were received",
+                        users.size(), users.get(FIRST).getName());
+                return users;
+            }
+
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
             throw new InternalServerErrorException();
+
+        } finally {
+            connectionPool.finishSession(connection);
         }
     }
 
     @Override
-    public void save(User user) {
-        Connection connection = connectionPool.takeOut();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(ADD_ONE_USER);
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
+    public void save(UserDto user) {
+        Connection connection = establishConnection();
+
+        try (var preparedStatement = connection.prepareStatement(ADD_ONE_USER)) {
+
+            preparedStatement.setString(1, user.getName());
             preparedStatement.executeUpdate();
-            connectionPool.takeIn(connection);
-            logger.info("Object was added to database");
+            logger.debug("User with name = {} was added to database", user.getName());
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
             throw new InternalServerErrorException();
+
+        } finally {
+            connectionPool.finishSession(connection);
         }
     }
 
     @Override
     public void deleteById(String id) {
-        Connection connection = connectionPool.takeOut();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID);
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
+        Connection connection = establishConnection();
+
+        try (var preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID)) {
+
+            preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
-            connectionPool.takeIn(connection);
-            logger.info("Object from database was deleted");
+            logger.debug("User from database with id = {} was deleted", id);
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
             throw new InternalServerErrorException();
+
+        } finally {
+            connectionPool.finishSession(connection);
         }
     }
 
     @Override
-    public void updateById(String id, User user) {
-        Connection connection = connectionPool.takeOut();
-        try {
-            PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID);
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
-            preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
+    public void updateById(String id, UserDto user) {
+        Connection connection = establishConnection();
+
+        try (var preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID)) {
+
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, id);
             preparedStatement.executeUpdate();
-            connectionPool.takeIn(connection);
-            logger.info("Object in database was updated");
+            logger.debug("User with id = {} in database was updated", id);
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            connectionPool.takeIn(connection);
             throw new InternalServerErrorException();
+
+        } finally {
+            connectionPool.finishSession(connection);
         }
 
     }
@@ -155,4 +168,15 @@ public class UserRepositoryImpl implements UserRepository {
         }
         return users;
     }
+
+    private User extractFirstUserFromResultSet(ResultSet resultSet) throws SQLException {
+        return extractUsersFromResultSet(resultSet).get(FIRST);
+    }
+
+    private Connection establishConnection() {
+        Connection connection = connectionPool.startSession();
+        logger.debug("Connection created");
+        return connection;
+    }
+
 }

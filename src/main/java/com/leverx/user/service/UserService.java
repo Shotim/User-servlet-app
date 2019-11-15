@@ -1,18 +1,22 @@
 package com.leverx.user.service;
 
+import com.leverx.user.entity.User;
+import com.leverx.user.entity.UserDto;
+
 import java.util.Collection;
 
+//TODO change UserDto to User
 public interface UserService {
 
-    Collection<String> findAll();
+    Collection<User> findAll();
 
-    String findById(int id);
+    User findById(int id);
 
-    Collection<String> findByName(String name);
+    Collection<User> findByName(String name);
 
-    void save(String user);
+    void save(UserDto user);
 
     void deleteById(String id);
 
-    void updateById(String id, String user);
+    void updateById(String id, UserDto user);
 }
