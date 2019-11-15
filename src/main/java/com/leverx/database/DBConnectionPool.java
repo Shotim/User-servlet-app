@@ -2,6 +2,7 @@ package com.leverx.database;
 
 import org.slf4j.Logger;
 
+import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -45,10 +46,11 @@ public class DBConnectionPool {
 
         } catch (SQLException e) {
             logger.error("Can't create connection to jdbc Driver. Credentials are wrong");
+            throw new InternalServerErrorException();
         } catch (ClassNotFoundException e) {
             logger.error("Can't find path to properties file");
+            throw new InternalServerErrorException();
         }
-        return null;
     }
 
     public Connection startSession() {
