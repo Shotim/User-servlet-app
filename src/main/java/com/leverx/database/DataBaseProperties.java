@@ -14,8 +14,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 @FieldDefaults(level = PRIVATE)
 public class DataBaseProperties {
 
+    private static final String PROPERTY_FILE = "database.properties";
     private static final Logger logger = getLogger(DataBaseProperties.class);
-    public static final String PROPERTY_FILE = "database.properties";
     @Getter
     private String driverClassName;
     @Getter
