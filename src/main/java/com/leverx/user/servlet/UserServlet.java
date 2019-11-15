@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToDTOUser;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
@@ -24,7 +25,7 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 @WebServlet(name = "userServlet", urlPatterns = {"/users", "/users/*"})
 public class UserServlet extends HttpServlet {
 
-    private static final String PATH = "users";
+    private static final String ORIGIN_PATH = "users";
     private UserService service = new UserServiceImpl();
 
     @Override
@@ -33,22 +34,11 @@ public class UserServlet extends HttpServlet {
         var out = response.getWriter();
 
         var pathVariable = getPathVariableFromRequest(request);
-        //TODO Find solution to replace if,else,else statement
-        if (PATH.equals(pathVariable)) {
-            var users = service.findAll();
-            var jsonUsers = convertToJson(users);
-            jsonUsers.forEach(out::println);
-        } else if (isParsable(pathVariable)) {
-            var id = parseInt(pathVariable);
-            var user = service.findById(id);
-            var jsonUser = convertToJson(user);
-            out.print(jsonUser);
+
+        if (ORIGIN_PATH.equals(pathVariable)) {
+            transferAllUsersToResponse(out);
         } else {
-            service.findByName(pathVariable)
-                    .forEach(out::println);
-            var users = service.findByName(pathVariable);
-            var jsonUsers = convertToJson(users);
-            jsonUsers.forEach(out::println);
+            transferUsersBySpecificParameterToResponse(out, pathVariable);
         }
         out.flush();
         response.setStatus(SC_OK);
@@ -84,5 +74,32 @@ public class UserServlet extends HttpServlet {
         } else {
             response.setStatus(SC_BAD_REQUEST);
         }
+    }
+
+    private void transferAllUsersToResponse(PrintWriter out){
+        var users = service.findAll();
+        var jsonUsers = convertToJson(users);
+        jsonUsers.forEach(out::println);
+    }
+
+    private void transferUsersBySpecificParameterToResponse(PrintWriter out, String pathVariable) {
+        if (isParsable(pathVariable)) {
+            transferUserByIdToResponse(out,pathVariable);
+        } else {
+            transferUsersByNameToResponse(out, pathVariable);
+        }
+    }
+
+    private void transferUserByIdToResponse(PrintWriter out, String pathVariable){
+        var id = parseInt(pathVariable);
+        var user = service.findById(id);
+        var jsonUser = convertToJson(user);
+        out.print(jsonUser);
+    }
+
+    private void transferUsersByNameToResponse(PrintWriter out, String pathVariable){
+        var users = service.findByName(pathVariable);
+        var jsonUsers = convertToJson(users);
+        jsonUsers.forEach(out::println);
     }
 }
