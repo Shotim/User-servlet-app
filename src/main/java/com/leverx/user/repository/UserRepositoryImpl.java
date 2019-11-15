@@ -23,11 +23,7 @@ import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
 import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
 import static org.slf4j.LoggerFactory.getLogger;
 
-//TODO Should be refactored all methods
 public class UserRepositoryImpl implements UserRepository {
-
-    private static final int FIRST_QUERY_ARGUMENT = 1;
-    private static final int SECOND_QUERY_ARGUMENT = 2;
 
     private static final Logger logger = getLogger(UserRepositoryImpl.class);
     private static final int FIRST = 0;
@@ -62,7 +58,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         try (var preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID)) {
 
-            preparedStatement.setInt(FIRST_QUERY_ARGUMENT, id);
+            preparedStatement.setInt(1, id);
 
             try (var resultSet = preparedStatement.executeQuery()) {
 
@@ -86,7 +82,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         try (var preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME)) {
 
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, name);
+            preparedStatement.setString(1, name);
 
             try (var resultSet = preparedStatement.executeQuery()) {
 
@@ -111,7 +107,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         try (var preparedStatement = connection.prepareStatement(ADD_ONE_USER)) {
 
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
+            preparedStatement.setString(1, user.getName());
             preparedStatement.executeUpdate();
             logger.debug("User with name = {} was added to database", user.getName());
         } catch (SQLException ex) {
@@ -129,7 +125,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         try (var preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID)) {
 
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, id);
+            preparedStatement.setString(1, id);
             preparedStatement.executeUpdate();
             logger.debug("User from database with id = {} was deleted", id);
         } catch (SQLException ex) {
@@ -147,8 +143,8 @@ public class UserRepositoryImpl implements UserRepository {
 
         try (var preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID)) {
 
-            preparedStatement.setString(FIRST_QUERY_ARGUMENT, user.getName());
-            preparedStatement.setString(SECOND_QUERY_ARGUMENT, id);
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, id);
             preparedStatement.executeUpdate();
             logger.debug("User with id = {} in database was updated", id);
         } catch (SQLException ex) {
