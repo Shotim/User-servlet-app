@@ -2,7 +2,6 @@ package com.leverx.user.repository;
 
 import com.leverx.database.DBConnectionPool;
 import com.leverx.user.entity.User;
-import com.leverx.user.entity.UserDto;
 import org.slf4j.Logger;
 
 import javax.ws.rs.InternalServerErrorException;
@@ -102,7 +101,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void save(UserDto user) {
+    public void save(User user) {
         Connection connection = establishConnection();
 
         try (var preparedStatement = connection.prepareStatement(ADD_ONE_USER)) {
@@ -138,15 +137,15 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public void updateById(String id, UserDto user) {
+    public void updateById(User user) {
         Connection connection = establishConnection();
 
         try (var preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID)) {
 
             preparedStatement.setString(1, user.getName());
-            preparedStatement.setString(2, id);
+            preparedStatement.setInt(2, user.getId());
             preparedStatement.executeUpdate();
-            logger.debug("User with id = {} in database was updated", id);
+            logger.debug("User with id = {} in database was updated", user.getId());
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             throw new InternalServerErrorException();
@@ -169,7 +168,9 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private User extractFirstUserFromResultSet(ResultSet resultSet) throws SQLException {
-        return extractUsersFromResultSet(resultSet).get(FIRST);
+        return extractUsersFromResultSet(resultSet).stream()
+                .findFirst()
+                .orElseThrow();
     }
 
     private Connection establishConnection() {

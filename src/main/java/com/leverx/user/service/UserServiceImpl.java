@@ -8,10 +8,13 @@ import com.leverx.user.repository.UserRepositoryImpl;
 
 import java.util.Collection;
 
+import static java.lang.Integer.parseInt;
+
 public class UserServiceImpl implements UserService {
 
     private Gson gson;
     private UserRepository userRepository;
+    private static final Integer DEFAULT_ID = 0;
 
     public UserServiceImpl() {
         gson = new Gson();
@@ -34,7 +37,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void save(UserDto user) {
+    public void save(UserDto userDto) {
+        User user = convertUserDtoToUser(DEFAULT_ID, userDto);
         userRepository.save(user);
     }
 
@@ -44,7 +48,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(String id, UserDto user) {
-        userRepository.updateById(id, user);
+    public void updateById(String id, UserDto userDto) {
+        var userId = parseInt(id);
+        User user = convertUserDtoToUser(userId, userDto);
+        userRepository.updateById(user);
+    }
+
+    private User convertUserDtoToUser(int id, UserDto userDto) {
+        String name = userDto.getName();
+        return new User(id, name);
     }
 }
