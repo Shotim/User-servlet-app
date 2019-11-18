@@ -10,7 +10,7 @@ public class ServletUtils {
     private static final String SEPARATOR = "/";
     private static final int ONE = 1;
 
-    public static String readJsonBody(HttpServletRequest request) throws IOException {
+    public static String readBody(HttpServletRequest request) throws IOException {
         return request.getReader()
                 .lines()
                 .collect(joining());
