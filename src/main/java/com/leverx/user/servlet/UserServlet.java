@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
-import static com.leverx.user.validation.UserValidation.isValidName;
+import static com.leverx.user.servlet.validation.UserValidation.isValidName;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;

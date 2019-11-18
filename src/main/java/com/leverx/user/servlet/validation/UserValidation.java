@@ -1,4 +1,4 @@
-package com.leverx.user.validation;
+package com.leverx.user.servlet.validation;
 
 import com.leverx.user.entity.UserDto;
 
