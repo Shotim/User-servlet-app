@@ -31,7 +31,7 @@ public class DBConnectionPool {
         addDriver();
         connection = createConnection();
         connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
-        Stream.generate(()->connection)
+        Stream.generate(() -> connection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
         logger.debug("DBConnectionPool instance was created");

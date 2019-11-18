@@ -83,7 +83,6 @@ public class UserServlet extends HttpServlet {
         var users = service.findAll();
         var jsonUsers = convertToJson(users);
         jsonUsers.forEach(writer::println);
-        logger.info("Was received {} users", users.size());
     }
 
     private void printUsersBySpecificParameterToResponseBody(PrintWriter writer, String pathVariable) {
@@ -99,7 +98,6 @@ public class UserServlet extends HttpServlet {
         var user = service.findById(id);
         var jsonUser = convertToJson(user);
         writer.print(jsonUser);
-        logger.info("");
     }
 
     private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
