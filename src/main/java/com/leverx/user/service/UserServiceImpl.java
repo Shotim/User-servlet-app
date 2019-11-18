@@ -8,7 +8,6 @@ import com.leverx.user.repository.UserRepositoryImpl;
 
 import java.util.Collection;
 
-//TODO change UserDto to User
 public class UserServiceImpl implements UserService {
 
     private Gson gson;
