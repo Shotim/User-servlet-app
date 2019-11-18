@@ -22,7 +22,7 @@ public class UserJsonMapper {
                 .collect(toList());
     }
 
-    public static UserDto convertFromJsonToDTOUser(String user) {
+    public static UserDto convertFromJsonToUserDto(String user) {
         return gson.fromJson(user, UserDto.class);
     }
 }
