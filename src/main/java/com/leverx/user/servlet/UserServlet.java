@@ -54,7 +54,8 @@ public class UserServlet extends HttpServlet {
             service.save(userDto);
             response.setStatus(SC_CREATED);
         } else {
-            delegateErrorMessage(response);
+            response.setStatus(SC_BAD_REQUEST);
+            logger.error("The name has more than 60 symbols");
         }
     }
 
@@ -75,7 +76,8 @@ public class UserServlet extends HttpServlet {
             service.updateById(id, userDto);
             response.setStatus(SC_OK);
         } else {
-            delegateErrorMessage(response);
+            response.setStatus(SC_BAD_REQUEST);
+            logger.error("The name has more than 60 symbols");
         }
     }
 
@@ -104,11 +106,5 @@ public class UserServlet extends HttpServlet {
         var users = service.findByName(pathVariable);
         var jsonUsers = convertToJson(users);
         jsonUsers.forEach(writer::println);
-    }
-
-    private void delegateErrorMessage(HttpServletResponse response) {
-        response.setStatus(SC_BAD_REQUEST);
-        logger.error("The name has more than 60 symbols");
-        throw new IllegalArgumentException();
     }
 }
