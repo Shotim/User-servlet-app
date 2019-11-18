@@ -19,19 +19,25 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
-    private BlockingQueue<Connection> connectionOutOfUsage;
-
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
-
     private static final Logger logger = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
+    private static DBConnectionPool connectionPool;
+    private BlockingQueue<Connection> connectionOutOfUsage;
 
-    public DBConnectionPool() {
+    private DBConnectionPool() {
         connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
         Stream.generate(DBConnectionPool::createConnection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
         logger.debug("DBConnectionPool instance was created");
+    }
+
+    public static DBConnectionPool getInstance() {
+        if (connectionPool == null) {
+            return new DBConnectionPool();
+        }
+        return connectionPool;
     }
 
     private static Connection createConnection() {

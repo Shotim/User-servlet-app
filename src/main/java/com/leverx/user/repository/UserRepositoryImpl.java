@@ -25,7 +25,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final DBConnectionPool connectionPool;
 
     public UserRepositoryImpl() {
-        connectionPool = new DBConnectionPool();
+        connectionPool = DBConnectionPool.getInstance();
     }
 
     @Override
@@ -41,7 +41,7 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(ex);
 
         } finally {
             connectionPool.destroyConnection(connection);
@@ -66,7 +66,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(ex);
 
         } finally {
             connectionPool.destroyConnection(connection);
@@ -92,7 +92,7 @@ public class UserRepositoryImpl implements UserRepository {
 
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(ex);
 
         } finally {
             connectionPool.destroyConnection(connection);
@@ -111,7 +111,7 @@ public class UserRepositoryImpl implements UserRepository {
             logger.debug("User with name = {} was added to database", user.getName());
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(ex);
 
         } finally {
             connectionPool.destroyConnection(connection);
@@ -130,7 +130,7 @@ public class UserRepositoryImpl implements UserRepository {
             logger.debug("User from database with id = {} was deleted", id);
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(ex);
 
         } finally {
             connectionPool.destroyConnection(connection);
@@ -150,7 +150,7 @@ public class UserRepositoryImpl implements UserRepository {
             logger.debug("User with id = {} in database was updated", user.getId());
         } catch (SQLException ex) {
             logger.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(ex);
 
         } finally {
             connectionPool.destroyConnection(connection);
