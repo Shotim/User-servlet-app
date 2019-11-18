@@ -6,26 +6,22 @@ import org.slf4j.Logger;
 
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
-import static com.leverx.constants.UserFields.ID;
-import static com.leverx.constants.UserFields.NAME;
 import static com.leverx.user.repository.SQLQuery.ADD_ONE_USER;
 import static com.leverx.user.repository.SQLQuery.DELETE_USER_BY_ID;
 import static com.leverx.user.repository.SQLQuery.SELECT_ALL_USERS;
 import static com.leverx.user.repository.SQLQuery.SELECT_ONE_USER_BY_ID;
 import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
 import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
+import static com.leverx.utils.RepositoryUtils.extractFirstUserFromResultSet;
+import static com.leverx.utils.RepositoryUtils.extractUsersFromResultSet;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserRepositoryImpl implements UserRepository {
 
     private static final Logger logger = getLogger(UserRepositoryImpl.class);
-    private static final int FIRST = 0;
     private final DBConnectionPool connectionPool;
 
     public UserRepositoryImpl() {
@@ -34,7 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Collection<User> findAll() {
-        Connection connection = establishConnection();
+        Connection connection = connectionPool.takeConnection();
+        logger.debug("Connection created");
 
         try (var preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
              var resultSet = preparedStatement.executeQuery()) {
@@ -53,7 +50,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findById(int id) {
-        Connection connection = establishConnection();
+        Connection connection = connectionPool.takeConnection();
+        logger.debug("Connection created");
 
         try (var preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID)) {
 
@@ -77,7 +75,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Collection<User> findByName(String name) {
-        Connection connection = establishConnection();
+        Connection connection = connectionPool.takeConnection();
+        logger.debug("Connection created");
 
         try (var preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME)) {
 
@@ -87,7 +86,7 @@ public class UserRepositoryImpl implements UserRepository {
 
                 var users = extractUsersFromResultSet(resultSet);
                 logger.debug("{} users from database with name = {} were received",
-                        users.size(), users.get(FIRST).getName());
+                        users.size(), name);
                 return users;
             }
 
@@ -102,7 +101,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void save(User user) {
-        Connection connection = establishConnection();
+        Connection connection = connectionPool.takeConnection();
+        logger.debug("Connection created");
 
         try (var preparedStatement = connection.prepareStatement(ADD_ONE_USER)) {
 
@@ -120,7 +120,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteById(String id) {
-        Connection connection = establishConnection();
+        Connection connection = connectionPool.takeConnection();
+        logger.debug("Connection created");
 
         try (var preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID)) {
 
@@ -138,7 +139,8 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateById(User user) {
-        Connection connection = establishConnection();
+        Connection connection = connectionPool.takeConnection();
+        logger.debug("Connection created");
 
         try (var preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID)) {
 
@@ -155,28 +157,4 @@ public class UserRepositoryImpl implements UserRepository {
         }
 
     }
-
-    private List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException {
-        List<User> users = new ArrayList<>();
-
-        while (resultSet.next()) {
-            users.add(
-                    new User(resultSet.getInt(ID),
-                            resultSet.getString(NAME)));
-        }
-        return users;
-    }
-
-    private User extractFirstUserFromResultSet(ResultSet resultSet) throws SQLException {
-        return extractUsersFromResultSet(resultSet).stream()
-                .findFirst()
-                .orElseThrow();
-    }
-
-    private Connection establishConnection() {
-        Connection connection = connectionPool.takeConnection();
-        logger.debug("Connection created");
-        return connection;
-    }
-
 }
