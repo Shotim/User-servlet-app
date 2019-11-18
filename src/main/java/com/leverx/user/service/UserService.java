@@ -13,9 +13,9 @@ public interface UserService {
 
     Collection<User> findByName(String name);
 
-    void save(UserDto user);
+    boolean save(UserDto user);
 
     void deleteById(String id);
 
-    void updateById(String id, UserDto user);
+    boolean updateById(String id, UserDto user);
 }

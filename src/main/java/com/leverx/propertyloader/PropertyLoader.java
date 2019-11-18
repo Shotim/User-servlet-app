@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.*;
 
-import static com.leverx.constants.DataBaseCredentialsFields.FILE_PATH;
+import static com.leverx.constants.DataBaseCredentialsFields.DB_FILE_PATH;
 
 public class PropertyLoader {
 
@@ -22,7 +22,7 @@ public class PropertyLoader {
     private Map<String, String> properties = new HashMap<>();
 
     public PropertyLoader() {
-        fileNames.add(FILE_PATH);
+        fileNames.add(DB_FILE_PATH);
         fileNames.stream()
                 .map(PropertyLoader::loadPropertiesFromFile)
                 .forEach(properties::putAll);
@@ -30,9 +30,10 @@ public class PropertyLoader {
 
     private static Map<String, String> loadPropertiesFromFile(String fileName) {
         var properties = new Properties();
-        try (var inputStream = PropertyLoader.class.getClassLoader().getResourceAsStream(FILE_PATH)) {
+        try (var inputStream = PropertyLoader.class.getClassLoader().getResourceAsStream(DB_FILE_PATH)) {
             properties.load(inputStream);
-            LOGGER.debug("Property file with name {} exists", FILE_PATH);
+            LOGGER.debug("Property file with name {} exists", DB_FILE_PATH);
+
             Map<String, String> propertiesMap = properties
                     .entrySet()
                     .stream()
@@ -42,7 +43,7 @@ public class PropertyLoader {
             LOGGER.debug("Properties were received");
             return propertiesMap;
         } catch (IOException e) {
-            LOGGER.error("Property file with name {} was not found", FILE_PATH);
+            LOGGER.error("Property file with name {} was not found", DB_FILE_PATH);
             throw new InternalServerErrorException(e);
         }
     }

@@ -20,7 +20,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class DBConnectionPool {
 
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
-    private static final Logger logger = getLogger(DBConnectionPool.class);
+    private static final Logger LOGGER = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
     private static DBConnectionPool connectionPool;
     private static Connection connection;
@@ -33,7 +33,7 @@ public class DBConnectionPool {
         generate(() -> connection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
-        logger.debug("DBConnectionPool instance was created");
+        LOGGER.debug("DBConnectionPool instance was created");
     }
 
     public static DBConnectionPool getInstance() {
@@ -50,11 +50,11 @@ public class DBConnectionPool {
             var password = properties.getProperty(PASSWORD);
 
             var connection = getConnection(url, user, password);
-            logger.info("Connection created");
+            LOGGER.info("Connection created");
             return connection;
 
         } catch (SQLException e) {
-            logger.error("Can't create connection to jdbc Driver. Credentials are wrong");
+            LOGGER.error("Can't create connection to jdbc Driver. Credentials are wrong");
             throw new InternalServerErrorException(e);
         }
     }
@@ -64,19 +64,19 @@ public class DBConnectionPool {
             var driver = properties.getProperty(DRIVER);
             Class.forName(driver);
         } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage());
+            LOGGER.error(e.getMessage());
             throw new InternalServerErrorException(e);
         }
     }
 
     public Connection takeConnection() {
         var connection = connectionOutOfUsage.remove();
-        logger.debug("Connection was received from pool");
+        LOGGER.debug("Connection was received from pool");
         return connection;
     }
 
     public void destroyConnection(Connection connection) {
         connectionOutOfUsage.add(connection);
-        logger.debug("Connection was returned to pool");
+        LOGGER.debug("Connection was returned to pool");
     }
 }

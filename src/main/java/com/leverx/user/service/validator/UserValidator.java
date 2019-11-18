@@ -1,8 +1,8 @@
-package com.leverx.user.servlet.validation;
+package com.leverx.user.service.validator;
 
 import com.leverx.user.entity.UserDto;
 
-public class UserValidation {
+public class UserValidator {
 
     public static final int VALID_NAME_LENGTH = 60;
 

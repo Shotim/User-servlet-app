@@ -2,8 +2,6 @@ package com.leverx.user.servlet;
 
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +11,6 @@ import java.io.PrintWriter;
 
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
-import static com.leverx.user.servlet.validation.UserValidation.isValidName;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
@@ -27,7 +24,6 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 public class UserServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "users";
-    private static final Logger logger = LoggerFactory.getLogger(UserServlet.class);
     private UserService service = new UserServiceImpl();
 
     @Override
@@ -50,12 +46,10 @@ public class UserServlet extends HttpServlet {
         var jsonDTOUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonDTOUser);
 
-        if (isValidName(userDto)) {
-            service.save(userDto);
+        if (service.save(userDto)) {
             response.setStatus(SC_CREATED);
         } else {
             response.setStatus(SC_BAD_REQUEST);
-            logger.error("The name has more than 60 symbols");
         }
     }
 
@@ -72,12 +66,10 @@ public class UserServlet extends HttpServlet {
         var jsonUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonUser);
 
-        if (isValidName(userDto)) {
-            service.updateById(id, userDto);
+        if (service.updateById(id, userDto)) {
             response.setStatus(SC_OK);
         } else {
             response.setStatus(SC_BAD_REQUEST);
-            logger.error("The name has more than 60 symbols");
         }
     }
 
