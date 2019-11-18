@@ -23,7 +23,6 @@ import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
 import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
 import static org.slf4j.LoggerFactory.getLogger;
 
-//TODO change UserDto to User
 public class UserRepositoryImpl implements UserRepository {
 
     private static final Logger logger = getLogger(UserRepositoryImpl.class);
@@ -49,7 +48,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
 
         } finally {
-            connectionPool.finishSession(connection);
+            connectionPool.stockConnection(connection);
         }
     }
 
@@ -73,7 +72,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
 
         } finally {
-            connectionPool.finishSession(connection);
+            connectionPool.stockConnection(connection);
         }
     }
 
@@ -98,7 +97,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
 
         } finally {
-            connectionPool.finishSession(connection);
+            connectionPool.stockConnection(connection);
         }
     }
 
@@ -116,7 +115,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
 
         } finally {
-            connectionPool.finishSession(connection);
+            connectionPool.stockConnection(connection);
         }
     }
 
@@ -134,7 +133,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
 
         } finally {
-            connectionPool.finishSession(connection);
+            connectionPool.stockConnection(connection);
         }
     }
 
@@ -153,7 +152,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException();
 
         } finally {
-            connectionPool.finishSession(connection);
+            connectionPool.stockConnection(connection);
         }
 
     }
@@ -174,7 +173,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     private Connection establishConnection() {
-        Connection connection = connectionPool.startSession();
+        Connection connection = connectionPool.takeConnection();
         logger.debug("Connection created");
         return connection;
     }
