@@ -34,7 +34,6 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         var responseWriter = response.getWriter();
-
         var pathVariable = getPathVariableFromRequest(request);
 
         if (ORIGIN_PATH.equals(pathVariable)) {
@@ -50,6 +49,7 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonDTOUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonDTOUser);
+
         if (isValidName(userDto)) {
             service.save(userDto);
             response.setStatus(SC_CREATED);
@@ -70,6 +70,7 @@ public class UserServlet extends HttpServlet {
         var id = getPathVariableFromRequest(request);
         var jsonUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonUser);
+
         if (isValidName(userDto)) {
             service.updateById(id, userDto);
             response.setStatus(SC_OK);
