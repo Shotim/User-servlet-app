@@ -5,31 +5,25 @@ import org.slf4j.Logger;
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.stream.Stream;
 
 import static java.sql.DriverManager.getConnection;
-import static java.util.Collections.synchronizedList;
-import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
-    private static final int LIST_FIRST_ELEMENT = 0;
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
     private static final Logger logger = getLogger(DBConnectionPool.class);
     private static DataBaseProperties properties = new DataBaseProperties();
-    private List<Connection> connectionInUse;
-    private List<Connection> connectionOutOfUsage;
+    private BlockingQueue<Connection> connectionOutOfUsage;
 
     public DBConnectionPool() {
-        connectionInUse = synchronizedList(new ArrayList<Connection>());
-        connectionOutOfUsage = synchronizedList(
-                Stream
-                        .generate(DBConnectionPool::createConnection)
-                        .limit(MAX_POOL_CONNECTION_AMOUNT)
-                        .collect(toList()));
+        connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
+        Stream.generate(DBConnectionPool::createConnection)
+                .limit(MAX_POOL_CONNECTION_AMOUNT)
+                .forEach(connectionOutOfUsage::add);
         logger.debug("DBConnectionPool instance was created");
     }
 
@@ -53,18 +47,13 @@ public class DBConnectionPool {
         }
     }
 
-    public Connection startSession() {
-        while (connectionOutOfUsage.isEmpty()) {
-            logger.info("Wait for connection");
-        }
-        var connection = connectionOutOfUsage.get(LIST_FIRST_ELEMENT);
-        connectionInUse.add(connection);
+    public Connection takeConnection() {
+        var connection = connectionOutOfUsage.remove();
         logger.debug("Connection was received from pool");
         return connection;
     }
 
-    public void finishSession(Connection connection) {
-        connectionInUse.remove(connection);
+    public void destroyConnection(Connection connection) {
         connectionOutOfUsage.add(connection);
         logger.debug("Connection was returned to pool");
     }
