@@ -11,11 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToDTOUser;
+import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
 import static com.leverx.user.validation.UserValidation.isValidName;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
-import static com.leverx.utils.ServletUtils.readJsonBody;
+import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -48,10 +48,10 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonDTOUser = readJsonBody(request);
-        var userDTO = convertFromJsonToDTOUser(jsonDTOUser);
-        if (isValidName(userDTO)) {
-            service.save(userDTO);
+        var jsonDTOUser = readBody(request);
+        var userDto = convertFromJsonToUserDto(jsonDTOUser);
+        if (isValidName(userDto)) {
+            service.save(userDto);
             response.setStatus(SC_CREATED);
         } else {
             delegateErrorMessage(response);
@@ -68,10 +68,10 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var id = getPathVariableFromRequest(request);
-        var jsonUser = readJsonBody(request);
-        var userDTO = convertFromJsonToDTOUser(jsonUser);
-        if (isValidName(userDTO)) {
-            service.updateById(id, userDTO);
+        var jsonUser = readBody(request);
+        var userDto = convertFromJsonToUserDto(jsonUser);
+        if (isValidName(userDto)) {
+            service.updateById(id, userDto);
             response.setStatus(SC_OK);
         } else {
             delegateErrorMessage(response);
