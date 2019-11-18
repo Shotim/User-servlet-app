@@ -10,9 +10,9 @@ public class ServiceUtils {
         return new User(id, name);
     }
 
-    public static User convertUserDtoToUser(UserDto userDto){
+    public static User convertUserDtoToUser(UserDto userDto) {
         int DEFAULT_USER_ID = 0;
         var name = userDto.getName();
-        return new User(DEFAULT_USER_ID,name);
+        return new User(DEFAULT_USER_ID, name);
     }
 }
