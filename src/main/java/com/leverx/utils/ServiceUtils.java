@@ -12,7 +12,6 @@ public class ServiceUtils {
 
     public static User convertUserDtoToUser(UserDto userDto) {
         int DEFAULT_USER_ID = 0;
-        var name = userDto.getName();
-        return new User(DEFAULT_USER_ID, name);
+        return convertUserDtoToUser(DEFAULT_USER_ID, userDto);
     }
 }
