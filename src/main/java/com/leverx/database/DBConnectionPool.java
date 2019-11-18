@@ -19,15 +19,19 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
+    private static DBConnectionPool connectionPool;
+
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
     private static final Logger logger = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
-    private static DBConnectionPool connectionPool;
+    private static Connection connection;
     private BlockingQueue<Connection> connectionOutOfUsage;
 
     private DBConnectionPool() {
+        addDriver();
+        connection = createConnection();
         connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
-        Stream.generate(DBConnectionPool::createConnection)
+        Stream.generate(()->connection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
         logger.debug("DBConnectionPool instance was created");
@@ -42,7 +46,6 @@ public class DBConnectionPool {
 
     private static Connection createConnection() {
         try {
-            Class.forName(properties.getProperty(DRIVER));
             var url = properties.getProperty(URL);
             var user = properties.getProperty(USERNAME);
             var password = properties.getProperty(PASSWORD);
@@ -54,8 +57,15 @@ public class DBConnectionPool {
         } catch (SQLException e) {
             logger.error("Can't create connection to jdbc Driver. Credentials are wrong");
             throw new InternalServerErrorException(e);
+        }
+    }
+
+    private void addDriver() {
+        try {
+            var driver = properties.getProperty(DRIVER);
+            Class.forName(driver);
         } catch (ClassNotFoundException e) {
-            logger.error("Can't find path to properties file");
+            logger.error(e.getMessage());
             throw new InternalServerErrorException(e);
         }
     }
