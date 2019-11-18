@@ -6,18 +6,18 @@ import com.leverx.user.entity.UserDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 
 import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
 import static java.lang.Integer.parseInt;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserServiceImpl implements UserService {
 
+    private static Logger LOGGER = getLogger(UserServiceImpl.class);
     private Gson gson;
     private UserRepository userRepository;
-    private static Logger LOGGER = LoggerFactory.getLogger(UserServiceImpl.class);
 
     public UserServiceImpl() {
         gson = new Gson();

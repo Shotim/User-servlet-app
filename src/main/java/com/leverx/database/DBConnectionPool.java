@@ -8,22 +8,21 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.stream.Stream;
 
 import static com.leverx.constants.DataBaseCredentialsFields.DRIVER;
 import static com.leverx.constants.DataBaseCredentialsFields.PASSWORD;
 import static com.leverx.constants.DataBaseCredentialsFields.URL;
 import static com.leverx.constants.DataBaseCredentialsFields.USERNAME;
 import static java.sql.DriverManager.getConnection;
+import static java.util.stream.Stream.generate;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
-    private static DBConnectionPool connectionPool;
-
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
     private static final Logger logger = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
+    private static DBConnectionPool connectionPool;
     private static Connection connection;
     private BlockingQueue<Connection> connectionOutOfUsage;
 
@@ -31,7 +30,7 @@ public class DBConnectionPool {
         addDriver();
         connection = createConnection();
         connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
-        Stream.generate(() -> connection)
+        generate(() -> connection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
         logger.debug("DBConnectionPool instance was created");
