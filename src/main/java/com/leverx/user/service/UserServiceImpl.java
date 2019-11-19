@@ -1,6 +1,5 @@
 package com.leverx.user.service;
 
-import com.google.gson.Gson;
 import com.leverx.user.entity.User;
 import com.leverx.user.entity.UserDto;
 import com.leverx.user.repository.UserRepository;
@@ -18,11 +17,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserServiceImpl implements UserService {
 
     private static Logger LOGGER = getLogger(UserServiceImpl.class);
-    private Gson gson;
     private UserRepository userRepository;
 
     public UserServiceImpl() {
-        gson = new Gson();
         userRepository = new UserRepositoryImpl();
     }
 
