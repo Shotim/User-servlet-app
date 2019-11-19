@@ -28,7 +28,7 @@ public class DBConnectionPool {
     private DBConnectionPool() {
         addDriver();
         Connection connection = createConnection();
-        generate(() -> connection)
+        generate(DBConnectionPool::createConnection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
         LOGGER.debug("DBConnectionPool instance was created");
@@ -36,7 +36,7 @@ public class DBConnectionPool {
 
     public static DBConnectionPool getInstance() {
         if (connectionPool == null) {
-            return new DBConnectionPool();
+            connectionPool = new DBConnectionPool();
         }
         return connectionPool;
     }
@@ -78,7 +78,7 @@ public class DBConnectionPool {
         }
     }
 
-    public void destroyConnection(Connection connection) {
+    public void putConnection(Connection connection) {
         try {
             connectionOutOfUsage.put(connection);
             LOGGER.debug("Connection was returned to pool");

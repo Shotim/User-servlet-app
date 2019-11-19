@@ -45,7 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException(ex);
 
         } finally {
-            connectionPool.destroyConnection(connection);
+            connectionPool.putConnection(connection);
         }
     }
 
@@ -70,7 +70,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException(ex);
 
         } finally {
-            connectionPool.destroyConnection(connection);
+            connectionPool.putConnection(connection);
         }
     }
 
@@ -96,7 +96,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException(ex);
 
         } finally {
-            connectionPool.destroyConnection(connection);
+            connectionPool.putConnection(connection);
         }
     }
 
@@ -116,7 +116,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException(ex);
 
         } finally {
-            connectionPool.destroyConnection(connection);
+            connectionPool.putConnection(connection);
         }
     }
 
@@ -135,7 +135,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException(ex);
 
         } finally {
-            connectionPool.destroyConnection(connection);
+            connectionPool.putConnection(connection);
         }
     }
 
@@ -156,7 +156,7 @@ public class UserRepositoryImpl implements UserRepository {
             throw new InternalServerErrorException(ex);
 
         } finally {
-            connectionPool.destroyConnection(connection);
+            connectionPool.putConnection(connection);
         }
     }
 }
