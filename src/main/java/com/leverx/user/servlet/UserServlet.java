@@ -2,8 +2,6 @@ package com.leverx.user.servlet;
 
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,11 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToDTOUser;
+import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
-import static com.leverx.user.validation.UserValidation.isValidName;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
-import static com.leverx.utils.ServletUtils.readJsonBody;
+import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -27,14 +24,12 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 public class UserServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "users";
-    private static final Logger logger = LoggerFactory.getLogger(UserServlet.class);
     private UserService service = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         var responseWriter = response.getWriter();
-
         var pathVariable = getPathVariableFromRequest(request);
 
         if (ORIGIN_PATH.equals(pathVariable)) {
@@ -48,13 +43,13 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonDTOUser = readJsonBody(request);
-        var userDTO = convertFromJsonToDTOUser(jsonDTOUser);
-        if (isValidName(userDTO)) {
-            service.save(userDTO);
+        var jsonDTOUser = readBody(request);
+        var userDto = convertFromJsonToUserDto(jsonDTOUser);
+
+        if (service.save(userDto).isPresent()) {
             response.setStatus(SC_CREATED);
         } else {
-            delegateErrorMessage(response);
+            response.setStatus(SC_BAD_REQUEST);
         }
     }
 
@@ -68,13 +63,13 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var id = getPathVariableFromRequest(request);
-        var jsonUser = readJsonBody(request);
-        var userDTO = convertFromJsonToDTOUser(jsonUser);
-        if (isValidName(userDTO)) {
-            service.updateById(id, userDTO);
+        var jsonUser = readBody(request);
+        var userDto = convertFromJsonToUserDto(jsonUser);
+
+        if (service.updateById(id, userDto).isPresent()) {
             response.setStatus(SC_OK);
         } else {
-            delegateErrorMessage(response);
+            response.setStatus(SC_BAD_REQUEST);
         }
     }
 
@@ -82,7 +77,6 @@ public class UserServlet extends HttpServlet {
         var users = service.findAll();
         var jsonUsers = convertToJson(users);
         jsonUsers.forEach(writer::println);
-        logger.info("Was received {} users", users.size());
     }
 
     private void printUsersBySpecificParameterToResponseBody(PrintWriter writer, String pathVariable) {
@@ -98,18 +92,11 @@ public class UserServlet extends HttpServlet {
         var user = service.findById(id);
         var jsonUser = convertToJson(user);
         writer.print(jsonUser);
-        logger.info("");
     }
 
     private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = service.findByName(pathVariable);
         var jsonUsers = convertToJson(users);
         jsonUsers.forEach(writer::println);
-    }
-
-    private void delegateErrorMessage(HttpServletResponse response) {
-        response.setStatus(SC_BAD_REQUEST);
-        logger.error("The name has more than 60 symbols");
-        throw new IllegalArgumentException();
     }
 }

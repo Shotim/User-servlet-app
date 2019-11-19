@@ -18,11 +18,11 @@ public class UserJsonMapper {
 
     public static Collection<String> convertToJson(Collection<User> users) {
         return users.stream()
-                .map(gson::toJson)
+                .map(UserJsonMapper::convertToJson)
                 .collect(toList());
     }
 
-    public static UserDto convertFromJsonToDTOUser(String user) {
+    public static UserDto convertFromJsonToUserDto(String user) {
         return gson.fromJson(user, UserDto.class);
     }
 }

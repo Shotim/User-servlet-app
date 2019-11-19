@@ -1,71 +1,90 @@
 package com.leverx.database;
 
+import com.leverx.propertyloader.PropertyLoader;
 import org.slf4j.Logger;
 
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Stream;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
+import static com.leverx.constants.DataBaseCredentialsFields.DRIVER;
+import static com.leverx.constants.DataBaseCredentialsFields.PASSWORD;
+import static com.leverx.constants.DataBaseCredentialsFields.URL;
+import static com.leverx.constants.DataBaseCredentialsFields.USERNAME;
 import static java.sql.DriverManager.getConnection;
-import static java.util.Collections.synchronizedList;
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.generate;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class DBConnectionPool {
 
-    private static final int LIST_FIRST_ELEMENT = 0;
     private static final int MAX_POOL_CONNECTION_AMOUNT = 10;
-    private static final Logger logger = getLogger(DBConnectionPool.class);
-    private static DataBaseProperties properties = new DataBaseProperties();
-    private List<Connection> connectionInUse;
-    private List<Connection> connectionOutOfUsage;
+    private static final Logger LOGGER = getLogger(DBConnectionPool.class);
+    private static final PropertyLoader properties = new PropertyLoader();
+    private static DBConnectionPool connectionPool;
+    private BlockingQueue<Connection> connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
 
-    public DBConnectionPool() {
-        connectionInUse = synchronizedList(new ArrayList<Connection>());
-        connectionOutOfUsage = synchronizedList(
-                Stream
-                        .generate(DBConnectionPool::createConnection)
-                        .limit(MAX_POOL_CONNECTION_AMOUNT)
-                        .collect(toList()));
-        logger.debug("DBConnectionPool instance was created");
+    private DBConnectionPool() {
+        addDriver();
+        Connection connection = createConnection();
+        generate(() -> connection)
+                .limit(MAX_POOL_CONNECTION_AMOUNT)
+                .forEach(connectionOutOfUsage::add);
+        LOGGER.debug("DBConnectionPool instance was created");
+    }
+
+    public static DBConnectionPool getInstance() {
+        if (connectionPool == null) {
+            return new DBConnectionPool();
+        }
+        return connectionPool;
     }
 
     private static Connection createConnection() {
         try {
-            Class.forName(properties.getDriverClassName());
-            var url = properties.getDatabaseUrl();
-            var user = properties.getDatabaseUsername();
-            var password = properties.getDatabasePassword();
+            var url = properties.getProperty(URL);
+            var user = properties.getProperty(USERNAME);
+            var password = properties.getProperty(PASSWORD);
 
             var connection = getConnection(url, user, password);
-            logger.info("Connection created");
+            LOGGER.info("Connection created");
             return connection;
 
         } catch (SQLException e) {
-            logger.error("Can't create connection to jdbc Driver. Credentials are wrong");
-            throw new InternalServerErrorException();
+            LOGGER.error("Can't create connection to jdbc Driver. Credentials are wrong");
+            throw new InternalServerErrorException(e);
+        }
+    }
+
+    private void addDriver() {
+        try {
+            var driver = properties.getProperty(DRIVER);
+            Class.forName(driver);
         } catch (ClassNotFoundException e) {
-            logger.error("Can't find path to properties file");
-            throw new InternalServerErrorException();
+            LOGGER.error(e.getMessage());
+            throw new InternalServerErrorException(e);
         }
     }
 
-    public Connection startSession() {
-        while (connectionOutOfUsage.isEmpty()) {
-            logger.info("Wait for connection");
+    public Connection takeConnection() {
+        try {
+            Connection connection = connectionOutOfUsage.take();
+            LOGGER.debug("Connection was received from pool");
+            return connection;
+        } catch (InterruptedException e) {
+            LOGGER.debug(e.getMessage());
+            throw new InternalServerErrorException(e);
         }
-        var connection = connectionOutOfUsage.get(LIST_FIRST_ELEMENT);
-        connectionInUse.add(connection);
-        logger.debug("Connection was received from pool");
-        return connection;
     }
 
-    public void finishSession(Connection connection) {
-        connectionInUse.remove(connection);
-        connectionOutOfUsage.add(connection);
-        logger.debug("Connection was returned to pool");
+    public void destroyConnection(Connection connection) {
+        try {
+            connectionOutOfUsage.put(connection);
+            LOGGER.debug("Connection was returned to pool");
+        } catch (InterruptedException e) {
+            LOGGER.debug(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 }

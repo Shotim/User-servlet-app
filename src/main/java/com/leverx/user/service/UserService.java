@@ -4,8 +4,8 @@ import com.leverx.user.entity.User;
 import com.leverx.user.entity.UserDto;
 
 import java.util.Collection;
+import java.util.Optional;
 
-//TODO change UserDto to User
 public interface UserService {
 
     Collection<User> findAll();
@@ -14,9 +14,9 @@ public interface UserService {
 
     Collection<User> findByName(String name);
 
-    void save(UserDto user);
+    Optional<User> save(UserDto user);
 
     void deleteById(String id);
 
-    void updateById(String id, UserDto user);
+    Optional<User> updateById(String id, UserDto user);
 }

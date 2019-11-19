@@ -13,32 +13,32 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class ServletListener implements ServletRequestListener, ServletContextListener {
 
-    private Logger logger = getLogger(ServletListener.class);
+    private static final Logger LOGGER = getLogger(ServletListener.class);
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
         ServletRequest request = sre.getServletRequest();
-        logger.info("Request initialized");
-        logger.info("Protocol: {}", request.getProtocol());
-        logger.info("Context type: {}", request.getContentType());
-        logger.info("Remote address: {}", request.getLocalAddr());
+        LOGGER.info("Request initialized");
+        LOGGER.info("Protocol: {}", request.getProtocol());
+        LOGGER.info("Context type: {}", request.getContentType());
+        LOGGER.info("Remote address: {}", request.getLocalAddr());
     }
 
     @Override
     public void requestDestroyed(ServletRequestEvent sre) {
-        logger.info("Request was destroyed");
+        LOGGER.info("Request was destroyed");
     }
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
-        logger.info("Context was initialized");
-        logger.info("Attributes: {}", context.getAttributeNames());
-        logger.info("Server info: {}", context.getServerInfo());
+        LOGGER.info("Context was initialized");
+        LOGGER.info("Attributes: {}", context.getAttributeNames());
+        LOGGER.info("Server info: {}", context.getServerInfo());
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        logger.info("Context was destroyed");
+        LOGGER.info("Context was destroyed");
     }
 }
