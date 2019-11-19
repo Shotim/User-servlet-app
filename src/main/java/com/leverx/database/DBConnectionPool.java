@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import static com.leverx.constants.DataBaseCredentialsFields.DRIVER;
 import static com.leverx.constants.DataBaseCredentialsFields.PASSWORD;
@@ -23,18 +23,17 @@ public class DBConnectionPool {
     private static final Logger LOGGER = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
     private static DBConnectionPool connectionPool;
-    private BlockingQueue<Connection> connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
+    private BlockingQueue<Connection> connectionOutOfUsage = new LinkedBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
 
     private DBConnectionPool() {
         addDriver();
-        Connection connection = createConnection();
         generate(DBConnectionPool::createConnection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
         LOGGER.debug("DBConnectionPool instance was created");
     }
 
-    public static DBConnectionPool getInstance() {
+    public static synchronized DBConnectionPool getInstance() {
         if (connectionPool == null) {
             connectionPool = new DBConnectionPool();
         }
