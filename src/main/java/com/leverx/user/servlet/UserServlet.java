@@ -6,6 +6,7 @@ import com.leverx.user.service.UserServiceImpl;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -46,9 +47,10 @@ public class UserServlet extends HttpServlet {
         var jsonDTOUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonDTOUser);
 
-        if (service.save(userDto).isPresent()) {
+        try {
+            service.save(userDto);
             response.setStatus(SC_CREATED);
-        } else {
+        } catch (InternalServerErrorException ex) {
             response.setStatus(SC_BAD_REQUEST);
         }
     }
@@ -66,11 +68,13 @@ public class UserServlet extends HttpServlet {
         var jsonUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonUser);
 
-        if (service.updateById(id, userDto).isPresent()) {
+        try {
+            service.updateById(id, userDto);
             response.setStatus(SC_OK);
-        } else {
+        } catch (InternalServerErrorException ex) {
             response.setStatus(SC_BAD_REQUEST);
         }
+
     }
 
     private void printAllUsersToResponseBody(PrintWriter writer) {
