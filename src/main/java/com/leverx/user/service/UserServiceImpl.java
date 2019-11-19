@@ -7,8 +7,8 @@ import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import org.slf4j.Logger;
 
+import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
-import java.util.Optional;
 
 import static com.leverx.user.service.validator.UserValidator.isValidName;
 import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
@@ -48,16 +48,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> save(UserDto userDto) {
+    public User save(UserDto userDto) {
         User user = convertUserDtoToUser(userDto);
         var savingPossible = isValidName(userDto);
         if (savingPossible) {
-            Optional<User> userOpt = userRepository.save(user);
+            userRepository.save(user);
             LOGGER.debug("User with name = {} was saved", userDto.getName());
-            return userOpt;
+            return user;
         } else {
-            LOGGER.debug("User with name = {} was not saved\nThe name has more than 60 symbols", userDto.getName());
-            return Optional.empty();
+            LOGGER.error("User with name = {} was not saved\nThe name has more than 60 symbols", userDto.getName());
+            throw new InternalServerErrorException();
         }
     }
 
@@ -68,17 +68,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<User> updateById(String id, UserDto userDto) {
+    public User updateById(String id, UserDto userDto) {
         var userId = parseInt(id);
         User user = convertUserDtoToUser(userId, userDto);
         var updatingPossible = isValidName(userDto);
         if (updatingPossible) {
-            Optional<User> userOpt = userRepository.updateById(user);
+            userRepository.updateById(user);
             LOGGER.debug("User with id = {} was updated", id);
-            return userOpt;
+            return user;
         } else {
-            LOGGER.debug("User with id = {} was not updated\nThe name has more than 60 symbols", id);
-            return Optional.empty();
+            LOGGER.error("User with id = {} was not updated\nThe name has more than 60 symbols", id);
+            throw new InternalServerErrorException();
         }
     }
 }
