@@ -8,7 +8,6 @@ import javax.ws.rs.InternalServerErrorException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Optional;
 
 import static com.leverx.user.repository.SQLQuery.ADD_ONE_USER;
 import static com.leverx.user.repository.SQLQuery.DELETE_USER_BY_ID;
@@ -101,7 +100,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> save(User user) {
+    public User save(User user) {
         Connection connection = connectionPool.takeConnection();
         LOGGER.debug("Connection created");
 
@@ -110,7 +109,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setString(1, user.getName());
             preparedStatement.executeUpdate();
             LOGGER.debug("User with name = {} was added to database", user.getName());
-            return Optional.of(user);
+            return user;
         } catch (SQLException ex) {
             LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             throw new InternalServerErrorException(ex);
@@ -140,7 +139,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> updateById(User user) {
+    public User updateById(User user) {
         Connection connection = connectionPool.takeConnection();
         LOGGER.debug("Connection created");
 
@@ -150,7 +149,7 @@ public class UserRepositoryImpl implements UserRepository {
             preparedStatement.setInt(2, user.getId());
             preparedStatement.executeUpdate();
             LOGGER.debug("User with id = {} in database was updated", user.getId());
-            return Optional.of(user);
+            return user;
         } catch (SQLException ex) {
             LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
             throw new InternalServerErrorException(ex);
