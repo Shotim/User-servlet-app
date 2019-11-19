@@ -8,6 +8,7 @@ import com.leverx.user.repository.UserRepositoryImpl;
 import org.slf4j.Logger;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.leverx.user.service.validator.UserValidator.isValidName;
 import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
@@ -47,16 +48,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean save(UserDto userDto) {
+    public Optional<User> save(UserDto userDto) {
         User user = convertUserDtoToUser(userDto);
         var savingPossible = isValidName(userDto);
         if (savingPossible) {
-            userRepository.save(user);
+            Optional<User> userOpt = userRepository.save(user);
             LOGGER.debug("User with name = {} was saved", userDto.getName());
+            return userOpt;
         } else {
             LOGGER.debug("User with name = {} was not saved\nThe name has more than 60 symbols", userDto.getName());
+            return Optional.empty();
         }
-        return savingPossible;
     }
 
     @Override
@@ -66,16 +68,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean updateById(String id, UserDto userDto) {
+    public Optional<User> updateById(String id, UserDto userDto) {
         var userId = parseInt(id);
         User user = convertUserDtoToUser(userId, userDto);
         var updatingPossible = isValidName(userDto);
         if (updatingPossible) {
-            userRepository.updateById(user);
+            Optional<User> userOpt = userRepository.updateById(user);
             LOGGER.debug("User with id = {} was updated", id);
+            return userOpt;
         } else {
             LOGGER.debug("User with id = {} was not updated\nThe name has more than 60 symbols", id);
+            return Optional.empty();
         }
-        return updatingPossible;
     }
 }

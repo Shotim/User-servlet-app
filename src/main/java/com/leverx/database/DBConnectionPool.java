@@ -23,12 +23,11 @@ public class DBConnectionPool {
     private static final Logger LOGGER = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
     private static DBConnectionPool connectionPool;
-    private static Connection connection;
     private BlockingQueue<Connection> connectionOutOfUsage;
 
     private DBConnectionPool() {
         addDriver();
-        connection = createConnection();
+        Connection connection = createConnection();
         connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
         generate(() -> connection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)

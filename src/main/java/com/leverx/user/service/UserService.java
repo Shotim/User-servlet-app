@@ -4,6 +4,7 @@ import com.leverx.user.entity.User;
 import com.leverx.user.entity.UserDto;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface UserService {
 
@@ -13,9 +14,9 @@ public interface UserService {
 
     Collection<User> findByName(String name);
 
-    boolean save(UserDto user);
+    Optional<User> save(UserDto user);
 
     void deleteById(String id);
 
-    boolean updateById(String id, UserDto user);
+    Optional<User> updateById(String id, UserDto user);
 }

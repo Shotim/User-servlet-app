@@ -5,7 +5,7 @@ volumes:
 services:
   database:
     image: mysql:8.0.18
-    #TODO
+
     command: --init-file /var/lib/init.sql
     volumes:
       - dbdata:/var/lib/mysql
