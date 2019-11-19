@@ -23,12 +23,11 @@ public class DBConnectionPool {
     private static final Logger LOGGER = getLogger(DBConnectionPool.class);
     private static final PropertyLoader properties = new PropertyLoader();
     private static DBConnectionPool connectionPool;
-    private BlockingQueue<Connection> connectionOutOfUsage;
+    private BlockingQueue<Connection> connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
 
     private DBConnectionPool() {
         addDriver();
         Connection connection = createConnection();
-        connectionOutOfUsage = new ArrayBlockingQueue<>(MAX_POOL_CONNECTION_AMOUNT);
         generate(() -> connection)
                 .limit(MAX_POOL_CONNECTION_AMOUNT)
                 .forEach(connectionOutOfUsage::add);
@@ -69,13 +68,23 @@ public class DBConnectionPool {
     }
 
     public Connection takeConnection() {
-        var connection = connectionOutOfUsage.remove();
-        LOGGER.debug("Connection was received from pool");
-        return connection;
+        try {
+            Connection connection = connectionOutOfUsage.take();
+            LOGGER.debug("Connection was received from pool");
+            return connection;
+        } catch (InterruptedException e) {
+            LOGGER.debug(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 
     public void destroyConnection(Connection connection) {
-        connectionOutOfUsage.add(connection);
-        LOGGER.debug("Connection was returned to pool");
+        try {
+            connectionOutOfUsage.put(connection);
+            LOGGER.debug("Connection was returned to pool");
+        } catch (InterruptedException e) {
+            LOGGER.debug(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 }

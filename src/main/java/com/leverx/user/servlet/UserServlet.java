@@ -46,7 +46,7 @@ public class UserServlet extends HttpServlet {
         var jsonDTOUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonDTOUser);
 
-        if (service.save(userDto)) {
+        if (service.save(userDto).isPresent()) {
             response.setStatus(SC_CREATED);
         } else {
             response.setStatus(SC_BAD_REQUEST);
@@ -66,7 +66,7 @@ public class UserServlet extends HttpServlet {
         var jsonUser = readBody(request);
         var userDto = convertFromJsonToUserDto(jsonUser);
 
-        if (service.updateById(id, userDto)) {
+        if (service.updateById(id, userDto).isPresent()) {
             response.setStatus(SC_OK);
         } else {
             response.setStatus(SC_BAD_REQUEST);
