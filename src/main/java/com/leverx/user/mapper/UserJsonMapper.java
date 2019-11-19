@@ -12,13 +12,13 @@ public class UserJsonMapper {
 
     private static final Gson gson = new Gson();
 
-    public static String convertToJson(User user) {
+    public static String convertFromUserToJson(User user) {
         return gson.toJson(user);
     }
 
-    public static Collection<String> convertToJson(Collection<User> users) {
+    public static Collection<String> convertFromUsersToJson(Collection<User> users) {
         return users.stream()
-                .map(UserJsonMapper::convertToJson)
+                .map(UserJsonMapper::convertFromUserToJson)
                 .collect(toList());
     }
 

@@ -1,5 +1,6 @@
 package com.leverx.user.servlet;
 
+import com.leverx.user.mapper.UserJsonMapper;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 
@@ -11,7 +12,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
-import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
@@ -79,7 +79,7 @@ public class UserServlet extends HttpServlet {
 
     private void printAllUsersToResponseBody(PrintWriter writer) {
         var users = service.findAll();
-        var jsonUsers = convertToJson(users);
+        var jsonUsers = UserJsonMapper.convertFromUsersToJson(users);
         jsonUsers.forEach(writer::println);
     }
 
@@ -94,13 +94,13 @@ public class UserServlet extends HttpServlet {
     private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
         var user = service.findById(id);
-        var jsonUser = convertToJson(user);
+        var jsonUser = UserJsonMapper.convertFromUserToJson(user);
         writer.print(jsonUser);
     }
 
     private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = service.findByName(pathVariable);
-        var jsonUsers = convertToJson(users);
+        var jsonUsers = UserJsonMapper.convertFromUsersToJson(users);
         jsonUsers.forEach(writer::println);
     }
 }
