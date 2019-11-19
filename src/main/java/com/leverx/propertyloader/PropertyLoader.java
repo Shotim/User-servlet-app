@@ -34,7 +34,7 @@ public class PropertyLoader {
             properties.load(inputStream);
             LOGGER.debug("Property file with name {} exists", DATABASE_PROPERTIES_FILE);
 
-            Map<String, String> propertiesMap = convertPropertiesToMap(properties);
+            var propertiesMap = convertPropertiesToMap(properties);
             return propertiesMap;
         } catch (IOException e) {
             LOGGER.error("Property file with name {} was not found", DATABASE_PROPERTIES_FILE);
