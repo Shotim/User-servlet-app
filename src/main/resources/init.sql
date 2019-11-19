@@ -4,5 +4,5 @@ create table if not exists users
 (
     id   int auto_increment
         primary key,
-    name text null
+    name char(60) not null
 );
