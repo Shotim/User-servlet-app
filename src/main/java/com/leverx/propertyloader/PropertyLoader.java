@@ -1,7 +1,6 @@
 package com.leverx.propertyloader;
 
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
@@ -13,11 +12,12 @@ import java.util.Properties;
 
 import static com.leverx.constants.DataBaseCredentialsFields.DATABASE_PROPERTIES_FILE;
 import static java.util.stream.Collectors.toMap;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class PropertyLoader {
 
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertyLoader.class);
+    private static final Logger LOGGER = getLogger(PropertyLoader.class);
     private static List<String> propertyFiles = new ArrayList<>();
     private Map<String, String> properties = new HashMap<>();
 
