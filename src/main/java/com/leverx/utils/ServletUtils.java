@@ -10,7 +10,7 @@ public class ServletUtils {
     private static final String SEPARATOR = "/";
     private static final int ONE = 1;
 
-    public static String readJsonBody(HttpServletRequest request) throws IOException {
+    public static String readBody(HttpServletRequest request) throws IOException {
         return request.getReader()
                 .lines()
                 .collect(joining());
@@ -21,7 +21,6 @@ public class ServletUtils {
         return getPathVariableFromUrl(url);
     }
 
-    //TODO redo method with Optional<Integer>
     public static String getPathVariableFromUrl(StringBuffer url) {
         var splittedBySlashURL = url.toString().split(SEPARATOR);
         var lastElementIndex = splittedBySlashURL.length - ONE;

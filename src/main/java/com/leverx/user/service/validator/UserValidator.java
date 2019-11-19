@@ -1,10 +1,10 @@
-package com.leverx.user.validation;
+package com.leverx.user.service.validator;
 
 import com.leverx.user.entity.UserDto;
 
-public class UserValidation {
+public class UserValidator {
 
-    public static final int VALID_NAME_LENGTH = 60;
+    private static final int VALID_NAME_LENGTH = 60;
 
     public static boolean isValidName(UserDto user) {
         return user.getName().length() < VALID_NAME_LENGTH;
