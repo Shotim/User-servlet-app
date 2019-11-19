@@ -1,4 +1,4 @@
-package com.leverx.user.filter;
+package com.leverx.servlet.filter;
 
 import org.slf4j.Logger;
 
@@ -15,9 +15,9 @@ import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static org.slf4j.LoggerFactory.getLogger;
 
 
-public class UserServletFilter implements Filter {
+public class ServletFilter implements Filter {
 
-    private static final Logger LOGGER = getLogger(UserServletFilter.class);
+    private static final Logger LOGGER = getLogger(ServletFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) {
