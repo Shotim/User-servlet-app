@@ -12,41 +12,47 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.stream.*;
 
-import static com.leverx.constants.DataBaseCredentialsFields.DB_FILE_PATH;
+import static com.leverx.constants.DataBaseCredentialsFields.DATABASE_PROPERTIES_FILE;
 
 public class PropertyLoader {
 
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertyLoader.class);
-    private static List<String> fileNames = new ArrayList<>();
+    private static List<String> propertyFiles = new ArrayList<>();
     private Map<String, String> properties = new HashMap<>();
 
     public PropertyLoader() {
-        fileNames.add(DB_FILE_PATH);
-        fileNames.stream()
+        propertyFiles.add(DATABASE_PROPERTIES_FILE);
+        propertyFiles.stream()
                 .map(PropertyLoader::loadPropertiesFromFile)
                 .forEach(properties::putAll);
     }
 
     private static Map<String, String> loadPropertiesFromFile(String fileName) {
         var properties = new Properties();
-        try (var inputStream = PropertyLoader.class.getClassLoader().getResourceAsStream(DB_FILE_PATH)) {
+        try (var inputStream = PropertyLoader.class.getClassLoader().getResourceAsStream(DATABASE_PROPERTIES_FILE)) {
             properties.load(inputStream);
-            LOGGER.debug("Property file with name {} exists", DB_FILE_PATH);
+            LOGGER.debug("Property file with name {} exists", DATABASE_PROPERTIES_FILE);
 
-            Map<String, String> propertiesMap = properties
-                    .entrySet()
-                    .stream()
-                    .collect(Collectors.toMap(
-                            element -> (String) element.getKey(),
-                            element -> (String) element.getValue()));
-            LOGGER.debug("Properties were received");
+            Map<String, String> propertiesMap = convertPropertiesToMap(properties);
             return propertiesMap;
         } catch (IOException e) {
-            LOGGER.error("Property file with name {} was not found", DB_FILE_PATH);
+            LOGGER.error("Property file with name {} was not found", DATABASE_PROPERTIES_FILE);
             throw new InternalServerErrorException(e);
         }
     }
+
+    private static Map<String, String> convertPropertiesToMap(Properties properties) {
+        Map<String, String> propertiesMap = properties
+                .entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        element -> (String) element.getKey(),
+                        element -> (String) element.getValue()));
+        LOGGER.debug("Properties were converted to Map");
+        return propertiesMap;
+    }
+
 
     public String getProperty(String key) {
         return properties.get(key);
