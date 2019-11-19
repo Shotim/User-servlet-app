@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import java.util.stream.*;
 
 import static com.leverx.constants.DataBaseCredentialsFields.DATABASE_PROPERTIES_FILE;
+import static java.util.stream.Collectors.toMap;
 
 public class PropertyLoader {
 
@@ -46,7 +46,7 @@ public class PropertyLoader {
         Map<String, String> propertiesMap = properties
                 .entrySet()
                 .stream()
-                .collect(Collectors.toMap(
+                .collect(toMap(
                         element -> (String) element.getKey(),
                         element -> (String) element.getValue()));
         LOGGER.debug("Properties were converted to Map");
