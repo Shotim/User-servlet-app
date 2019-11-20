@@ -37,5 +37,4 @@ public class Cat {
     @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ownerId")
     User owner;
-
 }

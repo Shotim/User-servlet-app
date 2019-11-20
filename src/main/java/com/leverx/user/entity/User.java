@@ -36,7 +36,6 @@ public class User {
     @Column
     String name;
 
-
     @OneToMany(fetch = FetchType.LAZY,
             cascade = REMOVE,
             mappedBy = "owner")
