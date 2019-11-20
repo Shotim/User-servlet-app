@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
-import static com.leverx.user.service.validator.UserValidator.isValidName;
 import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
+import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User save(UserDto userDto) {
         User user = convertUserDtoToUser(userDto);
-        var savingPossible = isValidName(userDto);
+        var savingPossible = isValid(userDto);
         if (savingPossible) {
             userRepository.save(user);
             LOGGER.debug("User with name = {} was saved", userDto.getName());
@@ -68,7 +68,7 @@ public class UserServiceImpl implements UserService {
     public User updateById(String id, UserDto userDto) {
         var userId = parseInt(id);
         User user = convertUserDtoToUser(userId, userDto);
-        var updatingPossible = isValidName(userDto);
+        var updatingPossible = isValid(userDto);
         if (updatingPossible) {
             userRepository.updateById(user);
             LOGGER.debug("User with id = {} was updated", id);
