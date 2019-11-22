@@ -11,7 +11,7 @@ public interface CatService {
 
     Cat findById(int id);
 
-    Collection<Cat> findByOwner(String ownerName);
+    Collection<Cat> findByOwner(int ownerId);
 
     Cat save(CatDto cat);
 }
