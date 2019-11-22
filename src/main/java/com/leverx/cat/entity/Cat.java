@@ -4,6 +4,8 @@ import com.leverx.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -14,13 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE)
 @Entity
 @Table(name = "cats")
@@ -31,10 +34,13 @@ public class Cat {
     @GeneratedValue(strategy = AUTO)
     int id;
 
+    @NonNull
     @Column
     String name;
 
-    @ManyToOne(fetch = LAZY)
+    @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "ownerId")
     User owner;
 }
+
+
