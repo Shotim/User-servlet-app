@@ -46,14 +46,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(UserDto userDto) {
-        User user = convertUserDtoToUser(userDto);
         var savingPossible = isValid(userDto);
         if (savingPossible) {
+            User user = convertUserDtoToUser(userDto);
             userRepository.save(user);
             LOGGER.debug("User with name = {} was saved", userDto.getName());
             return user;
         } else {
-            LOGGER.error("User with name = {} was not saved\nThe name has more than 60 symbols", userDto.getName());
+            LOGGER.error("User with name = {} was not saved", userDto.getName());
             throw new InternalServerErrorException();
         }
     }
@@ -74,7 +74,7 @@ public class UserServiceImpl implements UserService {
             LOGGER.debug("User with id = {} was updated", id);
             return user;
         } else {
-            LOGGER.error("User with id = {} was not updated\nThe name has more than 60 symbols", id);
+            LOGGER.error("User with id = {} was not updated", id);
             throw new InternalServerErrorException();
         }
     }

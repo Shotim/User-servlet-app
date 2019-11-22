@@ -24,7 +24,7 @@ public class PropertyLoader {
 
     private Properties getPropertiesFromFile(String fileName) {
         try (InputStream inputStream = DBPropertyLoader.class.getClassLoader().getResourceAsStream(fileName)) {
-            Properties properties = new Properties();
+            var properties = new Properties();
             properties.load(inputStream);
             return properties;
         } catch (IOException e) {

@@ -41,6 +41,7 @@ public class User {
     @Column
     String name;
 
+
     @OneToMany(fetch = FetchType.EAGER,
             cascade = ALL,
             mappedBy = "owner",
