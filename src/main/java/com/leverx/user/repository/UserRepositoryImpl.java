@@ -40,8 +40,8 @@ public class UserRepositoryImpl implements UserRepository {
     @Override
     public Collection<User> findByName(String name) {
         var session = sessionFactory.openSession();
-        var query = session.createQuery("from User where name=:name");
-        query.setParameter("name", name);
+        var query = session.createQuery("from User where name=:name")
+                .setParameter("name", name);
         var users = query.list();
         LOGGER.debug("Were received {} users with name = {}", users.size(), name);
         session.close();
@@ -63,8 +63,8 @@ public class UserRepositoryImpl implements UserRepository {
     public void deleteById(int id) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
-        var query = session.createQuery("delete User where id=:id");
-        query.setParameter("id", id);
+        var query = session.createQuery("delete User where id=:id")
+                .setParameter("id", id);
         query.executeUpdate();
         transaction.commit();
         session.close();
