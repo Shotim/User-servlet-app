@@ -11,8 +11,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class CatRepositoryImpl implements CatRepository {
 
-    private final SessionFactory sessionFactory = getSessionFactory();
     private static final Logger LOGGER = getLogger(CatRepositoryImpl.class);
+    private final SessionFactory sessionFactory = getSessionFactory();
 
     @SuppressWarnings("unchecked")
     @Override

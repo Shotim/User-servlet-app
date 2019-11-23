@@ -17,8 +17,8 @@ import java.util.Map;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromUserCollectionToJson;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromUserToJson;
-import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
+import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
@@ -46,7 +46,7 @@ public class UserServlet extends HttpServlet {
                 printAllUsersToResponseBody(responseWriter);
                 break;
             case GET_USER_BY_ID:
-                var userId = methodTypeWithPathVariable.get(GET_ALL_USERS);
+                var userId = methodTypeWithPathVariable.get(GET_USER_BY_ID);
                 printUserByIdToResponseBody(responseWriter, userId);
                 break;
             case GET_USER_BY_NAME:

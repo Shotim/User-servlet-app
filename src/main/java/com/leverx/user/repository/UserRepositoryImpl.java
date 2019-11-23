@@ -11,8 +11,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserRepositoryImpl implements UserRepository {
 
-    private final SessionFactory sessionFactory = getSessionFactory();
     private static final Logger LOGGER = getLogger(UserRepositoryImpl.class);
+    private final SessionFactory sessionFactory = getSessionFactory();
 
     @SuppressWarnings(value = "unchecked")
     @Override

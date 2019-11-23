@@ -30,7 +30,7 @@ public class UserJsonMapper {
 
     public static UserDto convertFromJsonToUserDto(String user) {
         try {
-            return OBJECT_MAPPER.readValue(user,UserDto.class);
+            return OBJECT_MAPPER.readValue(user, UserDto.class);
         } catch (JsonProcessingException e) {
             throw new InternalServerErrorException(e);
         }

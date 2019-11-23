@@ -17,7 +17,7 @@ public class ServiceUtils {
         return convertUserDtoToUser(DEFAULT_USER_ID, userDto);
     }
 
-    public static Cat convertCatDtoToCat(CatDto catDto){
+    public static Cat convertCatDtoToCat(CatDto catDto) {
         var name = catDto.getName();
         return new Cat(name);
     }
