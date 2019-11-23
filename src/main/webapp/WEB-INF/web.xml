@@ -23,8 +23,8 @@
 
     <servlet-mapping>
         <servlet-name>CatServlet</servlet-name>
-        <url-pattern>*/cats</url-pattern>
-        <url-pattern>*/cats/*</url-pattern>
+        <url-pattern>/cats</url-pattern>
+        <url-pattern>/cats/*</url-pattern>
     </servlet-mapping>
 
     <filter>
