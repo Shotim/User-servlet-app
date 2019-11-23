@@ -65,6 +65,7 @@ public class UserRepositoryImpl implements UserRepository {
         var transaction = session.beginTransaction();
         var query = session.createQuery("delete User where id=:id");
         query.setParameter("id", id);
+        query.executeUpdate();
         transaction.commit();
         session.close();
         LOGGER.debug("User with id = {} was deleted", id);

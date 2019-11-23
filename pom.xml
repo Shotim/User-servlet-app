@@ -22,6 +22,7 @@
         <apache.commoms.version>3.9</apache.commoms.version>
         <javax.ws.version>2.1.1</javax.ws.version>
         <hibernate.version>5.4.9.Final</hibernate.version>
+        <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
     </properties>
 
     <dependencies>
@@ -61,7 +62,6 @@
             <version>${javax.servlet.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>javax.validation</groupId>
             <artifactId>validation-api</artifactId>
@@ -85,6 +85,12 @@
             <artifactId>hibernate-core</artifactId>
             <version>${hibernate.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.hibernate.validator</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>${hibernate.validator.version}</version>
+        </dependency>
+
 
     </dependencies>
 </project>
