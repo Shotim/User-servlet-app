@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
@@ -38,6 +39,7 @@ public class Cat {
     @Column
     String name;
 
+    @Transient
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "ownerId")
     User owner;

@@ -11,14 +11,15 @@ import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 import static javax.persistence.CascadeType.ALL;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -41,8 +42,8 @@ public class User {
     @Column
     String name;
 
-
-    @OneToMany(fetch = FetchType.EAGER,
+    @Transient
+    @OneToMany(fetch = EAGER,
             cascade = ALL,
             mappedBy = "owner",
             orphanRemoval = true)
