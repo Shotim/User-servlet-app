@@ -1,6 +1,9 @@
 package com.leverx.user.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.leverx.cat.entity.Cat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,9 +18,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 import java.util.Collection;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -30,6 +33,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 @Entity
 @Table(name = "users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
 
     @NonNull
@@ -42,10 +46,12 @@ public class User {
     @Column
     String name;
 
-    @Transient
+    @JsonInclude(NON_NULL)
     @OneToMany(fetch = EAGER,
             cascade = ALL,
             mappedBy = "owner",
             orphanRemoval = true)
     Collection<Cat> cats;
 }
+
+

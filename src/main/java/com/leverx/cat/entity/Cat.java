@@ -1,5 +1,6 @@
 package com.leverx.cat.entity;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leverx.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -15,8 +16,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Transient;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.AUTO;
 import static lombok.AccessLevel.PRIVATE;
@@ -39,7 +40,7 @@ public class Cat {
     @Column
     String name;
 
-    @Transient
+    @JsonInclude(NON_NULL)
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "ownerId")
     User owner;
