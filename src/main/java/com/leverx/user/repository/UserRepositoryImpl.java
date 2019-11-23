@@ -20,8 +20,8 @@ public class UserRepositoryImpl implements UserRepository {
         var session = sessionFactory.openSession();
         var query = session.createQuery("from User");
         var users = query.list();
-        LOGGER.debug("Were received {} users", users.size());
         session.close();
+        LOGGER.debug("Were received {} users", users.size());
 
         return users;
     }
@@ -30,8 +30,8 @@ public class UserRepositoryImpl implements UserRepository {
     public User findById(int id) {
         var session = sessionFactory.openSession();
         var user = session.get(User.class, id);
-        LOGGER.debug("User with id = {} was received", id);
         session.close();
+        LOGGER.debug("User with id = {} was received", id);
 
         return user;
     }
@@ -43,8 +43,9 @@ public class UserRepositoryImpl implements UserRepository {
         var query = session.createQuery("from User where name=:name")
                 .setParameter("name", name);
         var users = query.list();
-        LOGGER.debug("Were received {} users with name = {}", users.size(), name);
         session.close();
+        LOGGER.debug("Were received {} users with name = {}", users.size(), name);
+
         return users;
     }
 
@@ -56,6 +57,7 @@ public class UserRepositoryImpl implements UserRepository {
         transaction.commit();
         session.close();
         LOGGER.debug("User was saved");
+
         return user;
     }
 
@@ -79,6 +81,7 @@ public class UserRepositoryImpl implements UserRepository {
         transaction.commit();
         session.close();
         LOGGER.debug("User with id = {} was updated", user.getId());
+
         return user;
     }
 }
