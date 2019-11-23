@@ -94,7 +94,7 @@ public class UserServlet extends HttpServlet {
 
     private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
-        var user = service.findByIdWithCats(id);
+        var user = service.findById(id);
         var jsonUser = convertFromUserToJson(user);
         writer.print(jsonUser);
     }

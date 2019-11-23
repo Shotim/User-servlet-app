@@ -9,9 +9,7 @@ public interface UserService {
 
     Collection<User> findAll();
 
-    User findByIdWithoutCats(int id);
-
-    User findByIdWithCats(int id);
+    User findById(int id);
 
     Collection<User> findByName(String name);
 
