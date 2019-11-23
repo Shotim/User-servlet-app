@@ -12,6 +12,7 @@ import java.util.Collection;
 import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
+import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UserServiceImpl implements UserService {
@@ -60,8 +61,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(String id) {
-        userRepository.deleteById(id);
-        LOGGER.debug("User with id = {} was removed", id);
+        if (isParsable(id)) {
+            int parsedId = parseInt(id);
+            userRepository.deleteById(parsedId);
+            LOGGER.debug("User with id = {} was removed", id);
+        } else {
+            LOGGER.debug("User was not updated. Check if id was correct");
+        }
     }
 
     @Override
