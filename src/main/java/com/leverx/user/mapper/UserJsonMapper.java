@@ -16,7 +16,7 @@ public class UserJsonMapper {
         return gson.toJson(user);
     }
 
-    public static Collection<String> convertFromUsersToJson(Collection<User> users) {
+    public static Collection<String> convertFromUserCollectionToJson(Collection<User> users) {
         return users.stream()
                 .map(UserJsonMapper::convertFromUserToJson)
                 .collect(toList());

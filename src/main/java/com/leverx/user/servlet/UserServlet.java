@@ -1,6 +1,5 @@
 package com.leverx.user.servlet;
 
-import com.leverx.user.mapper.UserJsonMapper;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 
@@ -12,6 +11,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
+import static com.leverx.user.mapper.UserJsonMapper.convertFromUserCollectionToJson;
+import static com.leverx.user.mapper.UserJsonMapper.convertFromUserToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
@@ -44,8 +45,8 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonDTOUser = readBody(request);
-        var userDto = convertFromJsonToUserDto(jsonDTOUser);
+        var jsonUserDto = readBody(request);
+        var userDto = convertFromJsonToUserDto(jsonUserDto);
 
         try {
             service.save(userDto);
@@ -79,7 +80,7 @@ public class UserServlet extends HttpServlet {
 
     private void printAllUsersToResponseBody(PrintWriter writer) {
         var users = service.findAll();
-        var jsonUsers = UserJsonMapper.convertFromUsersToJson(users);
+        var jsonUsers = convertFromUserCollectionToJson(users);
         jsonUsers.forEach(writer::println);
     }
 
@@ -93,14 +94,14 @@ public class UserServlet extends HttpServlet {
 
     private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
-        var user = service.findById(id);
-        var jsonUser = UserJsonMapper.convertFromUserToJson(user);
+        var user = service.findByIdWithCats(id);
+        var jsonUser = convertFromUserToJson(user);
         writer.print(jsonUser);
     }
 
     private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = service.findByName(pathVariable);
-        var jsonUsers = UserJsonMapper.convertFromUsersToJson(users);
+        var jsonUsers = convertFromUserCollectionToJson(users);
         jsonUsers.forEach(writer::println);
     }
 }

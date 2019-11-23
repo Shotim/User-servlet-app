@@ -1,5 +1,7 @@
 package com.leverx.user.service;
 
+import com.leverx.cat.repository.CatRepository;
+import com.leverx.cat.repository.CatRepositoryImpl;
 import com.leverx.user.entity.User;
 import com.leverx.user.entity.UserDto;
 import com.leverx.user.repository.UserRepository;
@@ -18,10 +20,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class UserServiceImpl implements UserService {
 
     private static Logger LOGGER = getLogger(UserServiceImpl.class);
-    private UserRepository userRepository;
+    private UserRepository userRepository = new UserRepositoryImpl();
+    private CatRepository catRepository = new CatRepositoryImpl();
 
-    public UserServiceImpl() {
-        userRepository = new UserRepositoryImpl();
+    @Override
+    public User findByIdWithCats(int id) {
+        var user = this.findByIdWithoutCats(id);
+        var cats = catRepository.findByOwner(id);
+        user.setCats(cats);
+        return user;
     }
 
     @Override
@@ -32,7 +39,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(int id) {
+    public User findByIdWithoutCats(int id) {
         User user = userRepository.findById(id);
         LOGGER.debug("Was received user with id = {}", id);
         return user;

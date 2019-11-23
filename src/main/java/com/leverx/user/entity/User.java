@@ -16,7 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
-import java.util.List;
+import java.util.Collection;
 
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -47,5 +47,5 @@ public class User {
             cascade = ALL,
             mappedBy = "owner",
             orphanRemoval = true)
-    List<Cat> cats;
+    Collection<Cat> cats;
 }

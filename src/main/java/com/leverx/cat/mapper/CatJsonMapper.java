@@ -16,13 +16,13 @@ public class CatJsonMapper {
         return gson.toJson(cat);
     }
 
-    public static Collection<String> convertFromCatsToJson(Collection<Cat> cats) {
+    public static Collection<String> convertFromCatCollectionToJson(Collection<Cat> cats) {
         return cats.stream()
                 .map(CatJsonMapper::convertFromCatToJson)
                 .collect(toList());
     }
 
-    public static CatDto convertFromJsonToCayDto(String cat) {
+    public static CatDto convertFromJsonToCatDto(String cat) {
         return gson.fromJson(cat, CatDto.class);
     }
 }
