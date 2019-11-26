@@ -35,6 +35,8 @@
         <filter-name>ServletFilter</filter-name>
         <url-pattern>/users</url-pattern>
         <url-pattern>/users/*</url-pattern>
+        <url-pattern>/cats</url-pattern>
+        <url-pattern>/cats/*</url-pattern>
     </filter-mapping>
 
     <listener>
