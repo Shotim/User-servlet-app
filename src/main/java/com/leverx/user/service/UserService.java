@@ -4,6 +4,7 @@ import com.leverx.user.entity.User;
 import com.leverx.user.entity.UserDto;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface UserService {
 
@@ -18,4 +19,6 @@ public interface UserService {
     void deleteById(String id);
 
     User updateById(String id, UserDto user);
+
+    void assignCatsToUser(int ownerId, List<Integer> catsIds);
 }
