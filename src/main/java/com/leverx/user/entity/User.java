@@ -49,8 +49,7 @@ public class User {
     @JsonInclude(NON_NULL)
     @OneToMany(fetch = EAGER,
             cascade = ALL,
-            mappedBy = "owner",
-            orphanRemoval = true)
+            mappedBy = "owner")
     Collection<Cat> cats;
 }
 
