@@ -19,6 +19,7 @@ public class ServiceUtils {
 
     public static Cat convertCatDtoToCat(CatDto catDto) {
         var name = catDto.getName();
-        return new Cat(name);
+        var dateOfBirth = catDto.getDateOfBirth();
+        return new Cat(name, dateOfBirth);
     }
 }
