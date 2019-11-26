@@ -34,8 +34,8 @@ mvn clean install
 docker-compose up
 ```
 #### * Run application on Tomcat Server:
-1) Copy war file you have just created to CATALINA_HOME/webapps, e.g.
-C:/Tomcat9/webapps
+1) Copy war file you have just created to `CATALINA_HOME/webapps`, e.g.
+`C:/Tomcat9/webapps`
 2) Start Tomcat server. On Windows run as Administrator file `startup.bat`
 3) Write the following Url: `https://localhost/YOUR_WAR_FILE_NAME/users`
 Response will contain the list of already stored users 
