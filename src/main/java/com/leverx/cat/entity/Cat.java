@@ -1,5 +1,6 @@
 package com.leverx.cat.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.leverx.user.entity.User;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.sql.Date;
 
+import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -39,6 +42,11 @@ public class Cat {
     @NonNull
     @Column
     String name;
+
+    @NonNull
+    @Column
+    @JsonFormat(shape = STRING, pattern = "YYYY-MM-dd")
+    Date dateOfBirth;
 
     @JsonInclude(NON_NULL)
     @ManyToOne(fetch = EAGER)
