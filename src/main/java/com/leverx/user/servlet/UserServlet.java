@@ -13,11 +13,13 @@ import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.leverx.jsonmapper.CollectionJsonMapper.convertFromJsonToIntegerList;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromUserCollectionToJson;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromUserToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
+import static com.leverx.utils.ServletUtils.initUserServletPutMethodType;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
@@ -78,16 +80,31 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var id = getPathVariableFromRequest(request);
-        var jsonUser = readBody(request);
-        var userDto = convertFromJsonToUserDto(jsonUser);
 
-        try {
-            userService.updateById(id, userDto);
-            response.setStatus(SC_OK);
-        } catch (InternalServerErrorException ex) {
-            response.setStatus(SC_BAD_REQUEST);
+        var methodTypeWithPathVariable = initUserServletPutMethodType(request);
+        var methodType = methodTypeWithPathVariable.getLeft();
+        var pathVariable = methodTypeWithPathVariable.getRight();
+        switch (methodType) {
+            case EDIT_USER: {
+                var jsonUser = readBody(request);
+                var userDto = convertFromJsonToUserDto(jsonUser);
+
+                try {
+                    userService.updateById(pathVariable, userDto);
+                    response.setStatus(SC_OK);
+                } catch (InternalServerErrorException ex) {
+                    response.setStatus(SC_BAD_REQUEST);
+                }
+            }
+            break;
+            case ASSIGN_CATS_TO_USER: {
+                var jsonIdList = readBody(request);
+                var catsIds = convertFromJsonToIntegerList(jsonIdList);
+                var ownerId = parseInt(pathVariable);
+                userService.assignCatsToUser(ownerId, catsIds);
+            }
         }
+
 
     }
 
