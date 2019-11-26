@@ -30,7 +30,7 @@ public class CatRepositoryImpl implements CatRepository {
     @Override
     public Collection<Cat> findByOwner(int ownerId) {
         var session = sessionFactory.openSession();
-        var query = session.createQuery("from Cat where owner=:ownerId")
+        var query = session.createQuery("from Cat where owner.id=:ownerId")
                 .setParameter("ownerId", ownerId);
         var cats = query.list();
         session.close();

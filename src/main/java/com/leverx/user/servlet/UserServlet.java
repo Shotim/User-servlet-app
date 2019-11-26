@@ -12,14 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Map;
 
 import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromUserCollectionToJson;
 import static com.leverx.user.mapper.UserJsonMapper.convertFromUserToJson;
-import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
-import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
-import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.readBody;
@@ -40,22 +36,20 @@ public class UserServlet extends HttpServlet {
 
         var responseWriter = response.getWriter();
         var methodTypeWithPathVariable = initUserServletGetMethodType(request);
-        var methodType = methodTypeWithPathVariable.entrySet().stream().findFirst().map(Map.Entry::getKey).get();
+        var methodType = methodTypeWithPathVariable.getLeft();
+        var requiredVariable = methodTypeWithPathVariable.getRight();
         switch (methodType) {
             case GET_ALL_USERS:
                 printAllUsersToResponseBody(responseWriter);
                 break;
             case GET_USER_BY_ID:
-                var userId = methodTypeWithPathVariable.get(GET_USER_BY_ID);
-                printUserByIdToResponseBody(responseWriter, userId);
+                printUserByIdToResponseBody(responseWriter, requiredVariable);
                 break;
             case GET_USER_BY_NAME:
-                var userName = methodTypeWithPathVariable.get(GET_USER_BY_NAME);
-                printUsersByNameToResponseBody(responseWriter, userName);
+                printUsersByNameToResponseBody(responseWriter, requiredVariable);
                 break;
             case GET_CATS_OF_USER:
-                var ownerId = methodTypeWithPathVariable.get(GET_CATS_OF_USER);
-                printCatsOfUser(responseWriter, ownerId);
+                printCatsOfUser(responseWriter, requiredVariable);
                 break;
         }
         responseWriter.flush();

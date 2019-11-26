@@ -1,11 +1,10 @@
 package com.leverx.utils;
 
 import com.leverx.user.servlet.GetMethodTypes;
+import com.leverx.user.servlet.Pair;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
@@ -34,25 +33,25 @@ public class ServletUtils {
         return splittedBySlashURL[lastElementIndex];
     }
 
-    public static Map<GetMethodTypes, String> initUserServletGetMethodType(HttpServletRequest request) {
-        Map<GetMethodTypes, String> map = new HashMap<>();
+    public static Pair<GetMethodTypes, String> initUserServletGetMethodType(HttpServletRequest request) {
+        Pair<GetMethodTypes, String> pair = new Pair<>();
         var requestUrl = request.getRequestURL();
         var splittedUrl = requestUrl.toString().split(SEPARATOR);
         int lastElementIndex = splittedUrl.length - 1;
         var lastElement = splittedUrl[lastElementIndex];
         if (isParsable(lastElement)) {
-            map.put(GET_USER_BY_ID, lastElement);
-            return map;
+            pair.setValues(GET_USER_BY_ID, lastElement);
+            return pair;
         } else if (USERS.equals(lastElement)) {
-            map.put(GET_ALL_USERS, lastElement);
-            return map;
+            pair.setValues(GET_ALL_USERS, lastElement);
+            return pair;
         } else if (CATS.equals(lastElement)) {
             var userId = splittedUrl[lastElementIndex - 1];
-            map.put(GET_CATS_OF_USER, userId);
-            return map;
+            pair.setValues(GET_CATS_OF_USER, userId);
+            return pair;
         } else {
-            map.put(GET_USER_BY_NAME, lastElement);
-            return map;
+            pair.setValues(GET_USER_BY_NAME, lastElement);
+            return pair;
         }
     }
 }
