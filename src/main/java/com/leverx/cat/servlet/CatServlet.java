@@ -1,5 +1,6 @@
 package com.leverx.cat.servlet;
 
+import com.leverx.cat.entity.CatDto;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
 import com.leverx.utils.ServletUtils;
@@ -11,9 +12,9 @@ import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.cat.mapper.CatJsonMapper.convertFromCatCollectionToJson;
-import static com.leverx.cat.mapper.CatJsonMapper.convertFromCatToJson;
-import static com.leverx.cat.mapper.CatJsonMapper.convertFromJsonToCatDto;
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
@@ -41,7 +42,7 @@ public class CatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonCatDto = ServletUtils.readBody(request);
-        var catDto = convertFromJsonToCatDto(jsonCatDto);
+        var catDto = convertFromJsonToEntity(jsonCatDto, CatDto.class);
 
         try {
             catService.save(catDto);
@@ -54,13 +55,13 @@ public class CatServlet extends HttpServlet {
     private void printCatByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
         var cat = catService.findById(id);
-        var catJson = convertFromCatToJson(cat);
+        var catJson = convertFromEntityToJson(cat);
         writer.print(catJson);
     }
 
     private void printAllCatsToResponseBody(PrintWriter writer) {
         var cats = catService.findAll();
-        var catsJson = convertFromCatCollectionToJson(cats);
+        var catsJson = convertFromEntityCollectionToJson(cats);
         catsJson.forEach(writer::println);
     }
 }

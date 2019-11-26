@@ -1,8 +1,9 @@
 package com.leverx.user.servlet;
 
-import com.leverx.cat.mapper.CatJsonMapper;
+import com.leverx.additionalentities.CatsIdsList;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
+import com.leverx.user.entity.UserDto;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 
@@ -13,10 +14,9 @@ import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.jsonmapper.CollectionJsonMapper.convertFromJsonToIntegerList;
-import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
-import static com.leverx.user.mapper.UserJsonMapper.convertFromUserCollectionToJson;
-import static com.leverx.user.mapper.UserJsonMapper.convertFromUserToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.initUserServletPutMethodType;
@@ -61,7 +61,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonUserDto = readBody(request);
-        var userDto = convertFromJsonToUserDto(jsonUserDto);
+        var userDto = convertFromJsonToEntity(jsonUserDto, UserDto.class);
 
         try {
             userService.save(userDto);
@@ -87,7 +87,7 @@ public class UserServlet extends HttpServlet {
         switch (methodType) {
             case EDIT_USER: {
                 var jsonUser = readBody(request);
-                var userDto = convertFromJsonToUserDto(jsonUser);
+                var userDto = convertFromJsonToEntity(jsonUser, UserDto.class);
 
                 try {
                     userService.updateById(pathVariable, userDto);
@@ -99,9 +99,10 @@ public class UserServlet extends HttpServlet {
             break;
             case ASSIGN_CATS_TO_USER: {
                 var jsonIdList = readBody(request);
-                var catsIds = convertFromJsonToIntegerList(jsonIdList);
+                var catsIds = convertFromJsonToEntity(jsonIdList, CatsIdsList.class);
+                var catsIdsList = catsIds.getIds();
                 var ownerId = parseInt(pathVariable);
-                userService.assignCatsToUser(ownerId, catsIds);
+                userService.assignCatsToUser(ownerId, catsIdsList);
             }
         }
 
@@ -110,27 +111,27 @@ public class UserServlet extends HttpServlet {
 
     private void printAllUsersToResponseBody(PrintWriter writer) {
         var users = userService.findAll();
-        var jsonUsers = convertFromUserCollectionToJson(users);
+        var jsonUsers = convertFromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
     }
 
     private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
         var user = userService.findById(id);
-        var jsonUser = convertFromUserToJson(user);
+        var jsonUser = convertFromEntityToJson(user);
         writer.print(jsonUser);
     }
 
     private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = userService.findByName(pathVariable);
-        var jsonUsers = convertFromUserCollectionToJson(users);
+        var jsonUsers = convertFromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
     }
 
     private void printCatsOfUser(PrintWriter writer, String ownerId) {
         var id = parseInt(ownerId);
         var cats = catService.findByOwner(id);
-        var jsonCats = CatJsonMapper.convertFromCatCollectionToJson(cats);
+        var jsonCats = convertFromEntityCollectionToJson(cats);
         jsonCats.forEach(writer::println);
     }
 }
