@@ -20,6 +20,7 @@ public class ServletUtils {
 
     private static final String SEPARATOR = "/";
     private static final int ONE = 1;
+    private static final int TWO = 2;
     private static final String USERS_ORIGIN = "users";
     private static final String CATS_ORIGIN = "cats";
 
@@ -30,40 +31,42 @@ public class ServletUtils {
     }
 
     public static String getPathVariableFromRequest(HttpServletRequest request) {
-        String[] splittedBySlashURL = getSplittedUrl(request);
-        var lastElementIndex = splittedBySlashURL.length - ONE;
-        return splittedBySlashURL[lastElementIndex];
+        var splittedBySlashURL = getSplittedUrl(request);
+        return getLastStringElement(splittedBySlashURL);
     }
 
     public static Pair<GetMethodTypes, String> initUserServletGetMethodType(HttpServletRequest request) {
         Pair<GetMethodTypes, String> pair = new Pair<>();
-        String[] splittedUrl = getSplittedUrl(request);
-        var lastElementIndex = splittedUrl.length - ONE;
-        var lastElement = splittedUrl[lastElementIndex];
+        var splittedUrl = getSplittedUrl(request);
+        var lastElement = getLastStringElement(splittedUrl);
+
         if (isParsable(lastElement)) {
             pair.setValues(GET_USER_BY_ID, lastElement);
 
-        } else if (USERS_ORIGIN.equals(lastElement)) {
-            pair.setValues(GET_ALL_USERS, lastElement);
-
-        } else if (CATS_ORIGIN.equals(lastElement)) {
-            var userId = splittedUrl[lastElementIndex - ONE];
-            pair.setValues(GET_CATS_OF_USER, userId);
-
         } else {
-            pair.setValues(GET_USER_BY_NAME, lastElement);
+            switch (lastElement) {
+                case USERS_ORIGIN:
+                    pair.setValues(GET_ALL_USERS, lastElement);
+                    break;
+                case CATS_ORIGIN:
+                    var userId = getPreLastStringElement(splittedUrl);
+                    pair.setValues(GET_CATS_OF_USER, userId);
+                    break;
+                default:
+                    pair.setValues(GET_USER_BY_NAME, lastElement);
+                    break;
+            }
         }
         return pair;
     }
 
     public static Pair<PutMethodTypes, String> initUserServletPutMethodType(HttpServletRequest request) {
         Pair<PutMethodTypes, String> pair = new Pair<>();
-        String[] splittedUrl = getSplittedUrl(request);
-        var lastElementIndex = splittedUrl.length - ONE;
-        var lastElement = splittedUrl[lastElementIndex];
+        var splittedUrl = getSplittedUrl(request);
+        var lastElement = getLastStringElement(splittedUrl);
 
         if (CATS_ORIGIN.equals(lastElement)) {
-            var ownerId = splittedUrl[lastElementIndex - ONE];
+            var ownerId = getPreLastStringElement(splittedUrl);
             pair.setValues(ASSIGN_CATS_TO_USER, ownerId);
         } else {
             pair.setValues(EDIT_USER, lastElement);
@@ -73,6 +76,17 @@ public class ServletUtils {
 
     private static String[] getSplittedUrl(HttpServletRequest request) {
         var requestUrl = request.getRequestURL();
-        return requestUrl.toString().split(SEPARATOR);
+        String stringUrl = requestUrl.toString();
+        return stringUrl.split(SEPARATOR);
+    }
+
+    private static String getLastStringElement(String[] splittedUrl) {
+        var lastElementIndex = splittedUrl.length - ONE;
+        return splittedUrl[lastElementIndex];
+    }
+
+    private static String getPreLastStringElement(String[] splittedUrl) {
+        var requiredElementIndex = splittedUrl.length - TWO;
+        return splittedUrl[requiredElementIndex];
     }
 }
