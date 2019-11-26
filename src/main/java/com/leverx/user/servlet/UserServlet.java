@@ -111,7 +111,7 @@ public class UserServlet extends HttpServlet {
     }
 
     private void printCatsOfUser(PrintWriter writer, String ownerId) {
-        var id = Integer.parseInt(ownerId);
+        var id = parseInt(ownerId);
         var cats = catService.findByOwner(id);
         var jsonCats = CatJsonMapper.convertFromCatCollectionToJson(cats);
         jsonCats.forEach(writer::println);

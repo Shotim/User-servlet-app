@@ -37,7 +37,7 @@ public class ServletUtils {
         Pair<GetMethodTypes, String> pair = new Pair<>();
         var requestUrl = request.getRequestURL();
         var splittedUrl = requestUrl.toString().split(SEPARATOR);
-        int lastElementIndex = splittedUrl.length - 1;
+        var lastElementIndex = splittedUrl.length - 1;
         var lastElement = splittedUrl[lastElementIndex];
         if (isParsable(lastElement)) {
             pair.setValues(GET_USER_BY_ID, lastElement);
