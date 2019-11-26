@@ -25,6 +25,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public Collection<Cat> findAll() {
         Collection<Cat> cats = catRepository.findAll();
+        cats.forEach(cat -> cat.setOwner(null));
         LOGGER.debug("Were received {} cats", cats.size());
         return cats;
     }
@@ -32,6 +33,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public Cat findById(int id) {
         Cat cat = catRepository.findById(id);
+        cat.getOwner().setCats(null);
         LOGGER.debug("Was received cat with id = {}", id);
         return cat;
     }
@@ -39,6 +41,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public Collection<Cat> findByOwner(int ownerId) {
         Collection<Cat> cats = catRepository.findByOwner(ownerId);
+        cats.forEach(cat -> cat.setOwner(null));
         LOGGER.debug("Were received {} cats", cats.size());
         return cats;
     }

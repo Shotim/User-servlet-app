@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<User> findAll() {
         Collection<User> users = userRepository.findAll();
+        users.forEach(user -> user.setCats(null));
         LOGGER.debug("Were received {} users", users.size());
         return users;
     }
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<User> findByName(String name) {
         Collection<User> users = userRepository.findByName(name);
+        users.forEach(user -> user.setCats(null));
         LOGGER.debug("Were received {} users", users.size());
         return users;
     }
