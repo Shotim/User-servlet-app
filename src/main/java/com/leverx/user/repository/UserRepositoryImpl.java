@@ -74,7 +74,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User updateById(User user) {
+    public User update(User user) {
         var session = sessionFactory.openSession();
         var transaction = session.beginTransaction();
         session.update(user);
