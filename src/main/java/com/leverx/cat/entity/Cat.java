@@ -21,7 +21,7 @@ import java.sql.Date;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -49,7 +49,7 @@ public class Cat {
     Date dateOfBirth;
 
     @JsonInclude(NON_NULL)
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = LAZY)
     @JoinColumn(name = "ownerId")
     User owner;
 }

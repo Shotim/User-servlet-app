@@ -22,7 +22,7 @@ import java.util.Collection;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.EAGER;
+import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -47,7 +47,7 @@ public class User {
     String name;
 
     @JsonInclude(NON_NULL)
-    @OneToMany(fetch = EAGER,
+    @OneToMany(fetch = LAZY,
             cascade = ALL,
             mappedBy = "owner")
     Collection<Cat> cats;
