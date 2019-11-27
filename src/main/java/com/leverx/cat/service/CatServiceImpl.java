@@ -5,22 +5,18 @@ import com.leverx.cat.entity.CatDto;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static com.leverx.utils.ServiceUtils.convertCatDtoToCat;
 import static com.leverx.validator.EntityValidator.isValid;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class CatServiceImpl implements CatService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(CatServiceImpl.class);
-    private CatRepository catRepository;
-
-    public CatServiceImpl() {
-        catRepository = new CatRepositoryImpl();
-    }
+    private static final Logger LOGGER = getLogger(CatServiceImpl.class);
+    private CatRepository catRepository = new CatRepositoryImpl();
 
     @Override
     public Collection<Cat> findAll() {

@@ -10,16 +10,24 @@ import org.hibernate.service.ServiceRegistry;
 import java.util.Properties;
 
 public class HibernateConfig {
-    public static SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration();
-        configuration.addAnnotatedClass(Cat.class);
-        configuration.addAnnotatedClass(User.class);
 
-        Properties properties = configuration.getProperties();
-        ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                .applySettings(properties)
-                .build();
+    private static SessionFactory sessionFactory;
 
-        return configuration.buildSessionFactory(serviceRegistry);
+    public static synchronized SessionFactory getSessionFactory() {
+
+        if (sessionFactory == null) {
+            Configuration configuration = new Configuration();
+            configuration.addAnnotatedClass(Cat.class);
+            configuration.addAnnotatedClass(User.class);
+
+            Properties properties = configuration.getProperties();
+            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
+                    .applySettings(properties)
+                    .build();
+
+            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        }
+
+        return sessionFactory;
     }
 }

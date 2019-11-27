@@ -12,8 +12,6 @@ public class EntityJsonMapper {
 
     private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-
-
     public static <T> String convertFromEntityToJson(T t) {
         try {
             return OBJECT_MAPPER.writeValueAsString(t);
