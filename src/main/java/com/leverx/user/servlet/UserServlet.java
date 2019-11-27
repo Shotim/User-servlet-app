@@ -100,8 +100,6 @@ public class UserServlet extends HttpServlet {
                 userService.assignCatsToUser(ownerId, catsIdsList);
             }
         }
-
-
     }
 
     private void printAllUsersToResponseBody(PrintWriter writer) {
