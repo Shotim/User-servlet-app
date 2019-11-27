@@ -6,7 +6,6 @@ import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import org.slf4j.Logger;
 
-import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static com.leverx.utils.ServiceUtils.convertCatDtoToCat;
@@ -48,7 +47,7 @@ public class CatServiceImpl implements CatService {
             return cat;
         } else {
             LOGGER.error("Cat with name = {} was not saved", catDto.getName());
-            throw new InternalServerErrorException();
+            return null;
         }
     }
 }

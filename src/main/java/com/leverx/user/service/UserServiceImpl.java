@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
             return user;
         } else {
             LOGGER.error("User with name = {} was not saved", userDto.getName());
-            throw new InternalServerErrorException();
+            return null;
         }
     }
 
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
             return user;
         } else {
             LOGGER.error("User with id = {} was not updated", id);
-            throw new InternalServerErrorException();
+            return null;
         }
     }
 
