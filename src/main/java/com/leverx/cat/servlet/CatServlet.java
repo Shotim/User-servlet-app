@@ -3,12 +3,10 @@ package com.leverx.cat.servlet;
 import com.leverx.cat.entity.CatDto;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
-import com.leverx.utils.ServletUtils;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -16,6 +14,7 @@ import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJs
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
+import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -41,13 +40,11 @@ public class CatServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonCatDto = ServletUtils.readBody(request);
+        var jsonCatDto = readBody(request);
         var catDto = convertFromJsonToEntity(jsonCatDto, CatDto.class);
-
-        try {
-            catService.save(catDto);
-            response.setStatus(SC_CREATED);
-        } catch (InternalServerErrorException e) {
+        var savedCat = catService.save(catDto);
+        response.setStatus(SC_CREATED);
+        if (savedCat == null) {
             response.setStatus(SC_BAD_REQUEST);
         }
     }

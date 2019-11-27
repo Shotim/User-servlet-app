@@ -10,7 +10,6 @@ import com.leverx.user.service.UserServiceImpl;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.InternalServerErrorException;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -62,11 +61,9 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonUserDto = readBody(request);
         var userDto = convertFromJsonToEntity(jsonUserDto, UserDto.class);
-
-        try {
-            userService.save(userDto);
-            response.setStatus(SC_CREATED);
-        } catch (InternalServerErrorException ex) {
+        var savedUser = userService.save(userDto);
+        response.setStatus(SC_CREATED);
+        if (savedUser == null) {
             response.setStatus(SC_BAD_REQUEST);
         }
     }
@@ -88,11 +85,9 @@ public class UserServlet extends HttpServlet {
             case EDIT_USER: {
                 var jsonUser = readBody(request);
                 var userDto = convertFromJsonToEntity(jsonUser, UserDto.class);
-
-                try {
-                    userService.updateById(pathVariable, userDto);
-                    response.setStatus(SC_OK);
-                } catch (InternalServerErrorException ex) {
+                var updatedUser = userService.updateById(pathVariable, userDto);
+                response.setStatus(SC_OK);
+                if (updatedUser == null) {
                     response.setStatus(SC_BAD_REQUEST);
                 }
             }
