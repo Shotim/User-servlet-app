@@ -1,4 +1,4 @@
-package com.leverx.additionalentities;
+package com.leverx.cat.entity;
 
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
