@@ -2,7 +2,6 @@ package com.leverx.user.entity;
 
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.leverx.cat.entity.Cat;
 import lombok.AllArgsConstructor;
@@ -20,9 +19,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collection;
 
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -46,8 +44,7 @@ public class User {
     @Column
     String name;
 
-    @JsonInclude(NON_NULL)
-    @OneToMany(fetch = LAZY,
+    @OneToMany(fetch = EAGER,
             cascade = ALL,
             mappedBy = "owner")
     Collection<Cat> cats;
