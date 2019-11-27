@@ -47,7 +47,7 @@ public class CatServiceImpl implements CatService {
             return cat;
         } else {
             LOGGER.error("Cat with name = {} was not saved", catDto.getName());
-            return null;
+            throw new IllegalArgumentException();
         }
     }
 }

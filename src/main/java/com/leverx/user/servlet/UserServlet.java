@@ -61,9 +61,10 @@ public class UserServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonUserDto = readBody(request);
         var userDto = convertFromJsonToEntity(jsonUserDto, UserDto.class);
-        var savedUser = userService.save(userDto);
-        response.setStatus(SC_CREATED);
-        if (savedUser == null) {
+        try {
+            userService.save(userDto);
+            response.setStatus(SC_CREATED);
+        } catch (IllegalArgumentException e) {
             response.setStatus(SC_BAD_REQUEST);
         }
     }
@@ -85,9 +86,10 @@ public class UserServlet extends HttpServlet {
             case EDIT_USER: {
                 var jsonUser = readBody(request);
                 var userDto = convertFromJsonToEntity(jsonUser, UserDto.class);
-                var updatedUser = userService.updateById(pathVariable, userDto);
-                response.setStatus(SC_OK);
-                if (updatedUser == null) {
+                try {
+                    userService.updateById(pathVariable, userDto);
+                    response.setStatus(SC_OK);
+                } catch (IllegalArgumentException e) {
                     response.setStatus(SC_BAD_REQUEST);
                 }
             }

@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
             return user;
         } else {
             LOGGER.error("User with name = {} was not saved", userDto.getName());
-            return null;
+            throw new IllegalArgumentException();
         }
     }
 
@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
             return user;
         } else {
             LOGGER.error("User with id = {} was not updated", id);
-            return null;
+            throw new IllegalArgumentException();
         }
     }
 
