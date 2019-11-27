@@ -44,8 +44,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public Cat save(CatDto catDto) {
-        var savingPossible = isValid(catDto);
-        if (savingPossible) {
+        if (isValid(catDto)) {
             Cat cat = convertCatDtoToCat(catDto);
             catRepository.save(cat);
             LOGGER.debug("Cat with name = {} was saved", catDto.getName());

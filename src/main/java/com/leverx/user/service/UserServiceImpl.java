@@ -51,8 +51,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User save(UserDto userDto) {
-        var savingPossible = isValid(userDto);
-        if (savingPossible) {
+        if (isValid(userDto)) {
             User user = convertUserDtoToUser(userDto);
             userRepository.save(user);
             LOGGER.debug("User with name = {} was saved", userDto.getName());
@@ -78,8 +77,7 @@ public class UserServiceImpl implements UserService {
     public User updateById(String id, UserDto userDto) {
         var userId = parseInt(id);
         User user = convertUserDtoToUser(userId, userDto);
-        var updatingPossible = isValid(userDto);
-        if (updatingPossible) {
+        if (isValid(userDto)) {
             userRepository.update(user);
             LOGGER.debug("User with id = {} was updated", id);
             return user;
