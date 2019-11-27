@@ -1,9 +1,11 @@
 package com.leverx.cat.repository;
 
 import com.leverx.cat.entity.Cat;
+import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 
+import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static com.leverx.config.HibernateConfig.getSessionFactory;
@@ -17,47 +19,64 @@ public class CatRepositoryImpl implements CatRepository {
     @SuppressWarnings("unchecked")
     @Override
     public Collection<Cat> findAll() {
-        var session = sessionFactory.openSession();
-        var query = session.createQuery("from Cat");
-        var cats = query.list();
-        session.close();
-        LOGGER.debug("Were received {} cats", cats.size());
+        try (var session = sessionFactory.openSession()) {
 
-        return cats;
+            var query = session.createQuery("from Cat");
+            var cats = query.list();
+            LOGGER.debug("Were received {} cats", cats.size());
+            return cats;
+
+        } catch (HibernateException e) {
+            LOGGER.error(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public Collection<Cat> findByOwner(int ownerId) {
-        var session = sessionFactory.openSession();
-        var query = session.createQuery("from Cat where owner.id=:ownerId")
-                .setParameter("ownerId", ownerId);
-        var cats = query.list();
-        session.close();
-        LOGGER.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
+        try (var session = sessionFactory.openSession()) {
 
-        return cats;
+            var query = session.createQuery("from Cat where owner.id=:ownerId")
+                    .setParameter("ownerId", ownerId);
+            var cats = query.list();
+            LOGGER.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
+            return cats;
+
+        } catch (HibernateException e) {
+            LOGGER.error(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 
     @Override
     public Cat findById(int id) {
-        var session = sessionFactory.openSession();
-        var cat = session.get(Cat.class, id);
-        session.close();
-        LOGGER.debug("Was received cat with id = {}", id);
+        try (var session = sessionFactory.openSession()) {
 
-        return cat;
+            var cat = session.get(Cat.class, id);
+            LOGGER.debug("Was received cat with id = {}", id);
+            return cat;
+
+        } catch (HibernateException e) {
+            LOGGER.error(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
+
     }
 
     @Override
     public Cat save(Cat cat) {
-        var session = sessionFactory.openSession();
-        var transaction = session.beginTransaction();
-        session.save(cat);
-        transaction.commit();
-        session.close();
-        LOGGER.debug("Cat was saved");
+        try (var session = sessionFactory.openSession()) {
 
-        return cat;
+            var transaction = session.beginTransaction();
+            session.save(cat);
+            transaction.commit();
+            LOGGER.debug("Cat was saved");
+            return cat;
+
+        } catch (HibernateException e) {
+            LOGGER.error(e.getMessage());
+            throw new InternalServerErrorException(e);
+        }
     }
 }
