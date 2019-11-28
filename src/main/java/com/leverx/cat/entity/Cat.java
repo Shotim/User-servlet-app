@@ -3,10 +3,12 @@ package com.leverx.cat.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leverx.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -16,14 +18,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.sql.Date;
+import java.time.LocalDateTime;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
-@Data
+//@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
@@ -44,7 +49,7 @@ public class Cat {
     @NonNull
     @Column
     @JsonFormat(shape = STRING, pattern = "YYYY-MM-dd")
-    Date dateOfBirth;
+    LocalDateTime dateOfBirth;
 
     @ManyToOne(fetch = EAGER)
     @JoinColumn(name = "ownerId")
