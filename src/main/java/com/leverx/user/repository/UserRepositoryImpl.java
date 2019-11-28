@@ -1,18 +1,17 @@
 package com.leverx.user.repository;
 
 import com.leverx.user.entity.User;
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManagerFactory;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
-import static org.slf4j.LoggerFactory.getLogger;
 
+@Slf4j
 public class UserRepositoryImpl implements UserRepository {
-
-    private static final Logger LOGGER = getLogger(UserRepositoryImpl.class);
+    
     private final EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
 
     @SuppressWarnings(value = "unchecked")
@@ -24,10 +23,10 @@ public class UserRepositoryImpl implements UserRepository {
             var query = entityManager.createQuery("from User");
             var users = query.getResultList();
             entityManager.getTransaction().commit();
-            LOGGER.debug("Were received {} users", users.size());
+            log.debug("Were received {} users", users.size());
             return users;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -41,10 +40,10 @@ public class UserRepositoryImpl implements UserRepository {
             entityManager.getTransaction().begin();
             var user = entityManager.find(User.class, id);
             entityManager.getTransaction().commit();
-            LOGGER.debug("User with id = {} was received", id);
+            log.debug("User with id = {} was received", id);
             return user;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -61,10 +60,10 @@ public class UserRepositoryImpl implements UserRepository {
                     .setParameter("name", name);
             var users = query.getResultList();
             entityManager.getTransaction().commit();
-            LOGGER.debug("Were received {} users with name = {}", users.size(), name);
+            log.debug("Were received {} users with name = {}", users.size(), name);
             return users;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -78,10 +77,10 @@ public class UserRepositoryImpl implements UserRepository {
             entityManager.getTransaction().begin();
             entityManager.persist(user);
             entityManager.getTransaction().commit();
-            LOGGER.debug("User was saved");
+            log.debug("User was saved");
             return user;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -97,9 +96,9 @@ public class UserRepositoryImpl implements UserRepository {
                     .setParameter("id", id);
             query.executeUpdate();
             entityManager.getTransaction().commit();
-            LOGGER.debug("User with id = {} was deleted", id);
+            log.debug("User with id = {} was deleted", id);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -113,10 +112,10 @@ public class UserRepositoryImpl implements UserRepository {
             entityManager.getTransaction().begin();
             entityManager.merge(user);
             entityManager.getTransaction().commit();
-            LOGGER.debug("User with id = {} was updated", user.getId());
+            log.debug("User with id = {} was updated", user.getId());
             return user;
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            log.error(e.getMessage());
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();

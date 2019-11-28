@@ -1,16 +1,15 @@
 package com.leverx.validator;
 
-import org.slf4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Validator;
 
 import static javax.validation.Validation.buildDefaultValidatorFactory;
-import static org.slf4j.LoggerFactory.getLogger;
 
+@Slf4j
 public class EntityValidator {
 
     public static final String NOT_VALID_NAME = "Name should be between 5 and 60 symbols";
-    private static final Logger LOGGER = getLogger(EntityValidator.class);
     private static Validator validator = buildDefaultValidatorFactory().getValidator();
 
     public static <T> boolean isValid(T entity) {
@@ -21,7 +20,7 @@ public class EntityValidator {
             return true;
         }
         violations
-                .forEach(violation -> LOGGER.error(violation.getMessage()));
+                .forEach(violation -> log.error(violation.getMessage()));
         return false;
     }
 }
