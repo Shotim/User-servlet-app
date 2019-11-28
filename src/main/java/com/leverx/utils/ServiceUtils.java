@@ -1,7 +1,7 @@
 package com.leverx.utils;
 
 import com.leverx.cat.entity.Cat;
-import com.leverx.cat.entity.CatDto;
+import com.leverx.cat.entity.CatInputDto;
 import com.leverx.user.entity.User;
 import com.leverx.user.entity.UserDto;
 
@@ -17,9 +17,9 @@ public class ServiceUtils {
         return convertUserDtoToUser(DEFAULT_USER_ID, userDto);
     }
 
-    public static Cat convertCatDtoToCat(CatDto catDto) {
-        var name = catDto.getName();
-        var dateOfBirth = catDto.getDateOfBirth();
+    public static Cat convertCatDtoToCat(CatInputDto catInputDto) {
+        var name = catInputDto.getName();
+        var dateOfBirth = catInputDto.getDateOfBirth();
         return new Cat(name, dateOfBirth);
     }
 }

@@ -1,6 +1,6 @@
 package com.leverx.cat.servlet;
 
-import com.leverx.cat.entity.CatDto;
+import com.leverx.cat.entity.CatInputDto;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
 
@@ -41,7 +41,7 @@ public class CatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonCatDto = readBody(request);
-        var catDto = convertFromJsonToEntity(jsonCatDto, CatDto.class);
+        var catDto = convertFromJsonToEntity(jsonCatDto, CatInputDto.class);
         try {
             catService.save(catDto);
             response.setStatus(SC_CREATED);

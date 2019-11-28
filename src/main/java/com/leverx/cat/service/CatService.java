@@ -1,7 +1,7 @@
 package com.leverx.cat.service;
 
 import com.leverx.cat.entity.Cat;
-import com.leverx.cat.entity.CatDto;
+import com.leverx.cat.entity.CatInputDto;
 
 import java.util.Collection;
 
@@ -13,5 +13,5 @@ public interface CatService {
 
     Collection<Cat> findByOwner(int ownerId);
 
-    Cat save(CatDto cat);
+    Cat save(CatInputDto cat);
 }

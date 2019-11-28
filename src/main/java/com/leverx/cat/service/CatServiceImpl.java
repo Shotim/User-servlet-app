@@ -1,7 +1,7 @@
 package com.leverx.cat.service;
 
 import com.leverx.cat.entity.Cat;
-import com.leverx.cat.entity.CatDto;
+import com.leverx.cat.entity.CatInputDto;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import org.slf4j.Logger;
@@ -39,14 +39,14 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public Cat save(CatDto catDto) {
-        if (isValid(catDto)) {
-            Cat cat = convertCatDtoToCat(catDto);
+    public Cat save(CatInputDto catInputDto) {
+        if (isValid(catInputDto)) {
+            Cat cat = convertCatDtoToCat(catInputDto);
             catRepository.save(cat);
-            LOGGER.debug("Cat with name = {} was saved", catDto.getName());
+            LOGGER.debug("Cat with name = {} was saved", catInputDto.getName());
             return cat;
         } else {
-            LOGGER.error("Cat with name = {} was not saved", catDto.getName());
+            LOGGER.error("Cat with name = {} was not saved", catInputDto.getName());
             throw new IllegalArgumentException();
         }
     }
