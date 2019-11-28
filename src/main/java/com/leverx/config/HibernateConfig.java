@@ -1,33 +1,18 @@
 package com.leverx.config;
 
-import com.leverx.cat.entity.Cat;
-import com.leverx.user.entity.User;
-import org.hibernate.SessionFactory;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
-import org.hibernate.service.ServiceRegistry;
-
-import java.util.Properties;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 public class HibernateConfig {
 
-    private static SessionFactory sessionFactory;
+    private static EntityManagerFactory entityManagerFactory;
 
-    public static synchronized SessionFactory getSessionFactory() {
+    public static synchronized EntityManagerFactory getEntityManagerFactory() {
 
-        if (sessionFactory == null) {
-            Configuration configuration = new Configuration();
-            configuration.addAnnotatedClass(Cat.class);
-            configuration.addAnnotatedClass(User.class);
-
-            Properties properties = configuration.getProperties();
-            ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder()
-                    .applySettings(properties)
-                    .build();
-
-            sessionFactory = configuration.buildSessionFactory(serviceRegistry);
+        if (entityManagerFactory == null) {
+            entityManagerFactory = Persistence.createEntityManagerFactory("Application");
         }
 
-        return sessionFactory;
+        return entityManagerFactory;
     }
 }
