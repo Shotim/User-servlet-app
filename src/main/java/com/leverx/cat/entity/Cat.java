@@ -3,12 +3,10 @@ package com.leverx.cat.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.leverx.user.entity.User;
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -25,10 +23,7 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
-//@Data
-@Getter
-@Setter
-@EqualsAndHashCode
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
