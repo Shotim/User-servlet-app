@@ -11,7 +11,7 @@ import javax.servlet.ServletRequestListener;
 
 @Slf4j
 public class ServletListener implements ServletRequestListener, ServletContextListener {
-    
+
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
         ServletRequest request = sre.getServletRequest();
