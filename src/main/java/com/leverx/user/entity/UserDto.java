@@ -13,7 +13,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 public class UserDto {
 
-    @Size(min = 5, max = 60, message = NOT_VALID_NAME)
+    @Size(min = 1, max = 60, message = NOT_VALID_NAME)
     @NotNull
     String name;
 }
