@@ -9,9 +9,9 @@ import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
 import static com.leverx.validator.EntityValidator.isValid;
@@ -21,7 +21,7 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 @Slf4j
 public class UserServiceImpl implements UserService {
-    
+
     private UserRepository userRepository = new UserRepositoryImpl();
     private CatRepository catRepository = new CatRepositoryImpl();
 
@@ -89,21 +89,22 @@ public class UserServiceImpl implements UserService {
         var user = userRepository.findById(ownerId);
         var cats = catsIds.stream()
                 .map(this::findCatIfExist)
+                .filter(Objects::nonNull)
                 .filter(cat -> cat.getOwner() == null)
                 .collect(toSet());
 
         cats.addAll(user.getCats());
         user.setCats(cats);
-        cats.forEach(cat -> cat.setOwner(user));
-
+        cats.stream()
+                .peek(cat -> cat.setOwner(user))
+                .forEach(catRepository::update);
         userRepository.update(user);
     }
 
     private Cat findCatIfExist(Integer catId) {
-        Cat foundedCat = catRepository.findById(catId);
+        var foundedCat = catRepository.findById(catId);
         if (foundedCat == null) {
             log.error("Cat with id = {} was not found", catId);
-            throw new InternalServerErrorException();
         } else {
             log.debug("Cat with id = {} was received", catId);
         }

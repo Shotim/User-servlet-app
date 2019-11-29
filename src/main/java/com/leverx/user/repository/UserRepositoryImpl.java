@@ -11,7 +11,7 @@ import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
 
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
-    
+
     private final EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
 
     @SuppressWarnings(value = "unchecked")

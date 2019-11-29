@@ -13,7 +13,7 @@ import static com.leverx.validator.EntityValidator.isValid;
 
 @Slf4j
 public class CatServiceImpl implements CatService {
-    
+
     private CatRepository catRepository = new CatRepositoryImpl();
 
     @Override
