@@ -9,6 +9,6 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @FieldDefaults(level = PRIVATE)
-public class CatsIdsList {
+public class CatsDtoIdsList {
     List<Integer> ids;
 }
