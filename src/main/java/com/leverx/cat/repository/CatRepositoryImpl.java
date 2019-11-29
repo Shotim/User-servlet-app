@@ -35,6 +35,7 @@ public class CatRepositoryImpl implements CatRepository {
             return cats;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -54,6 +55,7 @@ public class CatRepositoryImpl implements CatRepository {
             return cats;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -71,6 +73,7 @@ public class CatRepositoryImpl implements CatRepository {
             return cat;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -88,6 +91,7 @@ public class CatRepositoryImpl implements CatRepository {
             return cat;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -105,6 +109,7 @@ public class CatRepositoryImpl implements CatRepository {
             return cat;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();

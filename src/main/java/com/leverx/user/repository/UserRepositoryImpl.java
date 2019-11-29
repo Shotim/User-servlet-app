@@ -27,6 +27,7 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -44,6 +45,7 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -64,6 +66,7 @@ public class UserRepositoryImpl implements UserRepository {
             return users;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -81,6 +84,7 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -99,6 +103,7 @@ public class UserRepositoryImpl implements UserRepository {
             log.debug("User with id = {} was deleted", id);
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -116,6 +121,7 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
+            entityManager.getTransaction().rollback();
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
