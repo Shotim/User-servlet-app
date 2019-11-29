@@ -19,6 +19,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Collection;
 
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
@@ -44,6 +45,7 @@ public class User {
     String name;
 
     @OneToMany(fetch = EAGER,
+            cascade = ALL,
             mappedBy = "owner")
     Collection<Cat> cats;
 }

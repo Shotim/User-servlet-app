@@ -16,9 +16,10 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
@@ -43,10 +44,11 @@ public class Cat {
 
     @NonNull
     @Column
-    @JsonFormat(shape = STRING, pattern = "YYYY-MM-dd")
-    LocalDateTime dateOfBirth;
+    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
+    Date dateOfBirth;
 
-    @ManyToOne(fetch = EAGER)
+    @ManyToOne(fetch = EAGER,
+            cascade = ALL)
     @JoinColumn(name = "ownerId")
     User owner;
 }
