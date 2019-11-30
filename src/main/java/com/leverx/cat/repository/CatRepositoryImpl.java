@@ -1,8 +1,10 @@
 package com.leverx.cat.repository;
 
 import com.leverx.cat.entity.Cat;
+import com.leverx.cat.entity.Cat_;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.TypedQuery;
@@ -24,13 +26,16 @@ public class CatRepositoryImpl implements CatRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Cat> cr = criteriaBuilder.createQuery(Cat.class);
-            Root<Cat> root = cr.from(Cat.class);
-            cr.select(root);
-            TypedQuery<Cat> query = entityManager.createQuery(cr);
+            transaction = beginTransaction(entityManager);
+
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Cat> criteriaQuery = builder.createQuery(Cat.class);
+
+            Root<Cat> root = criteriaQuery.from(Cat.class);
+
+            criteriaQuery.select(root);
+
+            TypedQuery<Cat> query = entityManager.createQuery(criteriaQuery);
             var cats = query.getResultList();
             transaction.commit();
             log.debug("Were received {} cats", cats.size());
@@ -46,16 +51,22 @@ public class CatRepositoryImpl implements CatRepository {
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Collection<Cat> findByOwner(int ownerId) {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            var query = entityManager.createQuery("from Cat where owner.id=:ownerId")
-                    .setParameter("ownerId", ownerId);
+            transaction = beginTransaction(entityManager);
+
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Cat> criteriaQuery = builder.createQuery(Cat.class);
+
+            Root<Cat> root = criteriaQuery.from(Cat.class);
+
+            criteriaQuery.select(root);
+            criteriaQuery.where(builder.equal(root.get(Cat_.owner), ownerId));
+
+            TypedQuery<Cat> query = entityManager.createQuery(criteriaQuery);
             var cats = query.getResultList();
             log.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
             return cats;
@@ -75,9 +86,18 @@ public class CatRepositoryImpl implements CatRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            var cat = entityManager.find(Cat.class, id);
+            transaction = beginTransaction(entityManager);
+
+            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+            CriteriaQuery<Cat> criteriaQuery = builder.createQuery(Cat.class);
+
+            Root<Cat> root = criteriaQuery.from(Cat.class);
+
+            criteriaQuery.select(root);
+            criteriaQuery.where(builder.equal(root.get(Cat_.id), id));
+
+            TypedQuery<Cat> query = entityManager.createQuery(criteriaQuery);
+            var cat = query.getSingleResult();
             transaction.commit();
             log.debug("Was received cat with id = {}", id);
             return cat;
@@ -97,8 +117,8 @@ public class CatRepositoryImpl implements CatRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+            transaction = beginTransaction(entityManager);
+
             entityManager.persist(cat);
             transaction.commit();
             log.debug("Cat was saved");
@@ -114,25 +134,9 @@ public class CatRepositoryImpl implements CatRepository {
         }
     }
 
-    @Override
-    public Cat update(Cat cat) {
-        var entityManager = entityManagerFactory.createEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            entityManager.merge(cat);
-            transaction.commit();
-            log.debug("Cat was updated");
-            return cat;
-        } catch (Exception e) {
-            log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
-            throw new InternalServerErrorException(e);
-        } finally {
-            entityManager.close();
-        }
+    private EntityTransaction beginTransaction(EntityManager entityManager) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        return transaction;
     }
 }

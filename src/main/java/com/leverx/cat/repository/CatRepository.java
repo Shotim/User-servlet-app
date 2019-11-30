@@ -13,6 +13,4 @@ public interface CatRepository {
     Cat findById(int id);
 
     Cat save(Cat cat);
-
-    Cat update(Cat cat);
 }
