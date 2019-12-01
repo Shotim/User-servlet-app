@@ -4,17 +4,15 @@ import com.leverx.cat.entity.Cat;
 import com.leverx.cat.entity.Cat_;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.NoResultException;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
+import static com.leverx.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.utils.RepositoryUtils.rollbackTransaction;
 
 @Slf4j
 public class CatRepositoryImpl implements CatRepository {
@@ -28,23 +26,25 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Cat> criteriaQuery = builder.createQuery(Cat.class);
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(Cat.class);
 
-            Root<Cat> root = criteriaQuery.from(Cat.class);
+            var root = criteriaQuery.from(Cat.class);
 
             criteriaQuery.select(root);
 
-            TypedQuery<Cat> query = entityManager.createQuery(criteriaQuery);
+            var query = entityManager.createQuery(criteriaQuery);
             var cats = query.getResultList();
             transaction.commit();
             log.debug("Were received {} cats", cats.size());
             return cats;
+        } catch (NoResultException e) {
+            rollbackTransaction(transaction);
+            log.debug("Cats were not found");
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -58,23 +58,25 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Cat> criteriaQuery = builder.createQuery(Cat.class);
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(Cat.class);
 
-            Root<Cat> root = criteriaQuery.from(Cat.class);
+            var root = criteriaQuery.from(Cat.class);
 
             criteriaQuery.select(root);
             criteriaQuery.where(builder.equal(root.get(Cat_.owner), ownerId));
 
-            TypedQuery<Cat> query = entityManager.createQuery(criteriaQuery);
+            var query = entityManager.createQuery(criteriaQuery);
             var cats = query.getResultList();
             log.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
             return cats;
+        } catch (NoResultException e) {
+            rollbackTransaction(transaction);
+            log.debug("The owner with id {} has no cats", ownerId);
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -88,24 +90,26 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            CriteriaBuilder builder = entityManager.getCriteriaBuilder();
-            CriteriaQuery<Cat> criteriaQuery = builder.createQuery(Cat.class);
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(Cat.class);
 
-            Root<Cat> root = criteriaQuery.from(Cat.class);
+            var root = criteriaQuery.from(Cat.class);
 
             criteriaQuery.select(root);
             criteriaQuery.where(builder.equal(root.get(Cat_.id), id));
 
-            TypedQuery<Cat> query = entityManager.createQuery(criteriaQuery);
+            var query = entityManager.createQuery(criteriaQuery);
             var cat = query.getSingleResult();
             transaction.commit();
             log.debug("Was received cat with id = {}", id);
             return cat;
+        } catch (NoResultException e) {
+            rollbackTransaction(transaction);
+            log.debug("Cat with id = {} was not found", id);
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -125,18 +129,10 @@ public class CatRepositoryImpl implements CatRepository {
             return cat;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
         }
-    }
-
-    private EntityTransaction beginTransaction(EntityManager entityManager) {
-        EntityTransaction transaction = entityManager.getTransaction();
-        transaction.begin();
-        return transaction;
     }
 }

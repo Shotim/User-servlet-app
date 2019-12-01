@@ -1,38 +1,50 @@
 package com.leverx.user.repository;
 
 import com.leverx.user.entity.User;
+import com.leverx.user.entity.User_;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
+import static com.leverx.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.utils.RepositoryUtils.rollbackTransaction;
 
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
     private final EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
 
-    @SuppressWarnings(value = "unchecked")
     @Override
     public Collection<User> findAll() {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            var query = entityManager.createQuery("from User");
+            transaction = beginTransaction(entityManager);
+
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(User.class);
+
+            var root = criteriaQuery.from(User.class);
+
+            criteriaQuery.select(root);
+
+            var query = entityManager.createQuery(criteriaQuery);
             var users = query.getResultList();
             transaction.commit();
             log.debug("Were received {} users", users.size());
             return users;
+        } catch (NoResultException e) {
+            rollbackTransaction(transaction);
+            log.debug("Users were not found");
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -44,42 +56,61 @@ public class UserRepositoryImpl implements UserRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            var user = entityManager.find(User.class, id);
+            transaction = beginTransaction(entityManager);
+
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(User.class);
+
+            var root = criteriaQuery.from(User.class);
+
+            criteriaQuery.select(root);
+            criteriaQuery.where(builder.equal(root.get(User_.id), id));
+
+            var query = entityManager.createQuery(criteriaQuery);
+            var user = query.getSingleResult();
             transaction.commit();
             log.debug("User with id = {} was received", id);
             return user;
+        } catch (NoResultException e) {
+            rollbackTransaction(transaction);
+            log.debug("User with id = {} was not found", id);
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
         }
     }
 
-    @SuppressWarnings(value = "unchecked")
     @Override
     public Collection<User> findByName(String name) {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            var query = entityManager.createQuery("from User where name=:name")
-                    .setParameter("name", name);
+            transaction = beginTransaction(entityManager);
+
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(User.class);
+
+            var root = criteriaQuery.from(User.class);
+
+            criteriaQuery.select(root);
+            criteriaQuery.where(builder.equal(root.get(User_.name), name));
+
+            var query = entityManager.createQuery(criteriaQuery);
             var users = query.getResultList();
             transaction.commit();
             log.debug("Were received {} users with name = {}", users.size(), name);
             return users;
+        } catch (NoResultException e) {
+            rollbackTransaction(transaction);
+            log.debug("User with name = {} was not found", name);
+            return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -91,17 +122,14 @@ public class UserRepositoryImpl implements UserRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+            transaction = beginTransaction(entityManager);
             entityManager.persist(user);
             transaction.commit();
             log.debug("User was saved");
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -113,18 +141,22 @@ public class UserRepositoryImpl implements UserRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
-            var query = entityManager.createQuery("delete User where id=:id")
-                    .setParameter("id", id);
+            transaction = beginTransaction(entityManager);
+
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaDelete = builder.createCriteriaDelete(User.class);
+
+            var root = criteriaDelete.from(User.class);
+
+            criteriaDelete.where(builder.equal(root.get(User_.id), id));
+
+            var query = entityManager.createQuery(criteriaDelete);
             query.executeUpdate();
             transaction.commit();
             log.debug("User with id = {} was deleted", id);
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -136,17 +168,16 @@ public class UserRepositoryImpl implements UserRepository {
         var entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = null;
         try {
-            transaction = entityManager.getTransaction();
-            transaction.begin();
+            transaction = beginTransaction(entityManager);
+
             entityManager.merge(user);
+
             transaction.commit();
             log.debug("User with id = {} was updated", user.getId());
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
-            if (transaction != null && transaction.isActive()) {
-                transaction.rollback();
-            }
+            rollbackTransaction(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
