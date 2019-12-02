@@ -95,9 +95,7 @@ public class UserServiceImpl implements UserService {
 
         cats.addAll(user.getCats());
         user.setCats(cats);
-        cats.stream()
-                .peek(cat -> cat.setOwner(user))
-                .forEach(catRepository::update);
+        cats.forEach(cat -> cat.setOwner(user));
         userRepository.update(user);
     }
 
