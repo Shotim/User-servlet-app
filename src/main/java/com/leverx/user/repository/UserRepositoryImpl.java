@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.Path;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
@@ -66,7 +65,8 @@ public class UserRepositoryImpl implements UserRepository {
 
             criteriaQuery.select(root);
             var idPath = root.get(User_.id);
-            criteriaQuery.where(builder.equal(idPath, id));
+            var equalIdCondition = builder.equal(idPath, id);
+            criteriaQuery.where(equalIdCondition);
 
             var query = entityManager.createQuery(criteriaQuery);
             var user = query.getSingleResult();
@@ -100,7 +100,8 @@ public class UserRepositoryImpl implements UserRepository {
 
             criteriaQuery.select(root);
             var namePath = root.get(User_.name);
-            criteriaQuery.where(builder.equal(namePath, name));
+            var equalNameCondition = builder.equal(namePath, name);
+            criteriaQuery.where(equalNameCondition);
 
             var query = entityManager.createQuery(criteriaQuery);
             var users = query.getResultList();
@@ -151,8 +152,9 @@ public class UserRepositoryImpl implements UserRepository {
 
             var root = criteriaDelete.from(User.class);
 
-            Path<Integer> idPath = root.get(User_.id);
-            criteriaDelete.where(builder.equal(idPath, id));
+            var idPath = root.get(User_.id);
+            var equalIdCondition = builder.equal(idPath, id);
+            criteriaDelete.where(equalIdCondition);
 
             var query = entityManager.createQuery(criteriaDelete);
             query.executeUpdate();
