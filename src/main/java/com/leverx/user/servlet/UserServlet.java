@@ -1,6 +1,6 @@
 package com.leverx.user.servlet;
 
-import com.leverx.cat.entity.CatsIdsList;
+import com.leverx.cat.entity.CatsDtoIdsList;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
 import com.leverx.user.entity.UserDto;
@@ -23,6 +23,7 @@ import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
@@ -39,22 +40,23 @@ public class UserServlet extends HttpServlet {
         var methodTypeWithPathVariable = initUserServletGetMethodType(request);
         var methodType = methodTypeWithPathVariable.getLeft();
         var requiredVariable = methodTypeWithPathVariable.getRight();
+        var responseStatus = SC_OK;
         switch (methodType) {
             case GET_ALL_USERS:
-                printAllUsersToResponseBody(responseWriter);
+                responseStatus = printAllUsersToResponseBody(responseWriter);
                 break;
             case GET_USER_BY_ID:
-                printUserByIdToResponseBody(responseWriter, requiredVariable);
+                responseStatus = printUserByIdToResponseBody(responseWriter, requiredVariable);
                 break;
             case GET_USER_BY_NAME:
-                printUsersByNameToResponseBody(responseWriter, requiredVariable);
+                responseStatus = printUsersByNameToResponseBody(responseWriter, requiredVariable);
                 break;
             case GET_CATS_OF_USER:
-                printCatsOfUser(responseWriter, requiredVariable);
+                responseStatus = printCatsOfUser(responseWriter, requiredVariable);
                 break;
         }
         responseWriter.flush();
-        response.setStatus(SC_OK);
+        response.setStatus(responseStatus);
     }
 
     @Override
@@ -96,37 +98,45 @@ public class UserServlet extends HttpServlet {
             break;
             case ASSIGN_CATS_TO_USER: {
                 var jsonIdList = readBody(request);
-                var catsIds = convertFromJsonToEntity(jsonIdList, CatsIdsList.class);
+                var catsIds = convertFromJsonToEntity(jsonIdList, CatsDtoIdsList.class);
                 var catsIdsList = catsIds.getIds();
                 var ownerId = parseInt(pathVariable);
-                userService.assignCatsToUser(ownerId, catsIdsList);
+                try {
+                    userService.assignCatsToUser(ownerId, catsIdsList);
+                } catch (NullPointerException e) {
+                    response.setStatus(SC_BAD_REQUEST);
+                }
             }
         }
     }
 
-    private void printAllUsersToResponseBody(PrintWriter writer) {
+    private int printAllUsersToResponseBody(PrintWriter writer) {
         var users = userService.findAll();
         var jsonUsers = convertFromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
+        return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
 
-    private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
         var user = userService.findById(id);
         var jsonUser = convertFromEntityToJson(user);
         writer.print(jsonUser);
+        return user != null ? SC_OK : SC_NOT_FOUND;
     }
 
-    private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = userService.findByName(pathVariable);
         var jsonUsers = convertFromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
+        return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
 
-    private void printCatsOfUser(PrintWriter writer, String ownerId) {
+    private int printCatsOfUser(PrintWriter writer, String ownerId) {
         var id = parseInt(ownerId);
         var cats = catService.findByOwner(id);
         var jsonCats = convertFromEntityCollectionToJson(cats);
         jsonCats.forEach(writer::println);
+        return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
 }
