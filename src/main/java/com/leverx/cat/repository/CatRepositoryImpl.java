@@ -64,7 +64,8 @@ public class CatRepositoryImpl implements CatRepository {
             var root = criteriaQuery.from(Cat.class);
 
             criteriaQuery.select(root);
-            criteriaQuery.where(builder.equal(root.get(Cat_.owner), ownerId));
+            var ownerPath = root.get(Cat_.owner);
+            criteriaQuery.where(builder.equal(ownerPath, ownerId));
 
             var query = entityManager.createQuery(criteriaQuery);
             var cats = query.getResultList();
@@ -96,7 +97,8 @@ public class CatRepositoryImpl implements CatRepository {
             var root = criteriaQuery.from(Cat.class);
 
             criteriaQuery.select(root);
-            criteriaQuery.where(builder.equal(root.get(Cat_.id), id));
+            var idPath = root.get(Cat_.id);
+            criteriaQuery.where(builder.equal(idPath, id));
 
             var query = entityManager.createQuery(criteriaQuery);
             var cat = query.getSingleResult();
