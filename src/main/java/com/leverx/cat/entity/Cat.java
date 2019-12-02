@@ -1,6 +1,8 @@
 package com.leverx.cat.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.leverx.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +18,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import java.util.Date;
+import java.time.LocalDate;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static javax.persistence.CascadeType.ALL;
@@ -44,8 +46,9 @@ public class Cat {
 
     @NonNull
     @Column
+    @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
-    Date dateOfBirth;
+    LocalDate dateOfBirth;
 
     @ManyToOne(fetch = EAGER,
             cascade = ALL)
