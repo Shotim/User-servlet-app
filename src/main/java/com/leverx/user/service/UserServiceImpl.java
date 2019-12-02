@@ -27,23 +27,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<User> findAll() {
-        Collection<User> users = userRepository.findAll();
-        log.debug("Were received {} users", users.size());
-        return users;
+        return userRepository.findAll();
     }
 
     @Override
     public User findById(int id) {
-        User user = userRepository.findById(id);
-        log.debug("Was received user with id = {}", id);
-        return user;
+        return userRepository.findById(id);
     }
 
     @Override
     public Collection<User> findByName(String name) {
-        Collection<User> users = userRepository.findByName(name);
-        log.debug("Were received {} users", users.size());
-        return users;
+        return userRepository.findByName(name);
     }
 
     @Override
@@ -51,10 +45,8 @@ public class UserServiceImpl implements UserService {
         if (isValid(userDto)) {
             User user = convertUserDtoToUser(userDto);
             userRepository.save(user);
-            log.debug("User with name = {} was saved", userDto.getName());
             return user;
         } else {
-            log.error("User with name = {} was not saved", userDto.getName());
             throw new IllegalArgumentException();
         }
     }
@@ -64,7 +56,6 @@ public class UserServiceImpl implements UserService {
         if (isParsable(id)) {
             int parsedId = parseInt(id);
             userRepository.deleteById(parsedId);
-            log.debug("User with id = {} was removed", id);
         } else {
             log.debug("User was not updated. Check if id was correct");
         }
@@ -76,10 +67,8 @@ public class UserServiceImpl implements UserService {
         User user = convertUserDtoToUser(userId, userDto);
         if (isValid(userDto)) {
             userRepository.update(user);
-            log.debug("User with id = {} was updated", id);
             return user;
         } else {
-            log.error("User with id = {} was not updated", id);
             throw new IllegalArgumentException();
         }
     }
@@ -100,12 +89,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private Cat findCatIfExist(Integer catId) {
-        var foundedCat = catRepository.findById(catId);
-        if (foundedCat == null) {
-            log.error("Cat with id = {} was not found", catId);
-        } else {
-            log.debug("Cat with id = {} was received", catId);
-        }
-        return foundedCat;
+        return catRepository.findById(catId);
     }
 }
