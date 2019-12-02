@@ -26,7 +26,7 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
-//TODO remove json anotations
+//TODO remove json annotations
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
