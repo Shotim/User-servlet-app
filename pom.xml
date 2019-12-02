@@ -23,7 +23,7 @@
         <javax.ws.version>2.1.1</javax.ws.version>
         <hibernate.version>5.4.9.Final</hibernate.version>
         <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
-        <jackson.databind.version>2.10.1</jackson.databind.version>
+        <jackson.version>2.10.1</jackson.version>
     </properties>
 
     <dependencies>
@@ -78,7 +78,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>${jackson.databind.version}</version>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>
