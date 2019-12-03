@@ -45,7 +45,7 @@ public class CatRepositoryImpl implements CatRepository {
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            commitTransactionIfActive(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
