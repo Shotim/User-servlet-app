@@ -21,6 +21,7 @@ import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.initUserServletPutMethodType;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
+import static java.util.Objects.nonNull;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
@@ -122,7 +123,7 @@ public class UserServlet extends HttpServlet {
         var user = userService.findById(id);
         var jsonUser = convertFromEntityToJson(user);
         writer.print(jsonUser);
-        return user != null ? SC_OK : SC_NOT_FOUND;
+        return nonNull(user) ? SC_OK : SC_NOT_FOUND;
     }
 
     private int printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {

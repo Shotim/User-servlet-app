@@ -20,6 +20,7 @@ import static com.leverx.utils.ServiceUtils.convertUserInputDtoToUser;
 import static com.leverx.utils.ServiceUtils.convertUserToUserOutputDto;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
+import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
@@ -86,7 +87,7 @@ public class UserServiceImpl implements UserService {
         var cats = catsIds.stream()
                 .map(this::findCatIfExist)
                 .filter(Objects::nonNull)
-                .filter(cat -> cat.getOwner() == null)
+                .filter(cat -> isNull(cat.getOwner()))
                 .collect(toSet());
 
         cats.addAll(user.getCats());

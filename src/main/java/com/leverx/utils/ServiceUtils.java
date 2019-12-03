@@ -9,6 +9,7 @@ import com.leverx.user.entity.UserOutputDto;
 
 import java.util.Collection;
 
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 public class ServiceUtils {
@@ -32,7 +33,7 @@ public class ServiceUtils {
     public static UserOutputDto convertUserToUserOutputDto(User user) {
         var id = user.getId();
         var name = user.getName();
-        var cats = user.getCats()!=null?convertCatCollectionToCatOutputDtoCollection(user.getCats()):null;
+        var cats = nonNull(user.getCats()) ? convertCatCollectionToCatOutputDtoCollection(user.getCats()) : null;
         return new UserOutputDto(id, name, cats);
     }
 
@@ -46,7 +47,7 @@ public class ServiceUtils {
         var id = cat.getId();
         var name = cat.getName();
         var dateOfBirth = cat.getDateOfBirth();
-        var owner = cat.getOwner() != null ? convertUserToUserOutputDto(cat.getOwner()) : null;
+        var owner = nonNull(cat.getOwner()) ? convertUserToUserOutputDto(cat.getOwner()) : null;
         return new CatOutputDto(id, name, dateOfBirth, owner);
     }
 
