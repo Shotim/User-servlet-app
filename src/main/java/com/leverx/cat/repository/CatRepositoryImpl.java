@@ -40,7 +40,7 @@ public class CatRepositoryImpl implements CatRepository {
             log.debug("Were received {} cats", cats.size());
             return cats;
         } catch (NoResultException e) {
-            rollbackTransactionIfActive(transaction);
+            commitTransactionIfActive(transaction);
             log.debug("Cats were not found");
             return null;
         } catch (Exception e) {
