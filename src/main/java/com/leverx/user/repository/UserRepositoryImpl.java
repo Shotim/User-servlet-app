@@ -4,13 +4,12 @@ import com.leverx.user.entity.User;
 import com.leverx.user.entity.User_;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
-import static com.leverx.config.EntityManagerFactoryImpl.getEntityManagerFactory;
+import static com.leverx.config.EntityManagerFactoryImpl.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
@@ -18,11 +17,9 @@ import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
-    private final EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
-
     @Override
     public Collection<User> findAll() {
-        var entityManager = entityManagerFactory.createEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
@@ -54,7 +51,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User findById(int id) {
-        var entityManager = entityManagerFactory.createEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
@@ -89,7 +86,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public Collection<User> findByName(String name) {
-        var entityManager = entityManagerFactory.createEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
@@ -124,7 +121,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User save(User user) {
-        var entityManager = entityManagerFactory.createEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
@@ -143,7 +140,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void deleteById(int id) {
-        var entityManager = entityManagerFactory.createEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
@@ -172,7 +169,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User update(User user) {
-        var entityManager = entityManagerFactory.createEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
