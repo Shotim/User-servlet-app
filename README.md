@@ -10,7 +10,9 @@ This project was done to realize how java servlets work. The entity `User` is in
 * Docker
 
 ## Used Technologies
-* Servlet API 4.0.1
+* Servlet API
+* JPA, Hibernate
+* Validation API
 
 ## Deployment
 
@@ -41,7 +43,7 @@ docker-compose up
 `
 http://localhost:8080/application/users
 `
-#### * Run application on Tomcat Server:
+#### * Local Deployment:
 1) Copy war file you have just created to `CATALINA_HOME/webapps`, e.g.
 `C:/Tomcat9/webapps`
 2) Start Tomcat server. On Windows run as Administrator file `startup.bat`
