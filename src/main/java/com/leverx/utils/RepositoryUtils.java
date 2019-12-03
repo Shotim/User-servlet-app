@@ -1,32 +1,28 @@
 package com.leverx.utils;
 
-import com.leverx.user.entity.User;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import static com.leverx.constants.UserFields.ID;
-import static com.leverx.constants.UserFields.NAME;
+import static java.util.Objects.nonNull;
 
 public class RepositoryUtils {
 
-    public static List<User> extractUsersFromResultSet(ResultSet resultSet) throws SQLException {
-        List<User> users = new ArrayList<>();
+    public static EntityTransaction beginTransaction(EntityManager entityManager) {
+        EntityTransaction transaction = entityManager.getTransaction();
+        transaction.begin();
+        return transaction;
+    }
 
-        while (resultSet.next()) {
-            users.add(
-                    new User(resultSet.getInt(ID),
-                            resultSet.getString(NAME)));
+
+    public static void rollbackTransactionIfActive(EntityTransaction transaction) {
+        if (nonNull(transaction) && transaction.isActive()) {
+            transaction.rollback();
         }
-        return users;
     }
 
-    public static User extractFirstUserFromResultSet(ResultSet resultSet) throws SQLException {
-        return extractUsersFromResultSet(resultSet).stream()
-                .findFirst()
-                .orElseThrow();
+    public static void commitTransactionIfActive(EntityTransaction transaction) {
+        if (nonNull(transaction) && transaction.isActive()) {
+            transaction.commit();
+        }
     }
-
 }

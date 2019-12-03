@@ -1,162 +1,193 @@
 package com.leverx.user.repository;
 
-import com.leverx.database.DBConnectionPool;
 import com.leverx.user.entity.User;
-import org.slf4j.Logger;
+import com.leverx.user.entity.User_;
+import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.EntityTransaction;
+import javax.persistence.NoResultException;
 import javax.ws.rs.InternalServerErrorException;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.Collection;
-import java.util.Optional;
 
-import static com.leverx.user.repository.SQLQuery.ADD_ONE_USER;
-import static com.leverx.user.repository.SQLQuery.DELETE_USER_BY_ID;
-import static com.leverx.user.repository.SQLQuery.SELECT_ALL_USERS;
-import static com.leverx.user.repository.SQLQuery.SELECT_ONE_USER_BY_ID;
-import static com.leverx.user.repository.SQLQuery.SELECT_USER_BY_NAME;
-import static com.leverx.user.repository.SQLQuery.UPDATE_USER_BY_ID;
-import static com.leverx.utils.RepositoryUtils.extractFirstUserFromResultSet;
-import static com.leverx.utils.RepositoryUtils.extractUsersFromResultSet;
-import static org.slf4j.LoggerFactory.getLogger;
+import static com.leverx.config.EntityManagerFactoryImpl.getEntityManagerFactory;
+import static com.leverx.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
+import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
+@Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final Logger LOGGER = getLogger(UserRepositoryImpl.class);
-    private final DBConnectionPool connectionPool;
-
-    public UserRepositoryImpl() {
-        connectionPool = DBConnectionPool.getInstance();
-    }
+    private final EntityManagerFactory entityManagerFactory = getEntityManagerFactory();
 
     @Override
     public Collection<User> findAll() {
-        Connection connection = connectionPool.takeConnection();
-        LOGGER.debug("Connection created");
+        var entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
 
-        try (var preparedStatement = connection.prepareStatement(SELECT_ALL_USERS);
-             var resultSet = preparedStatement.executeQuery()) {
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(User.class);
 
-            var users = extractUsersFromResultSet(resultSet);
-            LOGGER.debug("Found {} users", users.size());
+            var root = criteriaQuery.from(User.class);
+
+            criteriaQuery.select(root);
+
+            var query = entityManager.createQuery(criteriaQuery);
+            var users = query.getResultList();
+            transaction.commit();
+            log.debug("Were received {} users", users.size());
             return users;
-        } catch (SQLException ex) {
-            LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException(ex);
-
+        } catch (NoResultException e) {
+            commitTransactionIfActive(transaction);
+            log.debug("Users were not found");
+            return null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
         } finally {
-            connectionPool.putConnection(connection);
+            entityManager.close();
         }
     }
 
     @Override
     public User findById(int id) {
-        Connection connection = connectionPool.takeConnection();
-        LOGGER.debug("Connection created");
+        var entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
 
-        try (var preparedStatement = connection.prepareStatement(SELECT_ONE_USER_BY_ID)) {
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(User.class);
 
-            preparedStatement.setInt(1, id);
+            var root = criteriaQuery.from(User.class);
 
-            try (var resultSet = preparedStatement.executeQuery()) {
+            criteriaQuery.select(root);
+            var idPath = root.get(User_.id);
+            var equalIdCondition = builder.equal(idPath, id);
+            criteriaQuery.where(equalIdCondition);
 
-                var user = extractFirstUserFromResultSet(resultSet);
-                LOGGER.debug("User from database with id = {} was received", user.getId());
-                return user;
-            }
-
-        } catch (SQLException ex) {
-            LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException(ex);
-
+            var query = entityManager.createQuery(criteriaQuery);
+            var user = query.getSingleResult();
+            transaction.commit();
+            log.debug("User with id = {} was received", id);
+            return user;
+        } catch (NoResultException e) {
+            commitTransactionIfActive(transaction);
+            log.debug("User with id = {} was not found", id);
+            return null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
         } finally {
-            connectionPool.putConnection(connection);
+            entityManager.close();
         }
     }
 
     @Override
     public Collection<User> findByName(String name) {
-        Connection connection = connectionPool.takeConnection();
-        LOGGER.debug("Connection created");
+        var entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
 
-        try (var preparedStatement = connection.prepareStatement(SELECT_USER_BY_NAME)) {
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaQuery = builder.createQuery(User.class);
 
-            preparedStatement.setString(1, name);
+            var root = criteriaQuery.from(User.class);
 
-            try (var resultSet = preparedStatement.executeQuery()) {
+            criteriaQuery.select(root);
+            var namePath = root.get(User_.name);
+            var equalNameCondition = builder.equal(namePath, name);
+            criteriaQuery.where(equalNameCondition);
 
-                var users = extractUsersFromResultSet(resultSet);
-                LOGGER.debug("{} users from database with name = {} were received",
-                        users.size(), name);
-                return users;
-            }
-
-        } catch (SQLException ex) {
-            LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException(ex);
-
+            var query = entityManager.createQuery(criteriaQuery);
+            var users = query.getResultList();
+            transaction.commit();
+            log.debug("Were received {} users with name = {}", users.size(), name);
+            return users;
+        } catch (NoResultException e) {
+            commitTransactionIfActive(transaction);
+            log.debug("User with name = {} was not found", name);
+            return null;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
         } finally {
-            connectionPool.putConnection(connection);
+            entityManager.close();
         }
     }
 
     @Override
-    public Optional<User> save(User user) {
-        Connection connection = connectionPool.takeConnection();
-        LOGGER.debug("Connection created");
-
-        try (var preparedStatement = connection.prepareStatement(ADD_ONE_USER)) {
-
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.executeUpdate();
-            LOGGER.debug("User with name = {} was added to database", user.getName());
-            return Optional.of(user);
-        } catch (SQLException ex) {
-            LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException(ex);
-
+    public User save(User user) {
+        var entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            entityManager.persist(user);
+            transaction.commit();
+            log.debug("User was saved");
+            return user;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
         } finally {
-            connectionPool.putConnection(connection);
+            entityManager.close();
         }
     }
 
     @Override
-    public void deleteById(String id) {
-        Connection connection = connectionPool.takeConnection();
-        LOGGER.debug("Connection created");
+    public void deleteById(int id) {
+        var entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
 
-        try (var preparedStatement = connection.prepareStatement(DELETE_USER_BY_ID)) {
+            var builder = entityManager.getCriteriaBuilder();
+            var criteriaDelete = builder.createCriteriaDelete(User.class);
 
-            preparedStatement.setString(1, id);
-            preparedStatement.executeUpdate();
-            LOGGER.debug("User from database with id = {} was deleted", id);
-        } catch (SQLException ex) {
-            LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException(ex);
+            var root = criteriaDelete.from(User.class);
 
+            var idPath = root.get(User_.id);
+            var equalIdCondition = builder.equal(idPath, id);
+            criteriaDelete.where(equalIdCondition);
+
+            var query = entityManager.createQuery(criteriaDelete);
+            query.executeUpdate();
+            transaction.commit();
+            log.debug("User with id = {} was deleted", id);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
         } finally {
-            connectionPool.putConnection(connection);
+            entityManager.close();
         }
     }
 
     @Override
-    public Optional<User> updateById(User user) {
-        Connection connection = connectionPool.takeConnection();
-        LOGGER.debug("Connection created");
+    public User update(User user) {
+        var entityManager = entityManagerFactory.createEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
 
-        try (var preparedStatement = connection.prepareStatement(UPDATE_USER_BY_ID)) {
+            entityManager.merge(user);
 
-            preparedStatement.setString(1, user.getName());
-            preparedStatement.setInt(2, user.getId());
-            preparedStatement.executeUpdate();
-            LOGGER.debug("User with id = {} in database was updated", user.getId());
-            return Optional.of(user);
-        } catch (SQLException ex) {
-            LOGGER.error("SQL state:{}\n{}", ex.getSQLState(), ex.getMessage());
-            throw new InternalServerErrorException(ex);
-
+            transaction.commit();
+            log.debug("User with id = {} was updated", user.getId());
+            return user;
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
         } finally {
-            connectionPool.putConnection(connection);
+            entityManager.close();
         }
     }
 }

@@ -1,22 +1,24 @@
 package com.leverx.user.service;
 
-import com.leverx.user.entity.User;
-import com.leverx.user.entity.UserDto;
+import com.leverx.user.entity.UserInputDto;
+import com.leverx.user.entity.UserOutputDto;
 
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
 
 public interface UserService {
 
-    Collection<User> findAll();
+    Collection<UserOutputDto> findAll();
 
-    User findById(int id);
+    UserOutputDto findById(int id);
 
-    Collection<User> findByName(String name);
+    Collection<UserOutputDto> findByName(String name);
 
-    Optional<User> save(UserDto user);
+    UserOutputDto save(UserInputDto user);
 
     void deleteById(String id);
 
-    Optional<User> updateById(String id, UserDto user);
+    UserOutputDto updateById(String id, UserInputDto user);
+
+    void assignCatsToUser(int ownerId, List<Integer> catsIds);
 }
