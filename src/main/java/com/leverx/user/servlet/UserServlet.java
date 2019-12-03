@@ -3,7 +3,7 @@ package com.leverx.user.servlet;
 import com.leverx.cat.entity.CatsDtoIdsList;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
-import com.leverx.user.entity.UserDto;
+import com.leverx.user.entity.UserInputDto;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 
@@ -62,7 +62,7 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonUserDto = readBody(request);
-        var userDto = convertFromJsonToEntity(jsonUserDto, UserDto.class);
+        var userDto = convertFromJsonToEntity(jsonUserDto, UserInputDto.class);
         try {
             userService.save(userDto);
             response.setStatus(SC_CREATED);
@@ -87,7 +87,7 @@ public class UserServlet extends HttpServlet {
         switch (methodType) {
             case EDIT_USER: {
                 var jsonUser = readBody(request);
-                var userDto = convertFromJsonToEntity(jsonUser, UserDto.class);
+                var userDto = convertFromJsonToEntity(jsonUser, UserInputDto.class);
                 try {
                     userService.updateById(pathVariable, userDto);
                     response.setStatus(SC_OK);

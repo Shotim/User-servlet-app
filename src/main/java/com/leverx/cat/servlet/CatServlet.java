@@ -41,9 +41,9 @@ public class CatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var jsonCatDto = readBody(request);
-        var catDto = convertFromJsonToEntity(jsonCatDto, CatInputDto.class);
+        var catInputDto = convertFromJsonToEntity(jsonCatDto, CatInputDto.class);
         try {
-            catService.save(catDto);
+            catService.save(catInputDto);
             response.setStatus(SC_CREATED);
         } catch (IllegalArgumentException e) {
             response.setStatus(SC_BAD_REQUEST);

@@ -1,17 +1,17 @@
 package com.leverx.cat.service;
 
-import com.leverx.cat.entity.Cat;
 import com.leverx.cat.entity.CatInputDto;
+import com.leverx.cat.entity.CatOutputDto;
 
 import java.util.Collection;
 
 public interface CatService {
 
-    Collection<Cat> findAll();
+    Collection<CatOutputDto> findAll();
 
-    Cat findById(int id);
+    CatOutputDto findById(int id);
 
-    Collection<Cat> findByOwner(int ownerId);
+    Collection<CatOutputDto> findByOwner(int ownerId);
 
-    Cat save(CatInputDto cat);
+    CatOutputDto save(CatInputDto cat);
 }

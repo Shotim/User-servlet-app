@@ -2,13 +2,16 @@ package com.leverx.cat.service;
 
 import com.leverx.cat.entity.Cat;
 import com.leverx.cat.entity.CatInputDto;
+import com.leverx.cat.entity.CatOutputDto;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 
-import static com.leverx.utils.ServiceUtils.convertCatDtoToCat;
+import static com.leverx.utils.ServiceUtils.convertCatCollectionToCatOutputDtoCollection;
+import static com.leverx.utils.ServiceUtils.convertCatInputDtoToCat;
+import static com.leverx.utils.ServiceUtils.convertCatToCatOutputDto;
 import static com.leverx.validator.EntityValidator.isValid;
 
 @Slf4j
@@ -17,26 +20,29 @@ public class CatServiceImpl implements CatService {
     private CatRepository catRepository = new CatRepositoryImpl();
 
     @Override
-    public Collection<Cat> findAll() {
-        return catRepository.findAll();
+    public Collection<CatOutputDto> findAll() {
+        var cats = catRepository.findAll();
+        return convertCatCollectionToCatOutputDtoCollection(cats);
     }
 
     @Override
-    public Cat findById(int id) {
-        return catRepository.findById(id);
+    public CatOutputDto findById(int id) {
+        var cat = catRepository.findById(id);
+        return convertCatToCatOutputDto(cat);
     }
 
     @Override
-    public Collection<Cat> findByOwner(int ownerId) {
-        return catRepository.findByOwner(ownerId);
+    public Collection<CatOutputDto> findByOwner(int ownerId) {
+        var cats = catRepository.findByOwner(ownerId);
+        return convertCatCollectionToCatOutputDtoCollection(cats);
     }
 
     @Override
-    public Cat save(CatInputDto catInputDto) {
+    public CatOutputDto save(CatInputDto catInputDto) {
         if (isValid(catInputDto)) {
-            Cat cat = convertCatDtoToCat(catInputDto);
+            Cat cat = convertCatInputDtoToCat(catInputDto);
             catRepository.save(cat);
-            return cat;
+            return convertCatToCatOutputDto(cat);
         } else {
             throw new IllegalArgumentException();
         }

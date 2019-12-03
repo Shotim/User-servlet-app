@@ -1,14 +1,13 @@
 package com.leverx.user.entity;
 
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.leverx.cat.entity.Cat;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -24,15 +23,15 @@ import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
-//TODO remove json annotations
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE)
 @Entity
 @Table(name = "users")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User {
 
     @NonNull

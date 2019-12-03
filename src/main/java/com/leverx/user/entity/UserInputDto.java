@@ -11,7 +11,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @FieldDefaults(level = PRIVATE)
-public class UserDto {
+public class UserInputDto {
 
     @Size(min = 1, max = 60, message = NOT_VALID_NAME)
     @NotNull

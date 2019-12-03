@@ -4,16 +4,20 @@ import com.leverx.cat.entity.Cat;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import com.leverx.user.entity.User;
-import com.leverx.user.entity.UserDto;
+import com.leverx.user.entity.UserInputDto;
+import com.leverx.user.entity.UserOutputDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
+import com.leverx.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
+import static com.leverx.utils.ServiceUtils.convertUserCollectionToUserOutputDtoCollection;
+import static com.leverx.utils.ServiceUtils.convertUserInputDtoToUser;
+import static com.leverx.utils.ServiceUtils.convertUserToUserOutputDto;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
 import static java.util.stream.Collectors.toSet;
@@ -26,26 +30,29 @@ public class UserServiceImpl implements UserService {
     private CatRepository catRepository = new CatRepositoryImpl();
 
     @Override
-    public Collection<User> findAll() {
-        return userRepository.findAll();
+    public Collection<UserOutputDto> findAll() {
+        Collection<User> users = userRepository.findAll();
+        return convertUserCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
-    public User findById(int id) {
-        return userRepository.findById(id);
+    public UserOutputDto findById(int id) {
+        var user = userRepository.findById(id);
+        return convertUserToUserOutputDto(user);
     }
 
     @Override
-    public Collection<User> findByName(String name) {
-        return userRepository.findByName(name);
+    public Collection<UserOutputDto> findByName(String name) {
+        var users = userRepository.findByName(name);
+        return convertUserCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
-    public User save(UserDto userDto) {
-        if (isValid(userDto)) {
-            User user = convertUserDtoToUser(userDto);
+    public UserOutputDto save(UserInputDto userInputDto) {
+        if (isValid(userInputDto)) {
+            User user = convertUserInputDtoToUser(userInputDto);
             userRepository.save(user);
-            return user;
+            return convertUserToUserOutputDto(user);
         } else {
             throw new IllegalArgumentException();
         }
@@ -62,12 +69,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateById(String id, UserDto userDto) {
+    public UserOutputDto updateById(String id, UserInputDto userInputDto) {
         var userId = parseInt(id);
-        User user = convertUserDtoToUser(userId, userDto);
-        if (isValid(userDto)) {
+        User user = ServiceUtils.convertUserInputDtoToUser(userId, userInputDto);
+        if (isValid(userInputDto)) {
             userRepository.update(user);
-            return user;
+            return convertUserToUserOutputDto(user);
         } else {
             throw new IllegalArgumentException();
         }
