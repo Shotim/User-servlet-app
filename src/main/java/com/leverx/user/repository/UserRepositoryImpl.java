@@ -12,7 +12,8 @@ import java.util.Collection;
 
 import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
-import static com.leverx.utils.RepositoryUtils.rollbackTransaction;
+import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
+import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
@@ -39,12 +40,12 @@ public class UserRepositoryImpl implements UserRepository {
             log.debug("Were received {} users", users.size());
             return users;
         } catch (NoResultException e) {
-            rollbackTransaction(transaction);
+            commitTransactionIfActive(transaction);
             log.debug("Users were not found");
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -74,12 +75,12 @@ public class UserRepositoryImpl implements UserRepository {
             log.debug("User with id = {} was received", id);
             return user;
         } catch (NoResultException e) {
-            rollbackTransaction(transaction);
+            commitTransactionIfActive(transaction);
             log.debug("User with id = {} was not found", id);
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -109,12 +110,12 @@ public class UserRepositoryImpl implements UserRepository {
             log.debug("Were received {} users with name = {}", users.size(), name);
             return users;
         } catch (NoResultException e) {
-            rollbackTransaction(transaction);
+            commitTransactionIfActive(transaction);
             log.debug("User with name = {} was not found", name);
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -133,7 +134,7 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -162,7 +163,7 @@ public class UserRepositoryImpl implements UserRepository {
             log.debug("User with id = {} was deleted", id);
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -183,7 +184,7 @@ public class UserRepositoryImpl implements UserRepository {
             return user;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();

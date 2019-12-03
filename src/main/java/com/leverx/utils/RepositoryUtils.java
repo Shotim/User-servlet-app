@@ -12,9 +12,15 @@ public class RepositoryUtils {
     }
 
 
-    public static void rollbackTransaction(EntityTransaction transaction) {
+    public static void rollbackTransactionIfActive(EntityTransaction transaction) {
         if (transaction != null && transaction.isActive()) {
             transaction.rollback();
+        }
+    }
+
+    public static void commitTransactionIfActive(EntityTransaction transaction) {
+        if (transaction != null && transaction.isActive()) {
+            transaction.commit();
         }
     }
 }

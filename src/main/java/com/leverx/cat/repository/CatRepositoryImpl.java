@@ -12,7 +12,8 @@ import java.util.Collection;
 
 import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
-import static com.leverx.utils.RepositoryUtils.rollbackTransaction;
+import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
+import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 @Slf4j
 public class CatRepositoryImpl implements CatRepository {
@@ -39,12 +40,12 @@ public class CatRepositoryImpl implements CatRepository {
             log.debug("Were received {} cats", cats.size());
             return cats;
         } catch (NoResultException e) {
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             log.debug("Cats were not found");
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            commitTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -73,12 +74,12 @@ public class CatRepositoryImpl implements CatRepository {
             log.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
             return cats;
         } catch (NoResultException e) {
-            rollbackTransaction(transaction);
+            commitTransactionIfActive(transaction);
             log.debug("The owner with id {} has no cats", ownerId);
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -108,12 +109,12 @@ public class CatRepositoryImpl implements CatRepository {
             log.debug("Was received cat with id = {}", id);
             return cat;
         } catch (NoResultException e) {
-            rollbackTransaction(transaction);
+            commitTransactionIfActive(transaction);
             log.debug("Cat with id = {} was not found", id);
             return null;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
@@ -133,7 +134,7 @@ public class CatRepositoryImpl implements CatRepository {
             return cat;
         } catch (Exception e) {
             log.error(e.getMessage());
-            rollbackTransaction(transaction);
+            rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
         } finally {
             entityManager.close();
