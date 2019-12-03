@@ -1,34 +1,27 @@
 package com.leverx.user.service;
 
-import com.leverx.cat.entity.Cat;
-import com.leverx.cat.repository.CatRepository;
-import com.leverx.cat.repository.CatRepositoryImpl;
-import com.leverx.user.entity.User;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
+import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import com.leverx.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.NoSuchElementException;
 
 import static com.leverx.utils.ServiceUtils.convertUserCollectionToUserOutputDtoCollection;
 import static com.leverx.utils.ServiceUtils.convertUserInputDtoToUser;
 import static com.leverx.utils.ServiceUtils.convertUserToUserOutputDto;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
-import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toSet;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 @Slf4j
 public class UserServiceImpl implements UserService {
 
     private UserRepository userRepository = new UserRepositoryImpl();
-    private CatRepository catRepository = new CatRepositoryImpl();
 
     @Override
     public Collection<UserOutputDto> findAll() {
@@ -37,8 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto findById(int id) {
-        var user = userRepository.findById(id);
+    public UserOutputDto findById(int id) throws NoSuchElementException {
+        var optionalUser = userRepository.findById(id);
+        var user = optionalUser.get();
         return convertUserToUserOutputDto(user);
     }
 
@@ -79,24 +73,5 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new IllegalArgumentException();
         }
-    }
-
-    @Override
-    public void assignCatsToUser(int ownerId, List<Integer> catsIds) {
-        var user = userRepository.findById(ownerId);
-        var cats = catsIds.stream()
-                .map(this::findCatIfExist)
-                .filter(Objects::nonNull)
-                .filter(cat -> isNull(cat.getOwner()))
-                .collect(toSet());
-
-        cats.addAll(user.getCats());
-        user.setCats(cats);
-        cats.forEach(cat -> cat.setOwner(user));
-        userRepository.update(user);
-    }
-
-    private Cat findCatIfExist(Integer catId) {
-        return catRepository.findById(catId);
     }
 }

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.NoSuchElementException;
 
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
@@ -18,6 +19,7 @@ import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class CatServlet extends HttpServlet {
@@ -29,13 +31,14 @@ public class CatServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var responseWriter = response.getWriter();
         var pathVariable = getPathVariableFromRequest(request);
+        var responseStatus = SC_OK;
         if (ORIGIN_PATH.equals(pathVariable)) {
-            printAllCatsToResponseBody(responseWriter);
+            responseStatus = printAllCatsToResponseBody(responseWriter);
         } else {
-            printCatByIdToResponseBody(responseWriter, pathVariable);
+            responseStatus = printCatByIdToResponseBody(responseWriter, pathVariable);
         }
         responseWriter.flush();
-        response.setStatus(SC_OK);
+        response.setStatus(responseStatus);
     }
 
     @Override
@@ -50,16 +53,23 @@ public class CatServlet extends HttpServlet {
         }
     }
 
-    private void printCatByIdToResponseBody(PrintWriter writer, String pathVariable) {
-        var id = parseInt(pathVariable);
-        var cat = catService.findById(id);
-        var catJson = convertFromEntityToJson(cat);
-        writer.print(catJson);
+    private int printCatByIdToResponseBody(PrintWriter writer, String pathVariable) {
+        try {
+            var id = parseInt(pathVariable);
+            var cat = catService.findById(id);
+            var catJson = convertFromEntityToJson(cat);
+            writer.print(catJson);
+            return SC_OK;
+        } catch (NoSuchElementException e) {
+            return SC_NOT_FOUND;
+        }
+
     }
 
-    private void printAllCatsToResponseBody(PrintWriter writer) {
+    private int printAllCatsToResponseBody(PrintWriter writer) {
         var cats = catService.findAll();
         var catsJson = convertFromEntityCollectionToJson(cats);
         catsJson.forEach(writer::println);
+        return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
 }

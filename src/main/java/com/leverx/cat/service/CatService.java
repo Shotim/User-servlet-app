@@ -4,6 +4,7 @@ import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 
 import java.util.Collection;
+import java.util.List;
 
 public interface CatService {
 
@@ -14,4 +15,6 @@ public interface CatService {
     Collection<CatOutputDto> findByOwner(int ownerId);
 
     CatOutputDto save(CatInputDto cat);
+
+    void assignCatsToUser(int ownerId, List<Integer> catsIds);
 }

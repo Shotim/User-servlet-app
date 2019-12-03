@@ -3,18 +3,19 @@ package com.leverx.user.repository;
 import com.leverx.user.entity.User;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface UserRepository {
 
     Collection<User> findAll();
 
-    User findById(int id);
+    Optional<User> findById(int id);
 
     Collection<User> findByName(String name);
 
-    User save(User user);
+    Optional<User> save(User user);
 
     void deleteById(int id);
 
-    User update(User user);
+    Optional<User> update(User user);
 }

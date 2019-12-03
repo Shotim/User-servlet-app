@@ -8,6 +8,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.leverx.config.EntityManagerFactoryImpl.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
@@ -36,11 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
             transaction.commit();
             log.debug("Were received {} users", users.size());
             return users;
-        } catch (NoResultException e) {
-            commitTransactionIfActive(transaction);
-            log.debug("Users were not found");
-            return null;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -50,7 +47,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User findById(int id) {
+    public Optional<User> findById(int id) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -70,12 +67,12 @@ public class UserRepositoryImpl implements UserRepository {
             var user = query.getSingleResult();
             transaction.commit();
             log.debug("User with id = {} was received", id);
-            return user;
+            return Optional.of(user);
         } catch (NoResultException e) {
             commitTransactionIfActive(transaction);
             log.debug("User with id = {} was not found", id);
-            return null;
-        } catch (Exception e) {
+            return Optional.empty();
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -106,11 +103,7 @@ public class UserRepositoryImpl implements UserRepository {
             transaction.commit();
             log.debug("Were received {} users with name = {}", users.size(), name);
             return users;
-        } catch (NoResultException e) {
-            commitTransactionIfActive(transaction);
-            log.debug("User with name = {} was not found", name);
-            return null;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -120,7 +113,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User save(User user) {
+    public Optional<User> save(User user) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -128,8 +121,8 @@ public class UserRepositoryImpl implements UserRepository {
             entityManager.persist(user);
             transaction.commit();
             log.debug("User was saved");
-            return user;
-        } catch (Exception e) {
+            return Optional.of(user);
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -158,7 +151,7 @@ public class UserRepositoryImpl implements UserRepository {
             query.executeUpdate();
             transaction.commit();
             log.debug("User with id = {} was deleted", id);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -168,7 +161,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public User update(User user) {
+    public Optional<User> update(User user) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -178,8 +171,8 @@ public class UserRepositoryImpl implements UserRepository {
 
             transaction.commit();
             log.debug("User with id = {} was updated", user.getId());
-            return user;
-        } catch (Exception e) {
+            return Optional.of(user);
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);

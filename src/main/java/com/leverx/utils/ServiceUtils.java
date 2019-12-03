@@ -1,11 +1,11 @@
 package com.leverx.utils;
 
-import com.leverx.cat.entity.Cat;
 import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
-import com.leverx.user.entity.User;
+import com.leverx.cat.entity.Cat;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
+import com.leverx.user.entity.User;
 
 import java.util.Collection;
 

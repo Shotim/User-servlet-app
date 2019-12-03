@@ -4,7 +4,6 @@ import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 
 import java.util.Collection;
-import java.util.List;
 
 public interface UserService {
 
@@ -19,6 +18,4 @@ public interface UserService {
     void deleteById(String id);
 
     UserOutputDto updateById(String id, UserInputDto user);
-
-    void assignCatsToUser(int ownerId, List<Integer> catsIds);
 }
