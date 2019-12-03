@@ -1,6 +1,5 @@
 version: '3.3'
 
-#TODO Modify docker-compose
 services:
   database:
     image: mysql:latest
@@ -10,13 +9,12 @@ services:
       MYSQL_USER: 'user'
       MYSQL_PASSWORD: 'password'
       MYSQL_ROOT_PASSWORD: 'root'
-    command: --init-file /docker-entrypoint-initdb.d
     ports:
       - '3306:3306'
     expose:
       - '3306'
     volumes:
-      - ./src/main/resources/initdb:/docker-entrypoint-initdb.d
+      - ./src/main/resources/dbinit:/docker-entrypoint-initdb.d
 
   tomcat:
     image: tomcat:9.0.27-jdk13-openjdk-oracle
@@ -24,3 +22,5 @@ services:
       - ./target/SimpleRestfulAppinServlets-1.0-SNAPSHOT.war:/usr/local/tomcat/webapps/application.war
     ports:
       - '8080:8080'
+    depends_on:
+      - database
