@@ -1,9 +1,9 @@
-package com.leverx.user.entity;
+package com.leverx.user.dto;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.leverx.cat.entity.CatOutputDto;
+import com.leverx.cat.dto.CatOutputDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;

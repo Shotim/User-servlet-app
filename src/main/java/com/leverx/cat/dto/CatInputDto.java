@@ -1,4 +1,4 @@
-package com.leverx.cat.entity;
+package com.leverx.cat.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;

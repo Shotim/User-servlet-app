@@ -1,7 +1,7 @@
 package com.leverx.user.service;
 
-import com.leverx.user.entity.UserInputDto;
-import com.leverx.user.entity.UserOutputDto;
+import com.leverx.user.dto.UserInputDto;
+import com.leverx.user.dto.UserOutputDto;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,7 +1,7 @@
 package com.leverx.cat.service;
 
-import com.leverx.cat.entity.CatInputDto;
-import com.leverx.cat.entity.CatOutputDto;
+import com.leverx.cat.dto.CatInputDto;
+import com.leverx.cat.dto.CatOutputDto;
 
 import java.util.Collection;
 

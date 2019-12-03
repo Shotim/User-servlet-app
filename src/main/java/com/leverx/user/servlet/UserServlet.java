@@ -1,9 +1,9 @@
 package com.leverx.user.servlet;
 
-import com.leverx.cat.entity.CatsDtoIdsList;
+import com.leverx.cat.dto.CatsDtoIdsList;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
-import com.leverx.user.entity.UserInputDto;
+import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 

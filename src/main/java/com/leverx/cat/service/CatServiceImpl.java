@@ -1,8 +1,8 @@
 package com.leverx.cat.service;
 
 import com.leverx.cat.entity.Cat;
-import com.leverx.cat.entity.CatInputDto;
-import com.leverx.cat.entity.CatOutputDto;
+import com.leverx.cat.dto.CatInputDto;
+import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;

@@ -1,6 +1,6 @@
 package com.leverx.cat.servlet;
 
-import com.leverx.cat.entity.CatInputDto;
+import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
 

@@ -1,4 +1,4 @@
-package com.leverx.cat.entity;
+package com.leverx.cat.dto;
 
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
