@@ -7,6 +7,7 @@ import com.leverx.user.servlet.PutMethodTypes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
@@ -23,6 +24,11 @@ public class ServletUtils {
     private static final int TWO = 2;
     private static final String USERS_ORIGIN = "users";
     private static final String CATS_ORIGIN = "cats";
+
+    public static <T> T readJsonBody(HttpServletRequest request, Class<T> tclass) throws IOException {
+        var jsonString = readBody(request);
+        return convertFromJsonToEntity(jsonString, tclass);
+    }
 
     public static String readBody(HttpServletRequest request) throws IOException {
         return request.getReader()

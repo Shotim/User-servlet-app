@@ -13,9 +13,8 @@ import java.util.NoSuchElementException;
 
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
-import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
-import static com.leverx.utils.ServletUtils.readBody;
+import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -43,8 +42,7 @@ public class CatServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonCatDto = readBody(request);
-        var catInputDto = convertFromJsonToEntity(jsonCatDto, CatInputDto.class);
+        var catInputDto = readJsonBody(request, CatInputDto.class);
         try {
             catService.save(catInputDto);
             response.setStatus(SC_CREATED);

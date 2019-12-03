@@ -16,11 +16,10 @@ import java.util.NoSuchElementException;
 
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
-import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.initUserServletPutMethodType;
-import static com.leverx.utils.ServletUtils.readBody;
+import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -62,8 +61,7 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonUserDto = readBody(request);
-        var userDto = convertFromJsonToEntity(jsonUserDto, UserInputDto.class);
+        var userDto = readJsonBody(request, UserInputDto.class);
         try {
             userService.save(userDto);
             response.setStatus(SC_CREATED);
@@ -87,8 +85,7 @@ public class UserServlet extends HttpServlet {
         var pathVariable = methodTypeWithPathVariable.getRight();
         switch (methodType) {
             case EDIT_USER: {
-                var jsonUser = readBody(request);
-                var userDto = convertFromJsonToEntity(jsonUser, UserInputDto.class);
+                var userDto = readJsonBody(request, UserInputDto.class);
                 try {
                     userService.updateById(pathVariable, userDto);
                     response.setStatus(SC_OK);
@@ -98,8 +95,7 @@ public class UserServlet extends HttpServlet {
             }
             break;
             case ASSIGN_CATS_TO_USER: {
-                var jsonIdList = readBody(request);
-                var catsIds = convertFromJsonToEntity(jsonIdList, CatsDtoIdsList.class);
+                var catsIds = readJsonBody(request, CatsDtoIdsList.class);
                 var catsIdsList = catsIds.getIds();
                 var ownerId = parseInt(pathVariable);
                 try {
