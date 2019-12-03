@@ -29,10 +29,18 @@ mvn clean install
 [INFO] ------------------------------------------------------------------------
 ```
 #### * Run project by Docker
+* Build `war` file with Maven:
+```
+mvn clean install
+```
 * Run docker container with MYSQL database
 ```
 docker-compose up
 ```
+* Go to the Url:
+`
+http://localhost:8080/application/users
+`
 #### * Run application on Tomcat Server:
 1) Copy war file you have just created to `CATALINA_HOME/webapps`, e.g.
 `C:/Tomcat9/webapps`
