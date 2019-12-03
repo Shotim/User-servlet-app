@@ -10,7 +10,7 @@ import javax.persistence.NoResultException;
 import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
-import static com.leverx.config.HibernateConfig.getEntityManagerFactory;
+import static com.leverx.config.EntityManagerFactoryImpl.getEntityManagerFactory;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
