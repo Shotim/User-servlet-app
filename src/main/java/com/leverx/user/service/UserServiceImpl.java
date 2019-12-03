@@ -1,84 +1,102 @@
 package com.leverx.user.service;
 
-import com.google.gson.Gson;
+import com.leverx.cat.entity.Cat;
+import com.leverx.cat.repository.CatRepository;
+import com.leverx.cat.repository.CatRepositoryImpl;
 import com.leverx.user.entity.User;
-import com.leverx.user.entity.UserDto;
+import com.leverx.user.entity.UserInputDto;
+import com.leverx.user.entity.UserOutputDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
-import org.slf4j.Logger;
+import com.leverx.utils.ServiceUtils;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.Optional;
+import java.util.List;
+import java.util.Objects;
 
-import static com.leverx.user.service.validator.UserValidator.isValidName;
-import static com.leverx.utils.ServiceUtils.convertUserDtoToUser;
+import static com.leverx.utils.ServiceUtils.convertUserCollectionToUserOutputDtoCollection;
+import static com.leverx.utils.ServiceUtils.convertUserInputDtoToUser;
+import static com.leverx.utils.ServiceUtils.convertUserToUserOutputDto;
+import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
-import static org.slf4j.LoggerFactory.getLogger;
+import static java.util.Objects.isNull;
+import static java.util.stream.Collectors.toSet;
+import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
+@Slf4j
 public class UserServiceImpl implements UserService {
 
-    private static Logger LOGGER = getLogger(UserServiceImpl.class);
-    private Gson gson;
-    private UserRepository userRepository;
-
-    public UserServiceImpl() {
-        gson = new Gson();
-        userRepository = new UserRepositoryImpl();
-    }
+    private UserRepository userRepository = new UserRepositoryImpl();
+    private CatRepository catRepository = new CatRepositoryImpl();
 
     @Override
-    public Collection<User> findAll() {
+    public Collection<UserOutputDto> findAll() {
         Collection<User> users = userRepository.findAll();
-        LOGGER.debug("Were received {} users", users.size());
-        return users;
+        return convertUserCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
-    public User findById(int id) {
-        User user = userRepository.findById(id);
-        LOGGER.debug("Was received user with id = {}", id);
-        return user;
+    public UserOutputDto findById(int id) {
+        var user = userRepository.findById(id);
+        return convertUserToUserOutputDto(user);
     }
 
     @Override
-    public Collection<User> findByName(String name) {
-        Collection<User> users = userRepository.findByName(name);
-        LOGGER.debug("Were received {} users", users.size());
-        return users;
+    public Collection<UserOutputDto> findByName(String name) {
+        var users = userRepository.findByName(name);
+        return convertUserCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
-    public Optional<User> save(UserDto userDto) {
-        User user = convertUserDtoToUser(userDto);
-        var savingPossible = isValidName(userDto);
-        if (savingPossible) {
-            Optional<User> userOpt = userRepository.save(user);
-            LOGGER.debug("User with name = {} was saved", userDto.getName());
-            return userOpt;
+    public UserOutputDto save(UserInputDto userInputDto) {
+        if (isValid(userInputDto)) {
+            User user = convertUserInputDtoToUser(userInputDto);
+            userRepository.save(user);
+            return convertUserToUserOutputDto(user);
         } else {
-            LOGGER.debug("User with name = {} was not saved\nThe name has more than 60 symbols", userDto.getName());
-            return Optional.empty();
+            throw new IllegalArgumentException();
         }
     }
 
     @Override
     public void deleteById(String id) {
-        userRepository.deleteById(id);
-        LOGGER.debug("User with id = {} was removed", id);
+        if (isParsable(id)) {
+            int parsedId = parseInt(id);
+            userRepository.deleteById(parsedId);
+        } else {
+            log.debug("User was not updated. Check if id was correct");
+        }
     }
 
     @Override
-    public Optional<User> updateById(String id, UserDto userDto) {
+    public UserOutputDto updateById(String id, UserInputDto userInputDto) {
         var userId = parseInt(id);
-        User user = convertUserDtoToUser(userId, userDto);
-        var updatingPossible = isValidName(userDto);
-        if (updatingPossible) {
-            Optional<User> userOpt = userRepository.updateById(user);
-            LOGGER.debug("User with id = {} was updated", id);
-            return userOpt;
+        User user = ServiceUtils.convertUserInputDtoToUser(userId, userInputDto);
+        if (isValid(userInputDto)) {
+            userRepository.update(user);
+            return convertUserToUserOutputDto(user);
         } else {
-            LOGGER.debug("User with id = {} was not updated\nThe name has more than 60 symbols", id);
-            return Optional.empty();
+            throw new IllegalArgumentException();
         }
+    }
+
+    @Override
+    public void assignCatsToUser(int ownerId, List<Integer> catsIds) {
+        var user = userRepository.findById(ownerId);
+        var cats = catsIds.stream()
+                .map(this::findCatIfExist)
+                .filter(Objects::nonNull)
+                .filter(cat -> isNull(cat.getOwner()))
+                .collect(toSet());
+
+        cats.addAll(user.getCats());
+        user.setCats(cats);
+        cats.forEach(cat -> cat.setOwner(user));
+        userRepository.update(user);
+    }
+
+    private Cat findCatIfExist(Integer catId) {
+        return catRepository.findById(catId);
     }
 }

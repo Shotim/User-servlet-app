@@ -3,7 +3,6 @@ package com.leverx.user.repository;
 import com.leverx.user.entity.User;
 
 import java.util.Collection;
-import java.util.Optional;
 
 public interface UserRepository {
 
@@ -13,9 +12,9 @@ public interface UserRepository {
 
     Collection<User> findByName(String name);
 
-    Optional<User> save(User user);
+    User save(User user);
 
-    void deleteById(String id);
+    void deleteById(int id);
 
-    Optional<User> updateById(User user);
+    User update(User user);
 }

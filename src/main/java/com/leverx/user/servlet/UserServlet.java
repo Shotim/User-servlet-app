@@ -1,5 +1,9 @@
 package com.leverx.user.servlet;
 
+import com.leverx.cat.entity.CatsDtoIdsList;
+import com.leverx.cat.service.CatService;
+import com.leverx.cat.service.CatServiceImpl;
+import com.leverx.user.entity.UserInputDto;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 
@@ -9,46 +13,61 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.user.mapper.UserJsonMapper.convertFromJsonToUserDto;
-import static com.leverx.user.mapper.UserJsonMapper.convertToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
+import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
+import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
+import static com.leverx.utils.ServletUtils.initUserServletPutMethodType;
 import static com.leverx.utils.ServletUtils.readBody;
 import static java.lang.Integer.parseInt;
+import static java.util.Objects.nonNull;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
+import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
-import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 
 public class UserServlet extends HttpServlet {
 
-    private static final String ORIGIN_PATH = "users";
-    private UserService service = new UserServiceImpl();
+    private UserService userService = new UserServiceImpl();
+    private CatService catService = new CatServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         var responseWriter = response.getWriter();
-        var pathVariable = getPathVariableFromRequest(request);
-
-        if (ORIGIN_PATH.equals(pathVariable)) {
-            printAllUsersToResponseBody(responseWriter);
-        } else {
-            printUsersBySpecificParameterToResponseBody(responseWriter, pathVariable);
+        var methodTypeWithPathVariable = initUserServletGetMethodType(request);
+        var methodType = methodTypeWithPathVariable.getLeft();
+        var requiredVariable = methodTypeWithPathVariable.getRight();
+        var responseStatus = SC_OK;
+        switch (methodType) {
+            case GET_ALL_USERS:
+                responseStatus = printAllUsersToResponseBody(responseWriter);
+                break;
+            case GET_USER_BY_ID:
+                responseStatus = printUserByIdToResponseBody(responseWriter, requiredVariable);
+                break;
+            case GET_USER_BY_NAME:
+                responseStatus = printUsersByNameToResponseBody(responseWriter, requiredVariable);
+                break;
+            case GET_CATS_OF_USER:
+                responseStatus = printCatsOfUser(responseWriter, requiredVariable);
+                break;
         }
         responseWriter.flush();
-        response.setStatus(SC_OK);
+        response.setStatus(responseStatus);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var jsonDTOUser = readBody(request);
-        var userDto = convertFromJsonToUserDto(jsonDTOUser);
-
-        if (service.save(userDto).isPresent()) {
+        var jsonUserDto = readBody(request);
+        var userDto = convertFromJsonToEntity(jsonUserDto, UserInputDto.class);
+        try {
+            userService.save(userDto);
             response.setStatus(SC_CREATED);
-        } else {
+        } catch (IllegalArgumentException e) {
             response.setStatus(SC_BAD_REQUEST);
         }
     }
@@ -56,47 +75,69 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doDelete(HttpServletRequest request, HttpServletResponse response) {
         var id = getPathVariableFromRequest(request);
-        service.deleteById(id);
+        userService.deleteById(id);
         response.setStatus(SC_NO_CONTENT);
     }
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var id = getPathVariableFromRequest(request);
-        var jsonUser = readBody(request);
-        var userDto = convertFromJsonToUserDto(jsonUser);
 
-        if (service.updateById(id, userDto).isPresent()) {
-            response.setStatus(SC_OK);
-        } else {
-            response.setStatus(SC_BAD_REQUEST);
+        var methodTypeWithPathVariable = initUserServletPutMethodType(request);
+        var methodType = methodTypeWithPathVariable.getLeft();
+        var pathVariable = methodTypeWithPathVariable.getRight();
+        switch (methodType) {
+            case EDIT_USER: {
+                var jsonUser = readBody(request);
+                var userDto = convertFromJsonToEntity(jsonUser, UserInputDto.class);
+                try {
+                    userService.updateById(pathVariable, userDto);
+                    response.setStatus(SC_OK);
+                } catch (IllegalArgumentException e) {
+                    response.setStatus(SC_BAD_REQUEST);
+                }
+            }
+            break;
+            case ASSIGN_CATS_TO_USER: {
+                var jsonIdList = readBody(request);
+                var catsIds = convertFromJsonToEntity(jsonIdList, CatsDtoIdsList.class);
+                var catsIdsList = catsIds.getIds();
+                var ownerId = parseInt(pathVariable);
+                try {
+                    userService.assignCatsToUser(ownerId, catsIdsList);
+                } catch (NullPointerException e) {
+                    response.setStatus(SC_BAD_REQUEST);
+                }
+            }
         }
     }
 
-    private void printAllUsersToResponseBody(PrintWriter writer) {
-        var users = service.findAll();
-        var jsonUsers = convertToJson(users);
+    private int printAllUsersToResponseBody(PrintWriter writer) {
+        var users = userService.findAll();
+        var jsonUsers = convertFromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
+        return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
 
-    private void printUsersBySpecificParameterToResponseBody(PrintWriter writer, String pathVariable) {
-        if (isParsable(pathVariable)) {
-            printUserByIdToResponseBody(writer, pathVariable);
-        } else {
-            printUsersByNameToResponseBody(writer, pathVariable);
-        }
-    }
-
-    private void printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
-        var user = service.findById(id);
-        var jsonUser = convertToJson(user);
+        var user = userService.findById(id);
+        var jsonUser = convertFromEntityToJson(user);
         writer.print(jsonUser);
+        return nonNull(user) ? SC_OK : SC_NOT_FOUND;
     }
 
-    private void printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
-        var users = service.findByName(pathVariable);
-        var jsonUsers = convertToJson(users);
+    private int printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
+        var users = userService.findByName(pathVariable);
+        var jsonUsers = convertFromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
+        return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
+    }
+
+    private int printCatsOfUser(PrintWriter writer, String ownerId) {
+        var id = parseInt(ownerId);
+        var cats = catService.findByOwner(id);
+        var jsonCats = convertFromEntityCollectionToJson(cats);
+        jsonCats.forEach(writer::println);
+        return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
 }
