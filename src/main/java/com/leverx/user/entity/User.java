@@ -35,18 +35,16 @@ import static lombok.AccessLevel.PRIVATE;
 @Table(name = "users")
 public class User {
 
-    @NonNull
     @Id
     @Column
+    @NonNull
     @GeneratedValue(strategy = IDENTITY)
     int id;
 
-    @NonNull
     @Column
+    @NonNull
     String name;
 
-    @OneToMany(fetch = EAGER,
-            cascade = ALL,
-            mappedBy = "owner")
+    @OneToMany(fetch = EAGER, cascade = ALL, mappedBy = "owner")
     Collection<Cat> cats = emptySet();
 }

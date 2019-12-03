@@ -10,10 +10,14 @@ import com.leverx.user.dto.UserOutputDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 
 @Getter
 @AllArgsConstructor
@@ -22,8 +26,12 @@ public class CatOutputDto {
 
     int id;
 
+    @NotNull
+    @Size(min = 5, max = 60, message = NOT_VALID_NAME)
     String name;
 
+    @NotNull
+    @PastOrPresent
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;

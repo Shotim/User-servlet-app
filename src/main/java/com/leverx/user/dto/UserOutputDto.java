@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
@@ -24,6 +25,7 @@ public class UserOutputDto {
 
     int id;
 
+    @NotNull
     String name;
 
     @JsonInclude(NON_NULL)
