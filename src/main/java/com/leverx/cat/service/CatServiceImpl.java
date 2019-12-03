@@ -68,6 +68,8 @@ public class CatServiceImpl implements CatService {
                 .collect(toSet());
 
         userCats.addAll(cats);
+        userCats.forEach(cat -> cat.setOwner(user));
+        user.setCats(userCats);
         userRepository.update(user);
     }
 
