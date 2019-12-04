@@ -13,9 +13,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-import static com.leverx.utils.ServiceUtils.convertCatCollectionToCatOutputDtoCollection;
-import static com.leverx.utils.ServiceUtils.convertCatInputDtoToCat;
-import static com.leverx.utils.ServiceUtils.convertCatToCatOutputDto;
+import static com.leverx.cat.dto.CatDtoConverter.convertCatCollectionToCatOutputDtoCollection;
+import static com.leverx.cat.dto.CatDtoConverter.convertCatInputDtoToCat;
+import static com.leverx.cat.dto.CatDtoConverter.convertCatToCatOutputDto;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 
