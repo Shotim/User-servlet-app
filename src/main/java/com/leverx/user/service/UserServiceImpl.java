@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserOutputDto findById(int id) throws NoSuchElementException {
         var optionalUser = userRepository.findById(id);
-        var user = optionalUser.get();
+        var user = optionalUser.orElseThrow();
         return convertUserToUserOutputDto(user);
     }
 

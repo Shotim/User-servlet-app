@@ -35,7 +35,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public CatOutputDto findById(int id) throws NoSuchElementException {
         var optionalCat = catRepository.findById(id);
-        var cat = optionalCat.get();
+        var cat = optionalCat.orElseThrow();
         return convertCatToCatOutputDto(cat);
     }
 
@@ -59,7 +59,7 @@ public class CatServiceImpl implements CatService {
     @Override
     public void assignCatsToUser(int ownerId, List<Integer> catsIds) throws NoSuchElementException {
         var optionalUser = userRepository.findById(ownerId);
-        var user = optionalUser.get();
+        var user = optionalUser.orElseThrow();
         var userCats = user.getCats();
 
         var cats = catsIds.stream()
@@ -74,6 +74,6 @@ public class CatServiceImpl implements CatService {
     }
 
     private Cat findCatIfExist(Integer catId) {
-        return catRepository.findById(catId).get();
+        return catRepository.findById(catId).orElseThrow();
     }
 }
