@@ -40,8 +40,8 @@ public class UserServlet extends HttpServlet {
 
         var responseWriter = response.getWriter();
         var methodTypeWithPathVariable = initUserServletGetMethodType(request);
-        var methodType = methodTypeWithPathVariable.getLeft();
-        var requiredVariable = methodTypeWithPathVariable.getRight();
+        var methodType = methodTypeWithPathVariable.getMethodType();
+        var requiredVariable = methodTypeWithPathVariable.getPathVar();
         var responseStatus = SC_OK;
         switch (methodType) {
             case GET_ALL_USERS:
@@ -85,8 +85,8 @@ public class UserServlet extends HttpServlet {
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         var methodTypeWithPathVariable = initUserServletPutMethodType(request);
-        var methodType = methodTypeWithPathVariable.getLeft();
-        var pathVariable = methodTypeWithPathVariable.getRight();
+        var methodType = methodTypeWithPathVariable.getMethodType();
+        var pathVariable = methodTypeWithPathVariable.getPathVar();
         switch (methodType) {
             case EDIT_USER: {
                 var userDto = readJsonBody(request, UserInputDto.class);

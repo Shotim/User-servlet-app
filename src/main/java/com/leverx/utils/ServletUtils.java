@@ -1,7 +1,7 @@
 package com.leverx.utils;
 
 import com.leverx.user.servlet.GetMethodTypes;
-import com.leverx.user.servlet.Pair;
+import com.leverx.user.servlet.MethodTypePlusRequiredVar;
 import com.leverx.user.servlet.PutMethodTypes;
 import com.leverx.validator.message.ValidationMessageErrors;
 
@@ -53,43 +53,43 @@ public class ServletUtils {
         return getLastStringElement(splittedBySlashURL);
     }
 
-    public static Pair<GetMethodTypes, String> initUserServletGetMethodType(HttpServletRequest request) {
-        Pair<GetMethodTypes, String> pair = new Pair<>();
+    public static MethodTypePlusRequiredVar<GetMethodTypes, String> initUserServletGetMethodType(HttpServletRequest request) {
+        MethodTypePlusRequiredVar<GetMethodTypes, String> methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<>();
         var splittedUrl = getSplittedUrl(request);
         var lastElement = getLastStringElement(splittedUrl);
 
         if (isParsable(lastElement)) {
-            pair.setValues(GET_USER_BY_ID, lastElement);
+            methodTypePlusRequiredVar.setValues(GET_USER_BY_ID, lastElement);
 
         } else {
             switch (lastElement) {
                 case USERS_ORIGIN:
-                    pair.setValues(GET_ALL_USERS, lastElement);
+                    methodTypePlusRequiredVar.setValues(GET_ALL_USERS, lastElement);
                     break;
                 case CATS_ORIGIN:
                     var userId = getPreLastStringElement(splittedUrl);
-                    pair.setValues(GET_CATS_OF_USER, userId);
+                    methodTypePlusRequiredVar.setValues(GET_CATS_OF_USER, userId);
                     break;
                 default:
-                    pair.setValues(GET_USER_BY_NAME, lastElement);
+                    methodTypePlusRequiredVar.setValues(GET_USER_BY_NAME, lastElement);
                     break;
             }
         }
-        return pair;
+        return methodTypePlusRequiredVar;
     }
 
-    public static Pair<PutMethodTypes, String> initUserServletPutMethodType(HttpServletRequest request) {
-        Pair<PutMethodTypes, String> pair = new Pair<>();
+    public static MethodTypePlusRequiredVar<PutMethodTypes, String> initUserServletPutMethodType(HttpServletRequest request) {
+        MethodTypePlusRequiredVar<PutMethodTypes, String> methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<>();
         var splittedUrl = getSplittedUrl(request);
         var lastElement = getLastStringElement(splittedUrl);
 
         if (CATS_ORIGIN.equals(lastElement)) {
             var ownerId = getPreLastStringElement(splittedUrl);
-            pair.setValues(ASSIGN_CATS_TO_USER, ownerId);
+            methodTypePlusRequiredVar.setValues(ASSIGN_CATS_TO_USER, ownerId);
         } else {
-            pair.setValues(EDIT_USER, lastElement);
+            methodTypePlusRequiredVar.setValues(EDIT_USER, lastElement);
         }
-        return pair;
+        return methodTypePlusRequiredVar;
     }
 
     private static String[] getSplittedUrl(HttpServletRequest request) {
