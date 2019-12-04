@@ -10,7 +10,7 @@ import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.leverx.config.EntityManagerFactoryImpl.getEntityManager;
+import static com.leverx.servlet.listener.ServletListener.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
