@@ -14,9 +14,10 @@ import java.util.NoSuchElementException;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
+import static com.leverx.utils.ServletUtils.printErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
+import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
@@ -43,11 +44,14 @@ public class CatServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var catInputDto = readJsonBody(request, CatInputDto.class);
-        try {
+
+        var optionalValid = isValid(catInputDto);
+
+        if (optionalValid.isPresent()) {
+            printErrorMessages(response, optionalValid.get());
+        } else {
             catService.save(catInputDto);
             response.setStatus(SC_CREATED);
-        } catch (IllegalArgumentException e) {
-            response.setStatus(SC_BAD_REQUEST);
         }
     }
 

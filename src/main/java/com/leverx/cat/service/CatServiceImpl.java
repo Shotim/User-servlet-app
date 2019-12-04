@@ -16,7 +16,6 @@ import java.util.NoSuchElementException;
 import static com.leverx.utils.ServiceUtils.convertCatCollectionToCatOutputDtoCollection;
 import static com.leverx.utils.ServiceUtils.convertCatInputDtoToCat;
 import static com.leverx.utils.ServiceUtils.convertCatToCatOutputDto;
-import static com.leverx.validator.EntityValidator.isValid;
 import static java.util.Objects.isNull;
 import static java.util.stream.Collectors.toSet;
 
@@ -47,13 +46,9 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public CatOutputDto save(CatInputDto catInputDto) {
-        if (isValid(catInputDto)) {
-            Cat cat = convertCatInputDtoToCat(catInputDto);
-            catRepository.save(cat);
-            return convertCatToCatOutputDto(cat);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        Cat cat = convertCatInputDtoToCat(catInputDto);
+        catRepository.save(cat);
+        return convertCatToCatOutputDto(cat);
     }
 
     @Override

@@ -19,7 +19,9 @@ import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.initUserServletPutMethodType;
+import static com.leverx.utils.ServletUtils.printErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
+import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -62,11 +64,13 @@ public class UserServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var userDto = readJsonBody(request, UserInputDto.class);
-        try {
+        var optionalValid = isValid(userDto);
+
+        if (optionalValid.isPresent()) {
+            printErrorMessages(response, optionalValid.get());
+        } else {
             userService.save(userDto);
             response.setStatus(SC_CREATED);
-        } catch (IllegalArgumentException e) {
-            response.setStatus(SC_BAD_REQUEST);
         }
     }
 
@@ -86,11 +90,12 @@ public class UserServlet extends HttpServlet {
         switch (methodType) {
             case EDIT_USER: {
                 var userDto = readJsonBody(request, UserInputDto.class);
-                try {
+                var optionalValid = isValid(userDto);
+                if (optionalValid.isPresent()) {
+                    printErrorMessages(response, optionalValid.get());
+                } else {
                     userService.updateById(pathVariable, userDto);
                     response.setStatus(SC_OK);
-                } catch (IllegalArgumentException e) {
-                    response.setStatus(SC_BAD_REQUEST);
                 }
             }
             break;

@@ -5,7 +5,6 @@ import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
-import com.leverx.utils.ServiceUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -44,13 +43,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOutputDto save(UserInputDto userInputDto) {
-        if (isValid(userInputDto)) {
-            User user = convertUserInputDtoToUser(userInputDto);
-            userRepository.save(user);
-            return convertUserToUserOutputDto(user);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        User user = convertUserInputDtoToUser(userInputDto);
+        userRepository.save(user);
+        return convertUserToUserOutputDto(user);
     }
 
     @Override
@@ -66,12 +61,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserOutputDto updateById(String id, UserInputDto userInputDto) {
         var userId = parseInt(id);
-        User user = ServiceUtils.convertUserInputDtoToUser(userId, userInputDto);
-        if (isValid(userInputDto)) {
-            userRepository.update(user);
-            return convertUserToUserOutputDto(user);
-        } else {
-            throw new IllegalArgumentException();
-        }
+        User user = convertUserInputDtoToUser(userId, userInputDto);
+        isValid(userInputDto);
+        userRepository.update(user);
+        return convertUserToUserOutputDto(user);
     }
 }

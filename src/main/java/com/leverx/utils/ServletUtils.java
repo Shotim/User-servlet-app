@@ -3,10 +3,13 @@ package com.leverx.utils;
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.Pair;
 import com.leverx.user.servlet.PutMethodTypes;
+import com.leverx.validator.message.ValidationMessageErrors;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
@@ -15,6 +18,7 @@ import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
 import static com.leverx.user.servlet.PutMethodTypes.ASSIGN_CATS_TO_USER;
 import static com.leverx.user.servlet.PutMethodTypes.EDIT_USER;
 import static java.util.stream.Collectors.joining;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 public class ServletUtils {
@@ -24,6 +28,14 @@ public class ServletUtils {
     private static final int TWO = 2;
     private static final String USERS_ORIGIN = "users";
     private static final String CATS_ORIGIN = "cats";
+
+    public static void printErrorMessages(HttpServletResponse response, ValidationMessageErrors errors) throws IOException {
+        response.setStatus(SC_BAD_REQUEST);
+        var messagesJson = convertFromEntityToJson(errors);
+        var responseWriter = response.getWriter();
+        responseWriter.print(messagesJson);
+        responseWriter.flush();
+    }
 
     public static <T> T readJsonBody(HttpServletRequest request, Class<T> tclass) throws IOException {
         var jsonString = readBody(request);
