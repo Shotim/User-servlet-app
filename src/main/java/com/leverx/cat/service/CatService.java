@@ -16,5 +16,7 @@ public interface CatService {
 
     CatOutputDto save(CatInputDto cat);
 
-    void assignCatsToUser(int ownerId, List<Integer> catsIds);
+    void assignCatsToExistingUser(int ownerId, List<Integer> catsIds);
+
+    void update(int catId, int ownerId);
 }
