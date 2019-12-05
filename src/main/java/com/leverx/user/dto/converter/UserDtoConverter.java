@@ -1,10 +1,13 @@
 package com.leverx.user.dto.converter;
 
+import com.leverx.cat.repository.CatRepository;
+import com.leverx.cat.repository.CatRepositoryImpl;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.entity.User;
 
 import java.util.Collection;
+import java.util.Optional;
 
 import static com.leverx.cat.dto.converter.CatDtoConverter.convertCatCollectionToCatOutputDtoCollection;
 import static java.util.Objects.nonNull;
@@ -12,9 +15,15 @@ import static java.util.stream.Collectors.toList;
 
 public class UserDtoConverter {
 
+    private static final CatRepository catRepository = new CatRepositoryImpl();
+
     public static User convertUserInputDtoToUser(int id, UserInputDto userInputDto) {
         var name = userInputDto.getName();
-        return new User(id, name);
+        var cats = userInputDto.getCatsIdsList().stream()
+                .map(catRepository::findById)
+                .map(Optional::orElseThrow)
+                .collect(toList());
+        return new User(id, name, cats);
     }
 
     public static User convertUserInputDtoToUser(UserInputDto userInputDto) {
