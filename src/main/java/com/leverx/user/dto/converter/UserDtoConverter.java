@@ -1,10 +1,12 @@
-package com.leverx.user.dto;
+package com.leverx.user.dto.converter;
 
+import com.leverx.user.dto.UserInputDto;
+import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.entity.User;
 
 import java.util.Collection;
 
-import static com.leverx.cat.dto.CatDtoConverter.convertCatCollectionToCatOutputDtoCollection;
+import static com.leverx.cat.dto.converter.CatDtoConverter.convertCatCollectionToCatOutputDtoCollection;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
