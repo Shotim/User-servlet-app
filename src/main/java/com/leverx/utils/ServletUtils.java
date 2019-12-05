@@ -3,7 +3,7 @@ package com.leverx.utils;
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.MethodTypePlusRequiredVar;
 import com.leverx.user.servlet.PutMethodTypes;
-import com.leverx.validator.message.ValidationMessageErrors;
+import com.leverx.validator.message.ValidationErrorsMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +29,7 @@ public class ServletUtils {
     private static final String USERS_ORIGIN = "users";
     private static final String CATS_ORIGIN = "cats";
 
-    public static void printErrorMessages(HttpServletResponse response, ValidationMessageErrors errors) throws IOException {
+    public static void printErrorMessages(HttpServletResponse response, ValidationErrorsMessage errors) throws IOException {
         response.setStatus(SC_BAD_REQUEST);
         var messagesJson = convertFromEntityToJson(errors);
         var responseWriter = response.getWriter();
