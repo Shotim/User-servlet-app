@@ -14,4 +14,6 @@ public interface CatRepository {
     Optional<Cat> findById(int id);
 
     Optional<Cat> save(Cat cat);
+
+    Optional<Cat> update(Cat cat);
 }

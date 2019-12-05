@@ -130,4 +130,25 @@ public class CatRepositoryImpl implements CatRepository {
             entityManager.close();
         }
     }
+
+    @Override
+    public Optional<Cat> update(Cat cat) {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+
+            entityManager.merge(cat);
+
+            transaction.commit();
+            log.debug("Cat with id = {} was updated", cat.getId());
+            return Optional.of(cat);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e);
+        } finally {
+            entityManager.close();
+        }
+    }
 }
