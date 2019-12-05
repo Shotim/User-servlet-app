@@ -10,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-import static com.leverx.user.dto.UserDtoConverter.convertUserCollectionToUserOutputDtoCollection;
-import static com.leverx.user.dto.UserDtoConverter.convertUserInputDtoToUser;
-import static com.leverx.user.dto.UserDtoConverter.convertUserToUserOutputDto;
+import static com.leverx.user.dto.converter.UserDtoConverter.convertUserCollectionToUserOutputDtoCollection;
+import static com.leverx.user.dto.converter.UserDtoConverter.convertUserInputDtoToUser;
+import static com.leverx.user.dto.converter.UserDtoConverter.convertUserToUserOutputDto;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
