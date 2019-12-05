@@ -1,7 +1,7 @@
 package com.leverx.validator;
 
 import com.leverx.validator.message.ValidationError;
-import com.leverx.validator.message.ValidationMessageErrors;
+import com.leverx.validator.message.ValidationErrorsMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Validator;
@@ -18,7 +18,7 @@ public class EntityValidator {
     private static final String VALIDATION_FAILED = "Validation failed";
     private static Validator validator = buildDefaultValidatorFactory().getValidator();
 
-    public static <T> Optional<ValidationMessageErrors> isValid(T entity) {
+    public static <T> Optional<ValidationErrorsMessage> isValid(T entity) {
         var violations = validator.validate(entity);
         var violationAmount = violations.size();
 
@@ -26,8 +26,7 @@ public class EntityValidator {
             return Optional.empty();
         }
 
-        ValidationMessageErrors message = new ValidationMessageErrors();
-        message.setMessage(VALIDATION_FAILED);
+        ValidationErrorsMessage message = new ValidationErrorsMessage(VALIDATION_FAILED);
 
         List<ValidationError> validationErrors = violations.stream()
                 .map(violation -> {
