@@ -16,14 +16,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PRIVATE;
 
-//TODO remove json annotations
 @Getter
 @Setter
 @NoArgsConstructor
@@ -39,17 +42,20 @@ public class Cat {
     @GeneratedValue(strategy = IDENTITY)
     int id;
 
-    @NonNull
     @Column
+    @NotNull
+    @NonNull
+    @Size(min = 5, max = 60, message = NOT_VALID_NAME)
     String name;
 
-    @NonNull
     @Column
+    @NotNull
+    @NonNull
+    @PastOrPresent
     LocalDate dateOfBirth;
 
-    @ManyToOne(fetch = EAGER,
-            cascade = ALL)
     @JoinColumn(name = "ownerId")
+    @ManyToOne(fetch = EAGER, cascade = ALL)
     User owner;
 }
 

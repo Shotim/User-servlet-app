@@ -2,6 +2,9 @@ package com.leverx.servlet.listener;
 
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -11,6 +14,13 @@ import javax.servlet.ServletRequestListener;
 
 @Slf4j
 public class ServletListener implements ServletRequestListener, ServletContextListener {
+
+    public static final String PERSISTENCE_UNIT_NAME = "Persistence";
+    private static EntityManagerFactory entityManagerFactory;
+
+    public static synchronized EntityManager getEntityManager() {
+        return entityManagerFactory.createEntityManager();
+    }
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
@@ -29,6 +39,7 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext context = sce.getServletContext();
+        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         log.info("Context was initialized");
         log.info("Attributes: {}", context.getAttributeNames());
         log.info("Server info: {}", context.getServerInfo());
@@ -36,6 +47,7 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
+        entityManagerFactory.close();
         log.info("Context was destroyed");
     }
 }

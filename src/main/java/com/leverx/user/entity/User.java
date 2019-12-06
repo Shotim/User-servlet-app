@@ -16,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.Collection;
 
 import static javax.persistence.CascadeType.ALL;
@@ -34,18 +35,16 @@ import static lombok.AccessLevel.PRIVATE;
 @Table(name = "users")
 public class User {
 
-    @NonNull
     @Id
     @Column
+    @NonNull
     @GeneratedValue(strategy = IDENTITY)
     int id;
 
-    @NonNull
     @Column
+    @NonNull
     String name;
 
-    @OneToMany(fetch = EAGER,
-            cascade = ALL,
-            mappedBy = "owner")
-    Collection<Cat> cats;
+    @OneToMany(fetch = EAGER, cascade = ALL, mappedBy = "owner")
+    Collection<Cat> cats = new ArrayList<>();
 }
