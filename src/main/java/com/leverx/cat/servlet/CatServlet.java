@@ -1,7 +1,7 @@
 package com.leverx.cat.servlet;
 
-import com.leverx.cat.facade.CatServletServiceAdapter;
 import com.leverx.cat.dto.CatInputDto;
+import com.leverx.cat.facade.CatServletServiceAdapter;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

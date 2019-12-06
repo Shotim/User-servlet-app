@@ -22,10 +22,10 @@ import static javax.validation.Validation.buildDefaultValidatorFactory;
 @Slf4j
 public class EntityValidator {
 
+    public static final String NOT_VALID_NAME = "Name should be between 5 and 60 symbols";
     private static final CatRepository CAT_REPOSITORY = new CatRepositoryImpl();
     private static final UserRepository USER_REPOSITORY = new UserRepositoryImpl();
     private static final String VALIDATION_FAILED = "Validation failed";
-    public static final String NOT_VALID_NAME = "Name should be between 5 and 60 symbols";
     private static final String CAT_HAS_OWNER = "Cat already has owner";
     private static final String CAT_DOES_NOT_EXIST = "Cat does not exist in database";
     private static final String USER_DOES_NOT_EXIST = "User does not exist in database";
