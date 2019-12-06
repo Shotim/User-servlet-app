@@ -1,14 +1,15 @@
-package com.leverx.cat.entity;
+package com.leverx.validator.message;
+
 
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
-
-import java.util.List;
 
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
 @FieldDefaults(level = PRIVATE)
-public class CatsDtoIdsList {
-    List<Integer> ids;
+public class ValidationError {
+
+    String field;
+    String message;
 }

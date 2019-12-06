@@ -3,6 +3,7 @@ package com.leverx.cat.repository;
 import com.leverx.cat.entity.Cat;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface CatRepository {
 
@@ -10,7 +11,9 @@ public interface CatRepository {
 
     Collection<Cat> findByOwner(int ownerId);
 
-    Cat findById(int id);
+    Optional<Cat> findById(int id);
 
-    Cat save(Cat cat);
+    Optional<Cat> save(Cat cat);
+
+    Optional<Cat> update(Cat cat);
 }
