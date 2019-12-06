@@ -89,6 +89,17 @@
 					"response": []
 				},
 				{
+					"name": "Get user's cat by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": ""
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Create new user",
 					"request": {
 						"method": "POST",
@@ -211,6 +222,44 @@
 								"users",
 								"2",
 								"cats"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Move cat to another user",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/2/cats/22",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"2",
+								"cats",
+								"22"
 							]
 						}
 					},
