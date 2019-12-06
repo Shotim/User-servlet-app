@@ -104,16 +104,20 @@ public class UserServlet extends HttpServlet {
             }
             break;
             case MOVE_CAT_TO_ANOTHER_USER:
-                var moveUserId = readJsonBody(request, MoveUserId.class);
-                var userId = moveUserId.getId();
-                var optionalValid = validateUserId(userId);
-                if (optionalValid.isPresent()) {
-                    printErrorMessages(response, optionalValid.get());
-                    response.setStatus(SC_BAD_REQUEST);
-                } else {
-                    var catId = parseInt(pathVariable);
-                    catService.update(catId, userId);
-                }
+                moveCatToAnotherUser(request, response, pathVariable);
+        }
+    }
+
+    private void moveCatToAnotherUser(HttpServletRequest request, HttpServletResponse response, String pathVariable) throws IOException {
+        var moveUserId = readJsonBody(request, MoveUserId.class);
+        var userId = moveUserId.getId();
+        var optionalValid = validateUserId(userId);
+        if (optionalValid.isPresent()) {
+            printErrorMessages(response, optionalValid.get());
+            response.setStatus(SC_BAD_REQUEST);
+        } else {
+            var catId = parseInt(pathVariable);
+            catService.update(catId, userId);
         }
     }
 
