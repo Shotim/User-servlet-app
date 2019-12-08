@@ -17,6 +17,8 @@ import java.time.LocalDate;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.leverx.validator.EntityValidator.MAX_SIZE;
+import static com.leverx.validator.EntityValidator.MIN_SIZE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 
 @Getter
@@ -27,7 +29,7 @@ public class CatOutputDto {
     int id;
 
     @NotNull
-    @Size(min = 5, max = 60, message = NOT_VALID_NAME)
+    @Size(min = MIN_SIZE, max = MAX_SIZE, message = NOT_VALID_NAME)
     String name;
 
     @NotNull

@@ -19,5 +19,5 @@ public class UserInputDto {
     @NotNull
     String name;
 
-    Collection<Integer> catsIdsList = new ArrayList<>();
+    Collection<Integer> catsIds = new ArrayList<>();
 }

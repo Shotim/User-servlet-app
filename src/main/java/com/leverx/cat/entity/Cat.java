@@ -21,6 +21,8 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
+import static com.leverx.validator.EntityValidator.MAX_SIZE;
+import static com.leverx.validator.EntityValidator.MIN_SIZE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -45,7 +47,7 @@ public class Cat {
     @Column
     @NotNull
     @NonNull
-    @Size(min = 5, max = 60, message = NOT_VALID_NAME)
+    @Size(min = MIN_SIZE, max = MAX_SIZE, message = NOT_VALID_NAME)
     String name;
 
     @Column
