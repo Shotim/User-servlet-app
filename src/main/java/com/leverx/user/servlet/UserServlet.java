@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
+import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
@@ -58,7 +58,6 @@ public class UserServlet extends HttpServlet {
         response.setStatus(responseStatus);
     }
 
-    //todo doesn't work
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var userDto = readJsonBody(request, UserInputDto.class);

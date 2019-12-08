@@ -2,8 +2,8 @@ package com.leverx.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.leverx.exception.InternalServerErrorException;
 
-import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 
 import static java.util.stream.Collectors.toList;
