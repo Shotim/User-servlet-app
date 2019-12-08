@@ -5,6 +5,7 @@ import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
+import com.leverx.validator.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -13,9 +14,8 @@ import java.util.NoSuchElementException;
 import static com.leverx.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
 import static com.leverx.user.dto.converter.UserDtoConverter.userInputDtoToUser;
 import static com.leverx.user.dto.converter.UserDtoConverter.userToUserOutputDto;
-import static com.leverx.validator.EntityValidator.isValid;
+import static com.leverx.user.validator.UserValidator.validateUserInputDto;
 import static java.lang.Integer.parseInt;
-import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -42,27 +42,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto save(UserInputDto userInputDto) {
+    public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
+        validateUserInputDto(userInputDto);
         var user = userInputDtoToUser(userInputDto);
+        user.getCats().forEach(cat -> cat.setOwner(user));
         userRepository.save(user);
         return userToUserOutputDto(user);
     }
 
     @Override
     public void deleteById(String id) {
-        if (isParsable(id)) {
-            int parsedId = parseInt(id);
-            userRepository.deleteById(parsedId);
-        } else {
-            log.debug("User was not updated. Check if id was correct");
-        }
+        int parsedId = parseInt(id);
+        userRepository.deleteById(parsedId);
     }
 
     @Override
-    public UserOutputDto updateById(String id, UserInputDto userInputDto) {
+    public UserOutputDto updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
+        validateUserInputDto(userInputDto);
         var userId = parseInt(id);
         var user = UserDtoConverter.userInputDtoToUser(userId, userInputDto);
-        isValid(userInputDto);
+        user.getCats().forEach(cat -> cat.setOwner(user));
         userRepository.update(user);
         return userToUserOutputDto(user);
     }

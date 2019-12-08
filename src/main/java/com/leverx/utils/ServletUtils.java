@@ -3,7 +3,6 @@ package com.leverx.utils;
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.MethodTypePlusRequiredVar;
 import com.leverx.user.servlet.PutMethodTypes;
-import com.leverx.validator.message.ValidationErrorsMessage;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,12 +15,9 @@ import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.converter.EntityJsonConverter.fromJsonToEntity;
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
-import static com.leverx.user.servlet.GetMethodTypes.GET_CAT_BY_ID_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
-import static com.leverx.user.servlet.PutMethodTypes.ASSIGN_CATS_TO_USER;
 import static com.leverx.user.servlet.PutMethodTypes.EDIT_USER;
-import static com.leverx.user.servlet.PutMethodTypes.MOVE_CAT_TO_ANOTHER_USER;
 import static java.util.stream.Collectors.joining;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
@@ -34,9 +30,9 @@ public class ServletUtils {
     private static final String USERS = "users";
     private static final String CATS = "cats";
 
-    public static void printErrorMessages(HttpServletResponse response, ValidationErrorsMessage errors) throws IOException {
+    public static void printErrorMessages(HttpServletResponse response, String message) throws IOException {
         response.setStatus(SC_BAD_REQUEST);
-        var messagesJson = fromEntityToJson(errors);
+        var messagesJson = fromEntityToJson(message);
         var responseWriter = response.getWriter();
         responseWriter.print(messagesJson);
         responseWriter.flush();
@@ -60,13 +56,8 @@ public class ServletUtils {
 
         if (isParsable(lastElement)) {
             String entityClass = getEntityReceivedClass(splittedUrl).orElseThrow();
-            switch (entityClass) {
-                case USERS:
-                    methodTypePlusRequiredVar.setValues(GET_USER_BY_ID, lastElement);
-                    break;
-                case CATS:
-                    methodTypePlusRequiredVar.setValues(GET_CAT_BY_ID_OF_USER, lastElement);
-                    break;
+            if (USERS.equals(entityClass)) {
+                methodTypePlusRequiredVar.setValues(GET_USER_BY_ID, lastElement);
             }
 
         } else {
@@ -90,19 +81,7 @@ public class ServletUtils {
         var methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<PutMethodTypes, String>();
         var splittedUrl = getSplittedUrl(request);
         var lastElement = getLastStringElement(splittedUrl);
-
-        if (isParsable(lastElement)) {
-            methodTypePlusRequiredVar.setValues(MOVE_CAT_TO_ANOTHER_USER, lastElement);
-        } else {
-
-            if (CATS.equals(lastElement)) {
-                var ownerId = getPreLastStringElement(splittedUrl);
-                methodTypePlusRequiredVar.setValues(ASSIGN_CATS_TO_USER, ownerId);
-            } else {
-                methodTypePlusRequiredVar.setValues(EDIT_USER, lastElement);
-            }
-        }
-
+        methodTypePlusRequiredVar.setValues(EDIT_USER, lastElement);
         return methodTypePlusRequiredVar;
     }
 

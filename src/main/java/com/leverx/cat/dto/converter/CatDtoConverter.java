@@ -6,7 +6,6 @@ import com.leverx.cat.entity.Cat;
 
 import java.util.Collection;
 
-import static com.leverx.user.dto.converter.UserDtoConverter.userToUserOutputDto;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
@@ -22,20 +21,17 @@ public class CatDtoConverter {
         var id = cat.getId();
         var name = cat.getName();
         var dateOfBirth = cat.getDateOfBirth();
-        var owner = nonNull(cat.getOwner()) ? userToUserOutputDto(cat.getOwner()) : null;
-        return new CatOutputDto(id, name, dateOfBirth, owner);
-    }
-
-    public static CatOutputDto catToCatOutputDtoWithoutOwner(Cat cat) {
-        var id = cat.getId();
-        var name = cat.getName();
-        var dateOfBirth = cat.getDateOfBirth();
+        var owner = cat.getOwner();
+        if (nonNull(owner)) {
+            var ownerId = owner.getId();
+            return new CatOutputDto(id, name, dateOfBirth, ownerId);
+        }
         return new CatOutputDto(id, name, dateOfBirth, null);
     }
 
     public static Collection<CatOutputDto> catCollectionToCatOutputDtoCollection(Collection<Cat> cats) {
         return cats.stream()
-                .map(CatDtoConverter::catToCatOutputDtoWithoutOwner)
+                .map(CatDtoConverter::catToCatOutputDto)
                 .collect(toList());
     }
 }

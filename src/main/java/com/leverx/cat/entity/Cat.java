@@ -23,6 +23,7 @@ import java.time.LocalDate;
 
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
 import static com.leverx.validator.EntityValidator.MIN_SIZE;
+import static com.leverx.validator.EntityValidator.NOT_VALID_DATE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
@@ -53,7 +54,7 @@ public class Cat {
     @Column
     @NotNull
     @NonNull
-    @PastOrPresent
+    @PastOrPresent(message = NOT_VALID_DATE)
     LocalDate dateOfBirth;
 
     @JoinColumn(name = "ownerId")

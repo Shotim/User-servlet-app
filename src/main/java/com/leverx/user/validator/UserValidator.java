@@ -1,31 +1,34 @@
 package com.leverx.user.validator;
 
+import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
-import com.leverx.validator.message.ValidationError;
-import com.leverx.validator.message.ValidationErrorsMessage;
+import com.leverx.validator.ValidationFailedException;
 
-import java.util.List;
-import java.util.Optional;
+import static com.leverx.cat.validator.CatValidator.validateCatsIds;
+import static com.leverx.validator.EntityValidator.validate;
 
 public class UserValidator {
 
-    private static final String VALIDATION_FAILED = "Validation failed";
     private static final UserRepository USER_REPOSITORY = new UserRepositoryImpl();
     private static final String USER_DOES_NOT_EXIST = "User does not exist in database";
 
-    public static Optional<ValidationErrorsMessage> validateUserId(Integer id) {
+    public static String validateUserId(Integer id) {
         var optionalUser = USER_REPOSITORY.findById(id);
         if (optionalUser.isEmpty()) {
-            var error = new ValidationError();
-            error.setField(id.toString());
-            error.setMessage(USER_DOES_NOT_EXIST);
-
-            var errorList = List.of(error);
-            var message = new ValidationErrorsMessage(VALIDATION_FAILED);
-            message.setValidationErrors(errorList);
-            return Optional.of(message);
+            var invalidValue = id.toString();
+            return invalidValue + ":  " + USER_DOES_NOT_EXIST;
         }
-        return Optional.empty();
+        return "";
+    }
+
+    public static void validateUserInputDto(UserInputDto userInputDto) throws ValidationFailedException {
+        var errors = validate(userInputDto);
+        var catsIds = userInputDto.getCatsIds();
+        var idsErrors = validateCatsIds(catsIds);
+        if (!errors.isEmpty() || !idsErrors.isEmpty()) {
+            String message = errors + idsErrors;
+            throw new ValidationFailedException(message);
+        }
     }
 }

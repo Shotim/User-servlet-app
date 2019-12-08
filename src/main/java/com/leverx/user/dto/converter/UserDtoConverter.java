@@ -19,7 +19,7 @@ public class UserDtoConverter {
 
     public static User userInputDtoToUser(int id, UserInputDto userInputDto) {
         var name = userInputDto.getName();
-        var cats = userInputDto.getCatsIdsList().stream()
+        var cats = userInputDto.getCatsIds().stream()
                 .map(catRepository::findById)
                 .map(Optional::orElseThrow)
                 .collect(toList());

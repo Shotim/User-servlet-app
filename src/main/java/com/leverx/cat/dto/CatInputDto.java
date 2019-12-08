@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
 import static com.leverx.validator.EntityValidator.MIN_SIZE;
+import static com.leverx.validator.EntityValidator.NOT_VALID_DATE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -27,7 +28,7 @@ public class CatInputDto {
     String name;
 
     @NotNull
-    @PastOrPresent
+    @PastOrPresent(message = NOT_VALID_DATE)
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate dateOfBirth;

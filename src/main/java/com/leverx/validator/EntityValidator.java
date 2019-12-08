@@ -1,13 +1,10 @@
 package com.leverx.validator;
 
-import com.leverx.validator.message.ValidationError;
-import com.leverx.validator.message.ValidationErrorsMessage;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Validator;
-import java.util.Optional;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.joining;
 import static javax.validation.Validation.buildDefaultValidatorFactory;
 
 @Slf4j
@@ -15,29 +12,32 @@ public class EntityValidator {
 
     public static final int MIN_SIZE = 5;
     public static final int MAX_SIZE = 60;
-    public static final String NOT_VALID_NAME = "Name should be between" + MIN_SIZE + "and" + MAX_SIZE + " symbols";
-    private static final String VALIDATION_FAILED = "Validation failed";
-
+    public static final String NOT_VALID_NAME = "Name should be between " + MIN_SIZE + " and " + MAX_SIZE + " symbols";
+    public static final String NOT_VALID_DATE = "Must be a date in the past or in the present";
+    private static final String VALIDATION_FAILED = "Validation failed\n";
     private static Validator validator = buildDefaultValidatorFactory().getValidator();
 
-    public static <T> Optional<ValidationErrorsMessage> isValid(T entity) {
+    public static <T> void validateEntity(T entity) throws ValidationFailedException {
+        String errors = validate(entity);
+        if (!errors.isEmpty()) {
+            throw new ValidationFailedException(errors);
+        }
+    }
+
+    public static <T> String validate(T entity) {
         var violations = validator.validate(entity);
         var violationAmount = violations.size();
 
         if (violationAmount == 0) {
-            return Optional.empty();
+            return "";
         }
 
-        var message = new ValidationErrorsMessage(VALIDATION_FAILED);
-
-        var validationErrors = violations.stream()
+        return violations.stream()
                 .map(violation -> {
-                    var error = new ValidationError();
-                    error.setField(violation.getInvalidValue().toString());
-                    error.setMessage(violation.getMessage());
-                    return error;
-                }).collect(toList());
-        message.setValidationErrors(validationErrors);
-        return Optional.of(message);
+                    var invalidValue = violation.getInvalidValue().toString();
+                    var invalidCause = violation.getMessage();
+                    return invalidValue + ":  " + invalidCause;
+                })
+                .collect(joining("; "));
     }
 }

@@ -2,23 +2,20 @@ package com.leverx.cat.service;
 
 import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
-import com.leverx.cat.entity.Cat;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
-import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
+import com.leverx.validator.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 
 import static com.leverx.cat.dto.converter.CatDtoConverter.catCollectionToCatOutputDtoCollection;
 import static com.leverx.cat.dto.converter.CatDtoConverter.catInputDtoToCat;
 import static com.leverx.cat.dto.converter.CatDtoConverter.catToCatOutputDto;
-import static java.util.stream.Collectors.toSet;
+import static com.leverx.validator.EntityValidator.validateEntity;
 
 @Slf4j
 public class CatServiceImpl implements CatService {
@@ -46,21 +43,11 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public CatOutputDto save(CatInputDto catInputDto) {
+    public CatOutputDto save(CatInputDto catInputDto) throws ValidationFailedException {
+        validateEntity(catInputDto);
         var cat = catInputDtoToCat(catInputDto);
         catRepository.save(cat);
         return catToCatOutputDto(cat);
-    }
-
-    @Override
-    public void assignCatsToExistingUser(int ownerId, List<Integer> catsIds) throws NoSuchElementException {
-
-        var user = userRepository.findById(ownerId).orElseThrow();
-        var userCats = user.getCats();
-        var cats = getCatsByIds(catsIds, user);
-        cats.forEach(cat -> cat.setOwner(user));
-        userCats.addAll(cats);
-        userRepository.update(user);
     }
 
     @Override
@@ -69,14 +56,5 @@ public class CatServiceImpl implements CatService {
         var user = userRepository.findById(ownerId).orElseThrow();
         cat.setOwner(user);
         catRepository.update(cat);
-    }
-
-    public Collection<Cat> getCatsByIds(List<Integer> catsIds, User user) {
-        return catsIds.stream()
-                .map(catRepository::findById)
-                .filter(Optional::isPresent)
-                .map(Optional::orElseThrow)
-                .peek(cat -> cat.setOwner(user))
-                .collect(toSet());
     }
 }
