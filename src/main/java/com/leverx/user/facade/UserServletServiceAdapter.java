@@ -16,14 +16,14 @@ import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+import static com.leverx.cat.validator.CatValidator.validateCatsIds;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
 import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
+import static com.leverx.user.validator.UserValidator.validateUserId;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.printErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static com.leverx.validator.EntityValidator.isValid;
-import static com.leverx.validator.EntityValidator.validateCatsIds;
-import static com.leverx.validator.EntityValidator.validateUserId;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
