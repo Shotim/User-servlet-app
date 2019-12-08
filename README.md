@@ -48,4 +48,5 @@ http://localhost:8080/application/users
 `C:/Tomcat9/webapps`
 2) Start Tomcat server. On Windows run as Administrator file `startup.bat`
 3) Write the following Url: `https://localhost/YOUR_WAR_FILE_NAME/users`
-Response will contain the list of already stored users 
+Response will contain the list of already stored users
+4) Stop Tomcat server. On Windows run file `shutdown.bat`
