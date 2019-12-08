@@ -2,14 +2,10 @@ package com.leverx.utils;
 
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.MethodTypePlusRequiredVar;
-import com.leverx.user.servlet.PutMethodTypes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.converter.EntityJsonConverter.fromJsonToEntity;
@@ -17,15 +13,15 @@ import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
-import static com.leverx.user.servlet.PutMethodTypes.EDIT_USER;
+import static com.leverx.utils.RequestURLUtils.getEntityReceivedClass;
+import static com.leverx.utils.RequestURLUtils.getLastStringElement;
+import static com.leverx.utils.RequestURLUtils.getPreLastStringElement;
+import static com.leverx.utils.RequestURLUtils.getSplittedUrl;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 public class ServletUtils {
 
-    private static final String SEPARATOR = "/";
-    private static final int ONE = 1;
-    private static final int TWO = 2;
     private static final String USERS = "users";
     private static final String CATS = "cats";
     public static final int SC_UNPROCESSABLE_ENTITY = 422;
@@ -75,45 +71,5 @@ public class ServletUtils {
             }
         }
         return methodTypePlusRequiredVar;
-    }
-
-    public static MethodTypePlusRequiredVar<PutMethodTypes, String> initUserServletPutMethodType(HttpServletRequest request) {
-        var methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<PutMethodTypes, String>();
-        var splittedUrl = getSplittedUrl(request);
-        var lastElement = getLastStringElement(splittedUrl);
-        methodTypePlusRequiredVar.setValues(EDIT_USER, lastElement);
-        return methodTypePlusRequiredVar;
-    }
-
-    public static String getPathVariableFromRequest(HttpServletRequest request) {
-        var splittedBySlashURL = getSplittedUrl(request);
-        return getLastStringElement(splittedBySlashURL);
-    }
-
-    private static List<String> getSplittedUrl(HttpServletRequest request) {
-        var requestUrl = request.getRequestURL();
-        var stringUrl = requestUrl.toString();
-        return Arrays.asList(stringUrl.split(SEPARATOR));
-    }
-
-    private static String getLastStringElement(List<String> splittedUrl) {
-        var lastElementIndex = splittedUrl.size() - ONE;
-        return splittedUrl.get(lastElementIndex);
-    }
-
-    private static String getPreLastStringElement(List<String> splittedUrl) {
-        var requiredElementIndex = splittedUrl.size() - TWO;
-        return splittedUrl.get(requiredElementIndex);
-    }
-
-    private static Optional<String> getEntityReceivedClass(List<String> splittedUrl) {
-        if (splittedUrl.contains(USERS)) {
-
-            if (splittedUrl.contains(CATS)) {
-                return Optional.of(CATS);
-            }
-            return Optional.of(USERS);
-        }
-        return Optional.empty();
     }
 }
