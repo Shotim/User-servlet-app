@@ -13,7 +13,9 @@ import static javax.validation.Validation.buildDefaultValidatorFactory;
 @Slf4j
 public class EntityValidator {
 
-    public static final String NOT_VALID_NAME = "Name should be between 5 and 60 symbols";
+    public static final int MIN_SIZE = 5;
+    public static final int MAX_SIZE = 60;
+    public static final String NOT_VALID_NAME = "Name should be between" + MIN_SIZE + "and" + MAX_SIZE + " symbols";
     private static final String VALIDATION_FAILED = "Validation failed";
 
     private static Validator validator = buildDefaultValidatorFactory().getValidator();
