@@ -47,7 +47,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public CatOutputDto save(CatInputDto catInputDto) {
-        Cat cat = convertCatInputDtoToCat(catInputDto);
+        var cat = convertCatInputDtoToCat(catInputDto);
         catRepository.save(cat);
         return convertCatToCatOutputDto(cat);
     }

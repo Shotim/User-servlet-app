@@ -2,7 +2,6 @@ package com.leverx.user.service;
 
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
-import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<UserOutputDto> findAll() {
-        Collection<User> users = userRepository.findAll();
+        var users = userRepository.findAll();
         return convertUserCollectionToUserOutputDtoCollection(users);
     }
 
@@ -43,7 +42,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOutputDto save(UserInputDto userInputDto) {
-        User user = convertUserInputDtoToUser(userInputDto);
+        var user = convertUserInputDtoToUser(userInputDto);
         userRepository.save(user);
         return convertUserToUserOutputDto(user);
     }
@@ -61,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserOutputDto updateById(String id, UserInputDto userInputDto) {
         var userId = parseInt(id);
-        User user = convertUserInputDtoToUser(userId, userInputDto);
+        var user = convertUserInputDtoToUser(userId, userInputDto);
         isValid(userInputDto);
         userRepository.update(user);
         return convertUserToUserOutputDto(user);

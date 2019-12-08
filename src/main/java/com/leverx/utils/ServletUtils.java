@@ -54,7 +54,7 @@ public class ServletUtils {
     }
 
     public static MethodTypePlusRequiredVar<GetMethodTypes, String> initUserServletGetMethodType(HttpServletRequest request) {
-        MethodTypePlusRequiredVar<GetMethodTypes, String> methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<>();
+        var methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<GetMethodTypes, String>();
         var splittedUrl = getSplittedUrl(request);
         var lastElement = getLastStringElement(splittedUrl);
 
@@ -87,7 +87,7 @@ public class ServletUtils {
     }
 
     public static MethodTypePlusRequiredVar<PutMethodTypes, String> initUserServletPutMethodType(HttpServletRequest request) {
-        MethodTypePlusRequiredVar<PutMethodTypes, String> methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<>();
+        var methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<PutMethodTypes, String>();
         var splittedUrl = getSplittedUrl(request);
         var lastElement = getLastStringElement(splittedUrl);
 
@@ -113,7 +113,7 @@ public class ServletUtils {
 
     private static List<String> getSplittedUrl(HttpServletRequest request) {
         var requestUrl = request.getRequestURL();
-        String stringUrl = requestUrl.toString();
+        var stringUrl = requestUrl.toString();
         return Arrays.asList(stringUrl.split(SEPARATOR));
     }
 

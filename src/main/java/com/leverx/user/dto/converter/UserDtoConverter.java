@@ -27,7 +27,7 @@ public class UserDtoConverter {
     }
 
     public static User convertUserInputDtoToUser(UserInputDto userInputDto) {
-        int DEFAULT_USER_ID = 0;
+        var DEFAULT_USER_ID = 0;
         return convertUserInputDtoToUser(DEFAULT_USER_ID, userInputDto);
     }
 

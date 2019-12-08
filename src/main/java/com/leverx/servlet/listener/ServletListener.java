@@ -4,13 +4,12 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+
+import static javax.persistence.Persistence.createEntityManagerFactory;
 
 @Slf4j
 public class ServletListener implements ServletRequestListener, ServletContextListener {
@@ -24,7 +23,7 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
-        ServletRequest request = sre.getServletRequest();
+        var request = sre.getServletRequest();
         log.info("Request initialized");
         log.info("Protocol: {}", request.getProtocol());
         log.info("Context type: {}", request.getContentType());
@@ -38,8 +37,8 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        ServletContext context = sce.getServletContext();
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        var context = sce.getServletContext();
+        entityManagerFactory = createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
         log.info("Context was initialized");
         log.info("Attributes: {}", context.getAttributeNames());
         log.info("Server info: {}", context.getServerInfo());

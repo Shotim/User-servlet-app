@@ -39,9 +39,9 @@ public class EntityValidator {
             return Optional.empty();
         }
 
-        ValidationErrorsMessage message = new ValidationErrorsMessage(VALIDATION_FAILED);
+        var message = new ValidationErrorsMessage(VALIDATION_FAILED);
 
-        List<ValidationError> validationErrors = violations.stream()
+        var validationErrors = violations.stream()
                 .map(violation -> {
                     var error = new ValidationError();
                     error.setField(violation.getInvalidValue().toString());
@@ -55,7 +55,7 @@ public class EntityValidator {
     public static Optional<ValidationErrorsMessage> validateUserId(Integer id) {
         var optionalUser = USER_REPOSITORY.findById(id);
         if (optionalUser.isEmpty()) {
-            ValidationError error = new ValidationError();
+            var error = new ValidationError();
             error.setField(id.toString());
             error.setMessage(USER_DOES_NOT_EXIST);
 
@@ -68,7 +68,7 @@ public class EntityValidator {
     }
 
     public static Optional<ValidationErrorsMessage> validateCatsIds(Collection<Integer> catsIds, ValidationErrorsMessage message) {
-        List<ValidationError> errorList = catsIds.stream()
+        var errorList = catsIds.stream()
                 .map(EntityValidator::getValidationErrors)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
