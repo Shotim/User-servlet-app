@@ -17,8 +17,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.leverx.cat.validator.CatValidator.validateCatsIds;
-import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
-import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
+import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.user.validator.UserValidator.validateUserId;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.printErrorMessages;
@@ -38,7 +38,7 @@ public class UserServletServiceAdapter {
 
     public int printAllUsersToResponseBody(PrintWriter writer) {
         var users = userService.findAll();
-        var jsonUsers = convertFromEntityCollectionToJson(users);
+        var jsonUsers = fromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
         return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
@@ -47,7 +47,7 @@ public class UserServletServiceAdapter {
         var id = parseInt(pathVariable);
         try {
             var user = userService.findById(id);
-            var jsonUser = convertFromEntityToJson(user);
+            var jsonUser = fromEntityToJson(user);
             writer.print(jsonUser);
             return SC_OK;
         } catch (NoSuchElementException e) {
@@ -57,7 +57,7 @@ public class UserServletServiceAdapter {
 
     public int printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = userService.findByName(pathVariable);
-        var jsonUsers = convertFromEntityCollectionToJson(users);
+        var jsonUsers = fromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
         return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
@@ -65,7 +65,7 @@ public class UserServletServiceAdapter {
     public int printCatsOfUser(PrintWriter writer, String ownerId) {
         var id = parseInt(ownerId);
         var cats = catService.findByOwner(id);
-        var jsonCats = convertFromEntityCollectionToJson(cats);
+        var jsonCats = fromEntityCollectionToJson(cats);
         jsonCats.forEach(writer::println);
         return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
@@ -74,7 +74,7 @@ public class UserServletServiceAdapter {
         var id = parseInt(catId);
         try {
             var cat = catService.findById(id);
-            var jsonCat = convertFromEntityToJson(cat);
+            var jsonCat = fromEntityToJson(cat);
             writer.print(jsonCat);
             return SC_OK;
         } catch (NoSuchElementException e) {

@@ -2,6 +2,7 @@ package com.leverx.user.service;
 
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
+import com.leverx.user.dto.converter.UserDtoConverter;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
@@ -9,9 +10,9 @@ import lombok.extern.slf4j.Slf4j;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserCollectionToUserOutputDtoCollection;
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserInputDtoToUser;
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserToUserOutputDto;
+import static com.leverx.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
+import static com.leverx.user.dto.converter.UserDtoConverter.userInputDtoToUser;
+import static com.leverx.user.dto.converter.UserDtoConverter.userToUserOutputDto;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
@@ -24,27 +25,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public Collection<UserOutputDto> findAll() {
         var users = userRepository.findAll();
-        return convertUserCollectionToUserOutputDtoCollection(users);
+        return userCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
     public UserOutputDto findById(int id) throws NoSuchElementException {
         var optionalUser = userRepository.findById(id);
         var user = optionalUser.orElseThrow();
-        return convertUserToUserOutputDto(user);
+        return userToUserOutputDto(user);
     }
 
     @Override
     public Collection<UserOutputDto> findByName(String name) {
         var users = userRepository.findByName(name);
-        return convertUserCollectionToUserOutputDtoCollection(users);
+        return userCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
     public UserOutputDto save(UserInputDto userInputDto) {
-        var user = convertUserInputDtoToUser(userInputDto);
+        var user = userInputDtoToUser(userInputDto);
         userRepository.save(user);
-        return convertUserToUserOutputDto(user);
+        return userToUserOutputDto(user);
     }
 
     @Override
@@ -60,9 +61,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserOutputDto updateById(String id, UserInputDto userInputDto) {
         var userId = parseInt(id);
-        var user = convertUserInputDtoToUser(userId, userInputDto);
+        var user = UserDtoConverter.userInputDtoToUser(userId, userInputDto);
         isValid(userInputDto);
         userRepository.update(user);
-        return convertUserToUserOutputDto(user);
+        return userToUserOutputDto(user);
     }
 }

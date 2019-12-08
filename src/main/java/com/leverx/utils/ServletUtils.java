@@ -12,8 +12,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
-import static com.leverx.mapper.EntityJsonMapper.convertFromJsonToEntity;
+import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.converter.EntityJsonConverter.fromJsonToEntity;
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CAT_BY_ID_OF_USER;
@@ -36,7 +36,7 @@ public class ServletUtils {
 
     public static void printErrorMessages(HttpServletResponse response, ValidationErrorsMessage errors) throws IOException {
         response.setStatus(SC_BAD_REQUEST);
-        var messagesJson = convertFromEntityToJson(errors);
+        var messagesJson = fromEntityToJson(errors);
         var responseWriter = response.getWriter();
         responseWriter.print(messagesJson);
         responseWriter.flush();
@@ -44,7 +44,7 @@ public class ServletUtils {
 
     public static <T> T readJsonBody(HttpServletRequest request, Class<T> tclass) throws IOException {
         var jsonString = readBody(request);
-        return convertFromJsonToEntity(jsonString, tclass);
+        return fromJsonToEntity(jsonString, tclass);
     }
 
     public static String readBody(HttpServletRequest request) throws IOException {

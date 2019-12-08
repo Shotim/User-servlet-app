@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static com.leverx.cat.dto.converter.CatDtoConverter.convertCatCollectionToCatOutputDtoCollection;
-import static com.leverx.cat.dto.converter.CatDtoConverter.convertCatInputDtoToCat;
-import static com.leverx.cat.dto.converter.CatDtoConverter.convertCatToCatOutputDto;
+import static com.leverx.cat.dto.converter.CatDtoConverter.catCollectionToCatOutputDtoCollection;
+import static com.leverx.cat.dto.converter.CatDtoConverter.catInputDtoToCat;
+import static com.leverx.cat.dto.converter.CatDtoConverter.catToCatOutputDto;
 import static java.util.stream.Collectors.toSet;
 
 @Slf4j
@@ -29,27 +29,27 @@ public class CatServiceImpl implements CatService {
     @Override
     public Collection<CatOutputDto> findAll() {
         var cats = catRepository.findAll();
-        return convertCatCollectionToCatOutputDtoCollection(cats);
+        return catCollectionToCatOutputDtoCollection(cats);
     }
 
     @Override
     public CatOutputDto findById(int id) throws NoSuchElementException {
         var optionalCat = catRepository.findById(id);
         var cat = optionalCat.orElseThrow();
-        return convertCatToCatOutputDto(cat);
+        return catToCatOutputDto(cat);
     }
 
     @Override
     public Collection<CatOutputDto> findByOwner(int ownerId) {
         var cats = catRepository.findByOwner(ownerId);
-        return convertCatCollectionToCatOutputDtoCollection(cats);
+        return catCollectionToCatOutputDtoCollection(cats);
     }
 
     @Override
     public CatOutputDto save(CatInputDto catInputDto) {
-        var cat = convertCatInputDtoToCat(catInputDto);
+        var cat = catInputDtoToCat(catInputDto);
         catRepository.save(cat);
-        return convertCatToCatOutputDto(cat);
+        return catToCatOutputDto(cat);
     }
 
     @Override

@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.NoSuchElementException;
 
-import static com.leverx.mapper.EntityJsonMapper.convertFromEntityCollectionToJson;
-import static com.leverx.mapper.EntityJsonMapper.convertFromEntityToJson;
+import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.ServletUtils.printErrorMessages;
 import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
@@ -26,7 +26,7 @@ public class CatServletServiceAdapter {
         try {
             var id = parseInt(pathVariable);
             var cat = catService.findById(id);
-            var catJson = convertFromEntityToJson(cat);
+            var catJson = fromEntityToJson(cat);
             writer.print(catJson);
             return SC_OK;
         } catch (NoSuchElementException e) {
@@ -37,7 +37,7 @@ public class CatServletServiceAdapter {
 
     public int printAllCatsToResponseBody(PrintWriter writer) {
         var cats = catService.findAll();
-        var catsJson = convertFromEntityCollectionToJson(cats);
+        var catsJson = fromEntityCollectionToJson(cats);
         catsJson.forEach(writer::println);
         return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
     }
