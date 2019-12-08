@@ -2,11 +2,11 @@ package com.leverx.cat.repository;
 
 import com.leverx.cat.entity.Cat;
 import com.leverx.cat.entity.Cat_;
+import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
-import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 import java.util.Optional;
 

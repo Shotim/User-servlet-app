@@ -1,12 +1,12 @@
 package com.leverx.user.repository;
 
+import com.leverx.exception.InternalServerErrorException;
 import com.leverx.user.entity.User;
 import com.leverx.user.entity.User_;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
-import javax.ws.rs.InternalServerErrorException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -119,6 +119,7 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             transaction = beginTransaction(entityManager);
             entityManager.persist(user);
+            entityManager.refresh(user);
             transaction.commit();
             log.debug("User was saved");
             return Optional.of(user);
