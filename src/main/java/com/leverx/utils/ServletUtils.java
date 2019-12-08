@@ -22,9 +22,9 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 public class ServletUtils {
 
+    public static final int SC_UNPROCESSABLE_ENTITY = 422;
     private static final String USERS = "users";
     private static final String CATS = "cats";
-    public static final int SC_UNPROCESSABLE_ENTITY = 422;
 
     public static void printValidationErrorMessages(HttpServletResponse response, String message) throws IOException {
         response.setStatus(SC_UNPROCESSABLE_ENTITY);
