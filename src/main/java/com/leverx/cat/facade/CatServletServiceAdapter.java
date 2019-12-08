@@ -39,7 +39,7 @@ public class CatServletServiceAdapter {
         var cats = catService.findAll();
         var catsJson = fromEntityCollectionToJson(cats);
         catsJson.forEach(writer::println);
-        return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
+        return cats.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
     public void performPost(HttpServletResponse response, CatInputDto catInputDto) throws IOException {

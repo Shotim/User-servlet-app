@@ -40,7 +40,7 @@ public class UserServletServiceAdapter {
         var users = userService.findAll();
         var jsonUsers = fromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
-        return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
+        return users.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
     public int printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
@@ -59,7 +59,7 @@ public class UserServletServiceAdapter {
         var users = userService.findByName(pathVariable);
         var jsonUsers = fromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
-        return users.size() != 0 ? SC_OK : SC_NOT_FOUND;
+        return users.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
     public int printCatsOfUser(PrintWriter writer, String ownerId) {
@@ -67,7 +67,7 @@ public class UserServletServiceAdapter {
         var cats = catService.findByOwner(id);
         var jsonCats = fromEntityCollectionToJson(cats);
         jsonCats.forEach(writer::println);
-        return cats.size() != 0 ? SC_OK : SC_NOT_FOUND;
+        return cats.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
     public int printUserCatById(PrintWriter writer, String catId) {
