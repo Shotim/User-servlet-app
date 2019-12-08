@@ -18,7 +18,7 @@ import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJso
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
-import static com.leverx.utils.ServletUtils.printErrorMessages;
+import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -66,7 +66,7 @@ public class UserServlet extends HttpServlet {
             userService.save(userDto);
             response.setStatus(SC_CREATED);
         } catch (ValidationFailedException e) {
-            printErrorMessages(response, e.getMessage());
+            printValidationErrorMessages(response, e.getMessage());
         }
     }
 
@@ -85,7 +85,7 @@ public class UserServlet extends HttpServlet {
             userService.updateById(pathVariable, userDto);
             response.setStatus(SC_OK);
         } catch (ValidationFailedException e) {
-            printErrorMessages(response, e.getMessage());
+            printValidationErrorMessages(response, e.getMessage());
         }
     }
 

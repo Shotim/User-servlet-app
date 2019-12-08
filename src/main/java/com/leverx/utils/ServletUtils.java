@@ -19,7 +19,6 @@ import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
 import static com.leverx.user.servlet.PutMethodTypes.EDIT_USER;
 import static java.util.stream.Collectors.joining;
-import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 public class ServletUtils {
@@ -29,9 +28,10 @@ public class ServletUtils {
     private static final int TWO = 2;
     private static final String USERS = "users";
     private static final String CATS = "cats";
+    public static final int SC_UNPROCESSABLE_ENTITY = 422;
 
-    public static void printErrorMessages(HttpServletResponse response, String message) throws IOException {
-        response.setStatus(SC_BAD_REQUEST);
+    public static void printValidationErrorMessages(HttpServletResponse response, String message) throws IOException {
+        response.setStatus(SC_UNPROCESSABLE_ENTITY);
         var messagesJson = fromEntityToJson(message);
         var responseWriter = response.getWriter();
         responseWriter.print(messagesJson);

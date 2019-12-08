@@ -15,7 +15,7 @@ import java.util.NoSuchElementException;
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.ServletUtils.getPathVariableFromRequest;
-import static com.leverx.utils.ServletUtils.printErrorMessages;
+import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -48,7 +48,7 @@ public class CatServlet extends HttpServlet {
             catService.save(catInputDto);
             response.setStatus(SC_CREATED);
         } catch (ValidationFailedException e) {
-            printErrorMessages(response, e.getMessage());
+            printValidationErrorMessages(response, e.getMessage());
         }
     }
 
