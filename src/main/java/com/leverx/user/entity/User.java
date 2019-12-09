@@ -16,9 +16,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import java.util.ArrayList;
 import java.util.Collection;
 
+import static java.util.Collections.emptyList;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -46,5 +46,5 @@ public class User {
     String name;
 
     @OneToMany(fetch = EAGER, cascade = ALL, mappedBy = "owner")
-    Collection<Cat> cats = new ArrayList<>();
+    Collection<Cat> cats = emptyList();
 }

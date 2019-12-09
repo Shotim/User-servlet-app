@@ -10,10 +10,10 @@ import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static java.util.Collections.emptyList;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -29,6 +29,6 @@ public class UserOutputDto {
     String name;
 
     @JsonInclude(NON_NULL)
-    Collection<CatOutputDto> cats = new ArrayList<>();
+    Collection<CatOutputDto> cats = emptyList();
 
 }
