@@ -4,13 +4,13 @@ import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
+import com.leverx.exception.ElementNotFoundException;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
 import com.leverx.validator.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 import static com.leverx.cat.dto.converter.CatDtoConverter.catCollectionToCatOutputDtoCollection;
 import static com.leverx.cat.dto.converter.CatDtoConverter.catInputDtoToCat;
@@ -30,9 +30,9 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public CatOutputDto findById(int id) throws NoSuchElementException {
+    public CatOutputDto findById(int id) throws ElementNotFoundException {
         var optionalCat = catRepository.findById(id);
-        var cat = optionalCat.orElseThrow();
+        var cat = optionalCat.orElseThrow(ElementNotFoundException::new);
         return catToCatOutputDto(cat);
     }
 

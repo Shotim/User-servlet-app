@@ -1,5 +1,6 @@
 package com.leverx.user.service;
 
+import com.leverx.exception.ElementNotFoundException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
@@ -9,7 +10,6 @@ import com.leverx.validator.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
 import static com.leverx.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
 import static com.leverx.user.dto.converter.UserDtoConverter.userInputDtoToUser;
@@ -30,9 +30,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto findById(int id) throws NoSuchElementException {
+    public UserOutputDto findById(int id) throws ElementNotFoundException {
         var optionalUser = userRepository.findById(id);
-        var user = optionalUser.orElseThrow();
+        var user = optionalUser.orElseThrow(ElementNotFoundException::new);
         return userToUserOutputDto(user);
     }
 

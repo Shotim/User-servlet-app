@@ -2,6 +2,7 @@ package com.leverx.user.servlet;
 
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
+import com.leverx.exception.ElementNotFoundException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.NoSuchElementException;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
@@ -54,8 +54,8 @@ public class UserServlet extends HttpServlet {
                 responseStatus = printCatsOfUser(responseWriter, requiredVariable);
                 break;
         }
-        responseWriter.flush();
         response.setStatus(responseStatus);
+        responseWriter.flush();
     }
 
     @Override
@@ -102,7 +102,7 @@ public class UserServlet extends HttpServlet {
             var jsonUser = fromEntityToJson(user);
             writer.print(jsonUser);
             return SC_OK;
-        } catch (NoSuchElementException e) {
+        } catch (ElementNotFoundException e) {
             return SC_NOT_FOUND;
         }
     }

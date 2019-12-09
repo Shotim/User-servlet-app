@@ -27,10 +27,10 @@ public class ServletUtils {
     private static final String CATS = "cats";
 
     public static void printValidationErrorMessages(HttpServletResponse response, String message) throws IOException {
-        response.setStatus(SC_UNPROCESSABLE_ENTITY);
         var messagesJson = fromEntityToJson(message);
         var responseWriter = response.getWriter();
         responseWriter.print(messagesJson);
+        response.setStatus(SC_UNPROCESSABLE_ENTITY);
         responseWriter.flush();
     }
 

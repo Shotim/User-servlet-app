@@ -1,5 +1,6 @@
 package com.leverx.user.service;
 
+import com.leverx.exception.ElementNotFoundException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.validator.ValidationFailedException;
@@ -10,7 +11,7 @@ public interface UserService {
 
     Collection<UserOutputDto> findAll();
 
-    UserOutputDto findById(int id);
+    UserOutputDto findById(int id) throws ElementNotFoundException;
 
     Collection<UserOutputDto> findByName(String name);
 
