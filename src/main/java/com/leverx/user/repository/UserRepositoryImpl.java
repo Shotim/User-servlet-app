@@ -119,7 +119,6 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             transaction = beginTransaction(entityManager);
             entityManager.persist(user);
-            entityManager.refresh(user);
             transaction.commit();
             log.debug("User was saved");
             return Optional.of(user);
