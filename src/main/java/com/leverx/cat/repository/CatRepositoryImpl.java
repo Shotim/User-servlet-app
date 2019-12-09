@@ -5,9 +5,13 @@ import com.leverx.cat.entity.Cat_;
 import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import static com.leverx.servlet.listener.ServletListener.getEntityManager;
@@ -25,15 +29,13 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            var builder = entityManager.getCriteriaBuilder();
-            var criteriaQuery = builder.createQuery(Cat.class);
-
+            var criteriaQuery = getCatCriteriaQuery(entityManager);
             var root = criteriaQuery.from(Cat.class);
 
             criteriaQuery.select(root);
 
-            var query = entityManager.createQuery(criteriaQuery);
-            var cats = query.getResultList();
+            var cats = getResultList(entityManager, criteriaQuery);
+
             transaction.commit();
             log.debug("Were received {} cats", cats.size());
             return cats;
@@ -41,6 +43,7 @@ public class CatRepositoryImpl implements CatRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -53,24 +56,15 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            var builder = entityManager.getCriteriaBuilder();
-            var criteriaQuery = builder.createQuery(Cat.class);
-
-            var root = criteriaQuery.from(Cat.class);
-
-            criteriaQuery.select(root);
-            var ownerPath = root.get(Cat_.owner);
-            var equalOwnerIdCondition = builder.equal(ownerPath, ownerId);
-            criteriaQuery.where(equalOwnerIdCondition);
-
-            var query = entityManager.createQuery(criteriaQuery);
-            var cats = query.getResultList();
+            var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(ownerId, entityManager, Cat_.owner);
+            var cats = getResultList(entityManager, criteriaQuery);
             log.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
             return cats;
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -83,18 +77,10 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            var builder = entityManager.getCriteriaBuilder();
-            var criteriaQuery = builder.createQuery(Cat.class);
-
-            var root = criteriaQuery.from(Cat.class);
-
-            criteriaQuery.select(root);
-            var idPath = root.get(Cat_.id);
-            var equalIdCondition = builder.equal(idPath, id);
-            criteriaQuery.where(equalIdCondition);
-
+            var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(id, entityManager, Cat_.id);
             var query = entityManager.createQuery(criteriaQuery);
             var cat = query.getSingleResult();
+
             transaction.commit();
             log.debug("Was received cat with id = {}", id);
             return Optional.of(cat);
@@ -102,10 +88,12 @@ public class CatRepositoryImpl implements CatRepository {
             commitTransactionIfActive(transaction);
             log.debug("Cat with id = {} was not found", id);
             return Optional.empty();
+
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -117,7 +105,6 @@ public class CatRepositoryImpl implements CatRepository {
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
-
             entityManager.persist(cat);
             transaction.commit();
             log.debug("Cat was saved");
@@ -126,6 +113,7 @@ public class CatRepositoryImpl implements CatRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -137,17 +125,42 @@ public class CatRepositoryImpl implements CatRepository {
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
-
             entityManager.merge(cat);
-
             transaction.commit();
             log.debug("Cat with id = {} was updated", cat.getId());
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
+    }
+
+    public CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Cat, ?> attribute) {
+
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Cat.class);
+        var root = criteriaQuery.from(Cat.class);
+
+        criteriaQuery.select(root);
+
+        var path = root.get(attribute);
+        var equalCondition = builder.equal(path, id);
+
+        criteriaQuery.where(equalCondition);
+
+        return criteriaQuery;
+    }
+
+    public List<Cat> getResultList(EntityManager entityManager, CriteriaQuery<Cat> criteriaQuery) {
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    public CriteriaQuery<Cat> getCatCriteriaQuery(EntityManager entityManager) {
+        var builder = entityManager.getCriteriaBuilder();
+        return builder.createQuery(Cat.class);
     }
 }
