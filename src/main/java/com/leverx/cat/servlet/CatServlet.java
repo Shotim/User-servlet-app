@@ -4,7 +4,7 @@ import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
 import com.leverx.exception.ElementNotFoundException;
-import com.leverx.validator.ValidationFailedException;
+import com.leverx.exception.ValidationFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +48,7 @@ public class CatServlet extends HttpServlet {
             catService.save(catInputDto);
             response.setStatus(SC_CREATED);
         } catch (ValidationFailedException e) {
-            printValidationErrorMessages(response, e.getMessage());
+            printValidationErrorMessages(response, e);
         }
     }
 
@@ -60,7 +60,7 @@ public class CatServlet extends HttpServlet {
             writer.print(catJson);
             return SC_OK;
         } catch (ElementNotFoundException e) {
-            return SC_NOT_FOUND;
+            return e.getStatusCode();
         }
 
     }
