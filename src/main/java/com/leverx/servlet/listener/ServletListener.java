@@ -9,6 +9,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
+import static com.leverx.envvar.loader.DBEnvironmentVariableLoader.getDBProperties;
 import static javax.persistence.Persistence.createEntityManagerFactory;
 
 @Slf4j
@@ -38,7 +39,7 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         var context = sce.getServletContext();
-        entityManagerFactory = createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
+        entityManagerFactory = createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getDBProperties());
         log.info("Context was initialized");
         log.info("Attributes: {}", context.getAttributeNames());
         log.info("Server info: {}", context.getServerInfo());
