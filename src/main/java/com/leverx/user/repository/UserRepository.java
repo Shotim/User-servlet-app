@@ -17,5 +17,5 @@ public interface UserRepository {
 
     void deleteById(int id);
 
-    Optional<User> update(User user);
+    void update(User user);
 }

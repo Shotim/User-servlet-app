@@ -161,7 +161,7 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public Optional<User> update(User user) {
+    public void update(User user) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -171,7 +171,6 @@ public class UserRepositoryImpl implements UserRepository {
 
             transaction.commit();
             log.debug("User with id = {} was updated", user.getId());
-            return Optional.of(user);
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);

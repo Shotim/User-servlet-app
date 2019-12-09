@@ -132,7 +132,7 @@ public class CatRepositoryImpl implements CatRepository {
     }
 
     @Override
-    public Optional<Cat> update(Cat cat) {
+    public void update(Cat cat) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
@@ -142,7 +142,6 @@ public class CatRepositoryImpl implements CatRepository {
 
             transaction.commit();
             log.debug("Cat with id = {} was updated", cat.getId());
-            return Optional.of(cat);
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);

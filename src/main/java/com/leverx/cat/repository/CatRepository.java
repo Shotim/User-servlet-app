@@ -15,5 +15,5 @@ public interface CatRepository {
 
     Optional<Cat> save(Cat cat);
 
-    Optional<Cat> update(Cat cat);
+    void update(Cat cat);
 }
