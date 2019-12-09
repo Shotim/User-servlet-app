@@ -30,6 +30,15 @@ mvn clean install
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
 ```
+
+#### Setting up of system variables
+
+Set the following system variables: 
+`DB_URL=jdbc:mysql://SERVICE_NAME:PORT/DB_NAME`,
+`DB_USER=YOUR_USERNAME`, 
+`DB_PASSWORD=YOUR_PASSWORD`,
+`DB_ROOT_PASSWORD=YOUR_ROOT_PASSWORD`;
+
 #### * Run project by Docker
 * Build `war` file with Maven:
 ```
@@ -50,3 +59,17 @@ http://localhost:8080/application/users
 3) Write the following Url: `https://localhost/YOUR_WAR_FILE_NAME/users`
 Response will contain the list of already stored users
 4) Stop Tomcat server. On Windows run file `shutdown.bat`
+
+#### Deploying with Docker
+
+2. Start docker containers by docker-compose:
+`
+docker-compose up -d
+`
+3. Go to the following `URL`:
+`
+http://localhost:8080/WAR_FILE_NAME/users
+`
+You will see the list of users.
+
+> To stop application type in cmd: `docker-compose stop`.
