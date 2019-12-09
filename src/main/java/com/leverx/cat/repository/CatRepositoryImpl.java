@@ -37,7 +37,7 @@ public class CatRepositoryImpl implements CatRepository {
             transaction.commit();
             log.debug("Were received {} cats", cats.size());
             return cats;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -67,7 +67,7 @@ public class CatRepositoryImpl implements CatRepository {
             var cats = query.getResultList();
             log.debug("Were received {} cats with ownerId = {}", cats.size(), ownerId);
             return cats;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -102,7 +102,7 @@ public class CatRepositoryImpl implements CatRepository {
             commitTransactionIfActive(transaction);
             log.debug("Cat with id = {} was not found", id);
             return Optional.empty();
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
@@ -122,7 +122,7 @@ public class CatRepositoryImpl implements CatRepository {
             transaction.commit();
             log.debug("Cat was saved");
             return Optional.of(cat);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
