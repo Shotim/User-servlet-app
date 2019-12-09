@@ -1,5 +1,6 @@
 package com.leverx.utils;
 
+import com.leverx.exception.ValidationFailedException;
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.MethodTypePlusRequiredVar;
 
@@ -22,15 +23,14 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
 public class ServletUtils {
 
-    public static final int SC_UNPROCESSABLE_ENTITY = 422;
     private static final String USERS = "users";
     private static final String CATS = "cats";
 
-    public static void printValidationErrorMessages(HttpServletResponse response, String message) throws IOException {
-        var messagesJson = fromEntityToJson(message);
+    public static void printValidationErrorMessages(HttpServletResponse response, ValidationFailedException e) throws IOException {
+        var messagesJson = fromEntityToJson(e.getMessage());
         var responseWriter = response.getWriter();
         responseWriter.print(messagesJson);
-        response.setStatus(SC_UNPROCESSABLE_ENTITY);
+        response.setStatus(e.getStatusCode());
         responseWriter.flush();
     }
 

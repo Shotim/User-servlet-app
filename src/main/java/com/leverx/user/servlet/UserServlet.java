@@ -3,10 +3,10 @@ package com.leverx.user.servlet;
 import com.leverx.cat.service.CatService;
 import com.leverx.cat.service.CatServiceImpl;
 import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
-import com.leverx.validator.ValidationFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -65,7 +65,7 @@ public class UserServlet extends HttpServlet {
             userService.save(userDto);
             response.setStatus(SC_CREATED);
         } catch (ValidationFailedException e) {
-            printValidationErrorMessages(response, e.getMessage());
+            printValidationErrorMessages(response, e);
         }
     }
 
@@ -84,7 +84,7 @@ public class UserServlet extends HttpServlet {
             userService.updateById(pathVariable, userDto);
             response.setStatus(SC_OK);
         } catch (ValidationFailedException e) {
-            printValidationErrorMessages(response, e.getMessage());
+            printValidationErrorMessages(response, e);
         }
     }
 
@@ -103,7 +103,7 @@ public class UserServlet extends HttpServlet {
             writer.print(jsonUser);
             return SC_OK;
         } catch (ElementNotFoundException e) {
-            return SC_NOT_FOUND;
+            return e.getStatusCode();
         }
     }
 
