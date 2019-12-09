@@ -1,5 +1,6 @@
 package com.leverx.validator;
 
+import com.leverx.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.Validator;
@@ -14,7 +15,6 @@ public class EntityValidator {
     public static final int MAX_SIZE = 60;
     public static final String NOT_VALID_NAME = "Name should be between " + MIN_SIZE + " and " + MAX_SIZE + " symbols";
     public static final String NOT_VALID_DATE = "Must be a date in the past or in the present";
-    private static final String VALIDATION_FAILED = "Validation failed\n";
     private static Validator validator = buildDefaultValidatorFactory().getValidator();
 
     public static <T> void validateEntity(T entity) throws ValidationFailedException {

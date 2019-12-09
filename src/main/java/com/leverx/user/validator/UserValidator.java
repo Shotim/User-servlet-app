@@ -1,7 +1,7 @@
 package com.leverx.user.validator;
 
 import com.leverx.user.dto.UserInputDto;
-import com.leverx.validator.ValidationFailedException;
+import com.leverx.exception.ValidationFailedException;
 
 import static com.leverx.cat.validator.CatValidator.validateCatsIds;
 import static com.leverx.validator.EntityValidator.validate;
