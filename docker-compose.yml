@@ -5,10 +5,10 @@ services:
     image: mysql:latest
     restart: always
     environment:
-      MYSQL_DATABASE: 'users'
-      MYSQL_USER: 'user'
-      MYSQL_PASSWORD: 'password'
-      MYSQL_ROOT_PASSWORD: 'root'
+      - MYSQL_URL=${MYSQL_URL}
+      - MYSQL_USERNAME=${MYSQL_USERNAME}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     ports:
       - '3307:3306'
     expose:
