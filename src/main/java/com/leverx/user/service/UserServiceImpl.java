@@ -6,7 +6,7 @@ import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
-import com.leverx.validator.ValidationFailedException;
+import com.leverx.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -62,12 +62,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
+    public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
         validateUserInputDto(userInputDto);
         var userId = parseInt(id);
         var user = UserDtoConverter.userInputDtoToUser(userId, userInputDto);
         user.getCats().forEach(cat -> cat.setOwner(user));
         userRepository.update(user);
-        return userToUserOutputDto(user);
+        userToUserOutputDto(user);
     }
 }

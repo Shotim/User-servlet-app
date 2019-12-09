@@ -3,7 +3,7 @@ package com.leverx.user.service;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
-import com.leverx.validator.ValidationFailedException;
+import com.leverx.exception.ValidationFailedException;
 
 import java.util.Collection;
 
@@ -19,5 +19,5 @@ public interface UserService {
 
     void deleteById(String id);
 
-    UserOutputDto updateById(String id, UserInputDto user) throws ValidationFailedException;
+    void updateById(String id, UserInputDto user) throws ValidationFailedException;
 }

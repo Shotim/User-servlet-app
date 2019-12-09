@@ -5,9 +5,7 @@ import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
 import com.leverx.exception.ElementNotFoundException;
-import com.leverx.user.repository.UserRepository;
-import com.leverx.user.repository.UserRepositoryImpl;
-import com.leverx.validator.ValidationFailedException;
+import com.leverx.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
@@ -21,7 +19,6 @@ import static com.leverx.validator.EntityValidator.validateEntity;
 public class CatServiceImpl implements CatService {
 
     private CatRepository catRepository = new CatRepositoryImpl();
-    private UserRepository userRepository = new UserRepositoryImpl();
 
     @Override
     public Collection<CatOutputDto> findAll() {
@@ -48,13 +45,5 @@ public class CatServiceImpl implements CatService {
         var cat = catInputDtoToCat(catInputDto);
         catRepository.save(cat);
         return catToCatOutputDto(cat);
-    }
-
-    @Override
-    public void update(int catId, int ownerId) {
-        var cat = catRepository.findById(catId).orElseThrow();
-        var user = userRepository.findById(ownerId).orElseThrow();
-        cat.setOwner(user);
-        catRepository.update(cat);
     }
 }
