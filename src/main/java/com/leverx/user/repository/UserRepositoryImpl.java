@@ -171,7 +171,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    public <T> CriteriaQuery<User> getUserCriteriaQueryEqualToParameter(T parameter, SingularAttribute<User, ?> attribute, EntityManager entityManager) {
+    private <T> CriteriaQuery<User> getUserCriteriaQueryEqualToParameter(T parameter, SingularAttribute<User, ?> attribute, EntityManager entityManager) {
         var builder = entityManager.getCriteriaBuilder();
         var criteriaQuery = builder.createQuery(User.class);
         var root = criteriaQuery.from(User.class);

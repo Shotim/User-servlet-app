@@ -138,7 +138,7 @@ public class CatRepositoryImpl implements CatRepository {
         }
     }
 
-    public CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Cat, ?> attribute) {
+    private CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Cat, ?> attribute) {
 
         var builder = entityManager.getCriteriaBuilder();
         var criteriaQuery = builder.createQuery(Cat.class);
@@ -154,12 +154,12 @@ public class CatRepositoryImpl implements CatRepository {
         return criteriaQuery;
     }
 
-    public List<Cat> getResultList(EntityManager entityManager, CriteriaQuery<Cat> criteriaQuery) {
+    private List<Cat> getResultList(EntityManager entityManager, CriteriaQuery<Cat> criteriaQuery) {
         var query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
     }
 
-    public CriteriaQuery<Cat> getCatCriteriaQuery(EntityManager entityManager) {
+    private CriteriaQuery<Cat> getCatCriteriaQuery(EntityManager entityManager) {
         var builder = entityManager.getCriteriaBuilder();
         return builder.createQuery(Cat.class);
     }
