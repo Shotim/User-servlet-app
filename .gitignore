@@ -3,4 +3,5 @@
 /target
 *.iml
 /src/main/test
-*.env
+db.env
+tomcat.env
