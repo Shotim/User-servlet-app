@@ -42,7 +42,7 @@ import static lombok.AccessLevel.PRIVATE;
 @Table(name = "pets")
 @Entity
 @Inheritance(strategy = JOINED)
-public class Pet {
+public abstract class Pet {
 
     @Id
     @Column
