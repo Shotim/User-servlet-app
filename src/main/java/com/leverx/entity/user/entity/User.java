@@ -1,6 +1,6 @@
 package com.leverx.entity.user.entity;
 
-import com.leverx.entity.cat.entity.Cat;
+import com.leverx.entity.pet.entity.Pet;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -46,5 +46,5 @@ public class User {
     String name;
 
     @OneToMany(fetch = EAGER, cascade = ALL, mappedBy = "owner")
-    Collection<Cat> cats = emptyList();
+    Collection<Pet> pets = emptyList();
 }
