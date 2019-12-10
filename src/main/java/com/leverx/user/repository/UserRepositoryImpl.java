@@ -42,7 +42,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException();
 
         } finally {
             entityManager.close();
@@ -71,7 +71,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException();
 
         } finally {
             entityManager.close();
@@ -95,7 +95,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException();
 
         } finally {
             entityManager.close();
@@ -116,7 +116,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException();
 
         } finally {
             entityManager.close();
@@ -145,7 +145,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException();
 
         } finally {
             entityManager.close();
@@ -164,7 +164,7 @@ public class UserRepositoryImpl implements UserRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
+            throw new InternalServerErrorException();
 
         } finally {
             entityManager.close();

@@ -18,7 +18,7 @@ public class InternalServerErrorException extends RuntimeException {
     @Getter
     static final int errorCode = INTERNAL_SERVER_ERROR;
 
-    public InternalServerErrorException(Exception e) {
-        super(message, e);
+    public InternalServerErrorException() {
+        super(message);
     }
 }
