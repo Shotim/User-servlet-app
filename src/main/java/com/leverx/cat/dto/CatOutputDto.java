@@ -37,6 +37,7 @@ public class CatOutputDto {
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;
 
+    @NotNull
     @PositiveOrZero
     int miceCachedNumber;
 

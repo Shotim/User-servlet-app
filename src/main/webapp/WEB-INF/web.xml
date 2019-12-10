@@ -15,6 +15,11 @@
         <servlet-class>com.leverx.cat.servlet.CatServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>DogServlet</servlet-name>
+        <servlet-class>com.leverx.dog.servlet.DogServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/users</url-pattern>
@@ -27,6 +32,12 @@
         <url-pattern>/cats/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>DogServlet</servlet-name>
+        <url-pattern>/dogs</url-pattern>
+        <url-pattern>/dogs/*</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>ServletFilter</filter-name>
         <filter-class>com.leverx.servlet.filter.ServletFilter</filter-class>
@@ -37,6 +48,8 @@
         <url-pattern>/users/*</url-pattern>
         <url-pattern>/cats</url-pattern>
         <url-pattern>/cats/*</url-pattern>
+        <url-pattern>/dogs</url-pattern>
+        <url-pattern>/dogs/*</url-pattern>
     </filter-mapping>
 
     <listener>
