@@ -15,6 +15,8 @@ public class EntityValidator {
     public static final int MAX_SIZE = 60;
     public static final String NOT_VALID_NAME = "Name should be between " + MIN_SIZE + " and " + MAX_SIZE + " symbols";
     public static final String NOT_VALID_DATE = "Must be a date in the past or in the present";
+    public static final String SHOULD_NOT_BE_EMPTY = "Field should be filled with value of concrete type";
+    public static final String NON_NEGATIVE_NUMBER = "Number must be positive or zero";
     private static Validator validator = buildDefaultValidatorFactory().getValidator();
 
     public static <T> void validateEntity(T entity) throws ValidationFailedException {

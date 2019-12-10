@@ -26,6 +26,7 @@ import static com.leverx.validator.EntityValidator.MAX_SIZE;
 import static com.leverx.validator.EntityValidator.MIN_SIZE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_DATE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
+import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -49,14 +50,14 @@ public class Pet {
     int id;
 
     @Column
-    @NotNull
     @NonNull
+    @NotNull(message = SHOULD_NOT_BE_EMPTY)
     @Size(min = MIN_SIZE, max = MAX_SIZE, message = NOT_VALID_NAME)
     String name;
 
     @Column
-    @NotNull
     @NonNull
+    @NotNull(message = SHOULD_NOT_BE_EMPTY)
     @PastOrPresent(message = NOT_VALID_DATE)
     LocalDate dateOfBirth;
 
