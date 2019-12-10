@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
@@ -32,4 +33,7 @@ public class CatInputDto {
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate dateOfBirth;
+
+    @PositiveOrZero
+    int miceCachedNumber;
 }
