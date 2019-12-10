@@ -7,17 +7,17 @@
 
     <servlet>
         <servlet-name>UserServlet</servlet-name>
-        <servlet-class>com.leverx.user.servlet.UserServlet</servlet-class>
+        <servlet-class>com.leverx.entity.user.servlet.UserServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>CatServlet</servlet-name>
-        <servlet-class>com.leverx.cat.servlet.CatServlet</servlet-class>
+        <servlet-class>com.leverx.entity.cat.servlet.CatServlet</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>DogServlet</servlet-name>
-        <servlet-class>com.leverx.dog.servlet.DogServlet</servlet-class>
+        <servlet-class>com.leverx.entity.dog.servlet.DogServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
