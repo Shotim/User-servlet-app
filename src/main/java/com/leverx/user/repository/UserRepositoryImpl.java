@@ -5,8 +5,11 @@ import com.leverx.user.entity.User;
 import com.leverx.user.entity.User_;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -27,7 +30,6 @@ public class UserRepositoryImpl implements UserRepository {
 
             var builder = entityManager.getCriteriaBuilder();
             var criteriaQuery = builder.createQuery(User.class);
-
             var root = criteriaQuery.from(User.class);
 
             criteriaQuery.select(root);
@@ -41,6 +43,7 @@ public class UserRepositoryImpl implements UserRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -53,18 +56,10 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            var builder = entityManager.getCriteriaBuilder();
-            var criteriaQuery = builder.createQuery(User.class);
-
-            var root = criteriaQuery.from(User.class);
-
-            criteriaQuery.select(root);
-            var idPath = root.get(User_.id);
-            var equalIdCondition = builder.equal(idPath, id);
-            criteriaQuery.where(equalIdCondition);
-
+            var criteriaQuery = getUserCriteriaQueryEqualToParameter(id, User_.id, entityManager);
             var query = entityManager.createQuery(criteriaQuery);
             var user = query.getSingleResult();
+
             transaction.commit();
             log.debug("User with id = {} was received", id);
             return Optional.of(user);
@@ -72,10 +67,12 @@ public class UserRepositoryImpl implements UserRepository {
             commitTransactionIfActive(transaction);
             log.debug("User with id = {} was not found", id);
             return Optional.empty();
+
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -88,18 +85,10 @@ public class UserRepositoryImpl implements UserRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            var builder = entityManager.getCriteriaBuilder();
-            var criteriaQuery = builder.createQuery(User.class);
-
-            var root = criteriaQuery.from(User.class);
-
-            criteriaQuery.select(root);
-            var namePath = root.get(User_.name);
-            var equalNameCondition = builder.equal(namePath, name);
-            criteriaQuery.where(equalNameCondition);
-
+            var criteriaQuery = getUserCriteriaQueryEqualToParameter(name, User_.name, entityManager);
             var query = entityManager.createQuery(criteriaQuery);
             var users = query.getResultList();
+
             transaction.commit();
             log.debug("Were received {} users with name = {}", users.size(), name);
             return users;
@@ -107,10 +96,12 @@ public class UserRepositoryImpl implements UserRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
     }
+
 
     @Override
     public Optional<User> save(User user) {
@@ -126,6 +117,7 @@ public class UserRepositoryImpl implements UserRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -140,11 +132,10 @@ public class UserRepositoryImpl implements UserRepository {
 
             var builder = entityManager.getCriteriaBuilder();
             var criteriaDelete = builder.createCriteriaDelete(User.class);
-
             var root = criteriaDelete.from(User.class);
-
             var idPath = root.get(User_.id);
             var equalIdCondition = builder.equal(idPath, id);
+
             criteriaDelete.where(equalIdCondition);
 
             var query = entityManager.createQuery(criteriaDelete);
@@ -155,6 +146,7 @@ public class UserRepositoryImpl implements UserRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
@@ -166,17 +158,29 @@ public class UserRepositoryImpl implements UserRepository {
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
-
             entityManager.merge(user);
-
             transaction.commit();
             log.debug("User with id = {} was updated", user.getId());
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e);
+
         } finally {
             entityManager.close();
         }
+    }
+
+    public <T> CriteriaQuery<User> getUserCriteriaQueryEqualToParameter(T parameter, SingularAttribute<User, ?> attribute, EntityManager entityManager) {
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(User.class);
+        var root = criteriaQuery.from(User.class);
+
+        criteriaQuery.select(root);
+
+        var path = root.get(attribute);
+        var equalCondition = builder.equal(path, parameter);
+        criteriaQuery.where(equalCondition);
+        return criteriaQuery;
     }
 }
