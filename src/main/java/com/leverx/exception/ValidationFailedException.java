@@ -10,12 +10,10 @@ import static lombok.AccessLevel.PRIVATE;
 public class ValidationFailedException extends Exception {
 
     public static final int SC_UNPROCESSABLE_ENTITY = 422;
-
-    @Getter
-    final int statusCode = SC_UNPROCESSABLE_ENTITY;
-
     @Getter
     static final int errorCode = VALIDATION_FAILED;
+    @Getter
+    final int statusCode = SC_UNPROCESSABLE_ENTITY;
 
     public ValidationFailedException(String errorMessage) {
         super(errorMessage);

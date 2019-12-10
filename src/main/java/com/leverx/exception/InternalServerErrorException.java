@@ -11,12 +11,10 @@ import static lombok.AccessLevel.PRIVATE;
 public class InternalServerErrorException extends RuntimeException {
 
     static final String message = "Internal server error";
-
-    @Getter
-    final int statusCode = SC_INTERNAL_SERVER_ERROR;
-
     @Getter
     static final int errorCode = INTERNAL_SERVER_ERROR;
+    @Getter
+    final int statusCode = SC_INTERNAL_SERVER_ERROR;
 
     public InternalServerErrorException() {
         super(message);

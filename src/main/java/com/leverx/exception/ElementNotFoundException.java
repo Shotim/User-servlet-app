@@ -11,12 +11,10 @@ import static lombok.AccessLevel.PRIVATE;
 public class ElementNotFoundException extends Exception {
 
     static final String message = "Entity was not found in database";
-
-    @Getter
-    final int statusCode = SC_NOT_FOUND;
-
     @Getter
     static final int errorCode = ELEMENT_NOT_FOUND;
+    @Getter
+    final int statusCode = SC_NOT_FOUND;
 
     public ElementNotFoundException() {
         super(message);
