@@ -1,11 +1,11 @@
 package com.leverx.entity.user.service;
 
-import com.leverx.exception.ElementNotFoundException;
 import com.leverx.entity.user.dto.UserInputDto;
 import com.leverx.entity.user.dto.UserOutputDto;
 import com.leverx.entity.user.dto.converter.UserDtoConverter;
 import com.leverx.entity.user.repository.UserRepository;
 import com.leverx.entity.user.repository.UserRepositoryImpl;
+import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 

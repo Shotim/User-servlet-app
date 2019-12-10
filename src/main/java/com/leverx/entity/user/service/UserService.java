@@ -1,8 +1,8 @@
 package com.leverx.entity.user.service;
 
-import com.leverx.exception.ElementNotFoundException;
 import com.leverx.entity.user.dto.UserInputDto;
 import com.leverx.entity.user.dto.UserOutputDto;
+import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
 
 import java.util.Collection;

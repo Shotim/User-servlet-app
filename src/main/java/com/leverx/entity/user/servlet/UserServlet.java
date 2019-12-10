@@ -2,11 +2,11 @@ package com.leverx.entity.user.servlet;
 
 import com.leverx.entity.cat.service.CatService;
 import com.leverx.entity.cat.service.CatServiceImpl;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 import com.leverx.entity.user.dto.UserInputDto;
 import com.leverx.entity.user.service.UserService;
 import com.leverx.entity.user.service.UserServiceImpl;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
