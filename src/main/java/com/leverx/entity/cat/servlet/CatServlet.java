@@ -52,7 +52,7 @@ public class CatServlet extends HttpServlet {
         }
     }
 
-    public int printCatByIdToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printCatByIdToResponseBody(PrintWriter writer, String pathVariable) {
         try {
             var id = parseInt(pathVariable);
             var cat = catService.findById(id);
@@ -65,7 +65,7 @@ public class CatServlet extends HttpServlet {
 
     }
 
-    public int printAllCatsToResponseBody(PrintWriter writer) {
+    private int printAllCatsToResponseBody(PrintWriter writer) {
         var cats = catService.findAll();
         var catsJson = fromEntityCollectionToJson(cats);
         catsJson.forEach(writer::println);
