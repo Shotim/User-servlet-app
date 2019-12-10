@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.leverx.cat.dto.CatOutputDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.NotNull;
@@ -17,7 +16,6 @@ import static java.util.Collections.emptyList;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
-@Setter
 @AllArgsConstructor
 @FieldDefaults(level = PRIVATE)
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
