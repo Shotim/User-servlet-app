@@ -2,7 +2,6 @@ package com.leverx.entity.user.service;
 
 import com.leverx.entity.user.dto.UserInputDto;
 import com.leverx.entity.user.dto.UserOutputDto;
-import com.leverx.entity.user.dto.converter.UserDtoConverter;
 import com.leverx.entity.user.repository.UserRepository;
 import com.leverx.entity.user.repository.UserRepositoryImpl;
 import com.leverx.exception.ElementNotFoundException;
@@ -46,11 +45,11 @@ public class UserServiceImpl implements UserService {
     public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
         validateUserInputDto(userInputDto);
         var user = userInputDtoToUser(userInputDto);
-        var cats = user.getCats();
-        user.setCats(emptyList());
+        var pets = user.getPets();
+        user.setPets(emptyList());
         var createdUser = userRepository.save(user).orElseThrow();
-        createdUser.setCats(cats);
-        createdUser.getCats().forEach(cat -> cat.setOwner(user));
+        createdUser.setPets(pets);
+        createdUser.getPets().forEach(pet -> pet.setOwner(user));
         userRepository.update(user);
         return userToUserOutputDto(user);
     }
@@ -65,9 +64,8 @@ public class UserServiceImpl implements UserService {
     public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
         validateUserInputDto(userInputDto);
         var userId = parseInt(id);
-        var user = UserDtoConverter.userInputDtoToUser(userId, userInputDto);
-        user.getCats().forEach(cat -> cat.setOwner(user));
+        var user = userInputDtoToUser(userId, userInputDto);
+        user.getPets().forEach(pet -> pet.setOwner(user));
         userRepository.update(user);
-        userToUserOutputDto(user);
     }
 }
