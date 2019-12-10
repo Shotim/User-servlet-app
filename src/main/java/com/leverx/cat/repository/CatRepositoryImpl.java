@@ -119,25 +119,6 @@ public class CatRepositoryImpl implements CatRepository {
         }
     }
 
-    @Override
-    public void update(Cat cat) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            entityManager.merge(cat);
-            transaction.commit();
-            log.debug("Cat with id = {} was updated", cat.getId());
-        } catch (RuntimeException e) {
-            log.error(e.getMessage());
-            rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e);
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
     private CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Cat, ?> attribute) {
 
         var builder = entityManager.getCriteriaBuilder();
