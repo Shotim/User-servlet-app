@@ -14,19 +14,21 @@ public class CatDtoConverter {
     public static Cat catInputDtoToCat(CatInputDto catInputDto) {
         var name = catInputDto.getName();
         var dateOfBirth = catInputDto.getDateOfBirth();
-        return new Cat(name, dateOfBirth);
+        int miceCachedNumber = catInputDto.getMiceCachedNumber();
+        return new Cat(name, dateOfBirth, miceCachedNumber);
     }
 
     public static CatOutputDto catToCatOutputDto(Cat cat) {
         var id = cat.getId();
         var name = cat.getName();
         var dateOfBirth = cat.getDateOfBirth();
+        var miceCachedNumber = cat.getMiceCachedNumber();
         var owner = cat.getOwner();
         if (nonNull(owner)) {
             var ownerId = owner.getId();
-            return new CatOutputDto(id, name, dateOfBirth, ownerId);
+            return new CatOutputDto(id, name, dateOfBirth, miceCachedNumber, ownerId);
         }
-        return new CatOutputDto(id, name, dateOfBirth, null);
+        return new CatOutputDto(id, name, dateOfBirth, miceCachedNumber, null);
     }
 
     public static Collection<CatOutputDto> catCollectionToCatOutputDtoCollection(Collection<Cat> cats) {
