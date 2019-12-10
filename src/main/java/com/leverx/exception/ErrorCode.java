@@ -1,19 +1,8 @@
 package com.leverx.exception;
 
-import lombok.Getter;
-import lombok.experimental.FieldDefaults;
+public class ErrorCode {
 
-import static lombok.AccessLevel.PRIVATE;
-
-@FieldDefaults(level = PRIVATE)
-public enum ErrorCode {
-
-    VALIDATION_FAILED(7135), ELEMENT_NOT_FOUND(4020), INTERNAL_SERVER_ERROR(343);
-
-    @Getter
-    int code;
-
-    ErrorCode(int code) {
-        this.code = code;
-    }
+    public static final int VALIDATION_FAILED = 7135;
+    public static final int ELEMENT_NOT_FOUND = 4020;
+    public static final int INTERNAL_SERVER_ERROR = 343;
 }

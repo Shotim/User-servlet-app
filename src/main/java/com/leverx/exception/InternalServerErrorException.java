@@ -3,6 +3,7 @@ package com.leverx.exception;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
+import static com.leverx.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -15,7 +16,7 @@ public class InternalServerErrorException extends RuntimeException {
     final int statusCode = SC_INTERNAL_SERVER_ERROR;
 
     @Getter
-    static final ErrorCode errorCode = ErrorCode.INTERNAL_SERVER_ERROR;
+    static final int errorCode = INTERNAL_SERVER_ERROR;
 
     public InternalServerErrorException(Exception e) {
         super(message, e);
