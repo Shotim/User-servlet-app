@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
+import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 import static java.util.Collections.emptyList;
 import static lombok.AccessLevel.PRIVATE;
 
@@ -23,7 +24,7 @@ public class UserOutputDto {
 
     int id;
 
-    @NotNull
+    @NotNull(message = SHOULD_NOT_BE_EMPTY)
     String name;
 
     @JsonInclude(NON_NULL)
