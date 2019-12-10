@@ -23,4 +23,6 @@ public class UserInputDto {
     String name;
 
     Collection<Integer> catsIds = emptyList();
+
+    Collection<Integer> dogsIds = emptyList();
 }

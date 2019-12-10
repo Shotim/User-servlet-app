@@ -3,7 +3,7 @@ package com.leverx.entity.user.dto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.leverx.entity.cat.dto.CatOutputDto;
+import com.leverx.entity.pet.dto.PetOutputDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
@@ -28,6 +28,5 @@ public class UserOutputDto {
     String name;
 
     @JsonInclude(NON_NULL)
-    Collection<CatOutputDto> cats = emptyList();
-
+    Collection<PetOutputDto> cats = emptyList();
 }
