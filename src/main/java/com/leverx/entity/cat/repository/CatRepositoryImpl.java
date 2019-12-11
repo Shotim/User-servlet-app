@@ -3,7 +3,6 @@ package com.leverx.entity.cat.repository;
 import com.leverx.entity.cat.entity.Cat;
 import com.leverx.entity.cat.entity.Cat_;
 import com.leverx.entity.pet.entity.Pet;
-import com.leverx.entity.pet.entity.Pet_;
 import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
@@ -44,7 +43,7 @@ public class CatRepositoryImpl implements CatRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(e.getMessage());
 
         } finally {
             entityManager.close();
@@ -65,7 +64,7 @@ public class CatRepositoryImpl implements CatRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(e.getMessage());
 
         } finally {
             entityManager.close();
@@ -79,7 +78,7 @@ public class CatRepositoryImpl implements CatRepository {
         try {
             transaction = beginTransaction(entityManager);
 
-            var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id);
+            var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(id, entityManager, Cat_.id);
             var query = entityManager.createQuery(criteriaQuery);
             var cat = query.getSingleResult();
 
@@ -94,7 +93,7 @@ public class CatRepositoryImpl implements CatRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(e.getMessage());
 
         } finally {
             entityManager.close();
@@ -114,7 +113,7 @@ public class CatRepositoryImpl implements CatRepository {
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(e.getMessage());
 
         } finally {
             entityManager.close();
