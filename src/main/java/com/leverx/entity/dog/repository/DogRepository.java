@@ -9,8 +9,6 @@ public interface DogRepository {
 
     Collection<Dog> findAll();
 
-    Collection<Dog> findByOwner(int ownerId);
-
     Optional<Dog> findById(int id);
 
     Optional<Dog> save(Dog cat);
