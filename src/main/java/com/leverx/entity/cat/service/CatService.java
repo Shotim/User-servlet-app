@@ -13,7 +13,5 @@ public interface CatService {
 
     CatOutputDto findById(int id) throws ElementNotFoundException;
 
-    Collection<CatOutputDto> findByOwner(int ownerId);
-
     CatOutputDto save(CatInputDto cat) throws ValidationFailedException;
 }
