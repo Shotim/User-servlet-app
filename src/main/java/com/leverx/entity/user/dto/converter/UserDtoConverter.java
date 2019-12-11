@@ -27,7 +27,7 @@ public class UserDtoConverter {
                 .map(catRepository::findById)
                 .map(Optional::orElseThrow)
                 .collect(toList());
-        var dogs = userInputDto.getCatsIds().stream()
+        var dogs = userInputDto.getDogsIds().stream()
                 .map(dogRepository::findById)
                 .map(Optional::orElseThrow)
                 .collect(toList());
