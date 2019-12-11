@@ -3,10 +3,10 @@ package com.leverx.entity.dog.dto.converter;
 import com.leverx.entity.dog.dto.DogInputDto;
 import com.leverx.entity.dog.dto.DogOutputDto;
 import com.leverx.entity.dog.entity.Dog;
+import com.leverx.entity.user.entity.User;
 
 import java.util.Collection;
 
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 public class DogDtoConverter {
@@ -23,12 +23,11 @@ public class DogDtoConverter {
         var name = dog.getName();
         var dateOfBirth = dog.getDateOfBirth();
         var isCutEars = dog.isCutEars();
-        var owner = dog.getOwner();
-        if (nonNull(owner)) {
-            var ownerId = owner.getId();
-            return new DogOutputDto(id, name, dateOfBirth, isCutEars, ownerId);
-        }
-        return new DogOutputDto(id, name, dateOfBirth, isCutEars, null);
+        var owners = dog.getOwners();
+        var ownerIds = owners.stream()
+                .map(User::getId)
+                .collect(toList());
+        return new DogOutputDto(id, name, dateOfBirth, isCutEars, ownerIds);
     }
 
     public static Collection<DogOutputDto> dogCollectionToDogOutputDtoCollection(Collection<Dog> dogs) {

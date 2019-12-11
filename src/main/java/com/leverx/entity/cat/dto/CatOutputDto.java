@@ -13,6 +13,7 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
@@ -43,5 +44,5 @@ public class CatOutputDto {
     @PositiveOrZero(message = NON_NEGATIVE_NUMBER)
     int miceCachedNumber;
 
-    Integer ownerId;
+    List<Integer> ownerIds;
 }

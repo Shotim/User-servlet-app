@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
@@ -39,5 +40,5 @@ public class DogOutputDto {
     @NotNull(message = SHOULD_NOT_BE_EMPTY)
     boolean isCutEars;
 
-    Integer ownerId;
+    List<Integer> ownerIds;
 }

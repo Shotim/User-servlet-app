@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
@@ -37,5 +38,5 @@ public class PetOutputDto {
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;
 
-    Integer ownerId;
+    List<Integer> ownerIds;
 }

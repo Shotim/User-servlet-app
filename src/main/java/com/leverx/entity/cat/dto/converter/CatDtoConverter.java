@@ -3,10 +3,10 @@ package com.leverx.entity.cat.dto.converter;
 import com.leverx.entity.cat.dto.CatInputDto;
 import com.leverx.entity.cat.dto.CatOutputDto;
 import com.leverx.entity.cat.entity.Cat;
+import com.leverx.entity.user.entity.User;
 
 import java.util.Collection;
 
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 public class CatDtoConverter {
@@ -23,12 +23,12 @@ public class CatDtoConverter {
         var name = cat.getName();
         var dateOfBirth = cat.getDateOfBirth();
         var miceCachedNumber = cat.getMiceCachedNumber();
-        var owner = cat.getOwner();
-        if (nonNull(owner)) {
-            var ownerId = owner.getId();
-            return new CatOutputDto(id, name, dateOfBirth, miceCachedNumber, ownerId);
-        }
-        return new CatOutputDto(id, name, dateOfBirth, miceCachedNumber, null);
+        var owners = cat.getOwners();
+        var ownerIds = owners.stream()
+                .map(User::getId)
+                .collect(toList());
+        return new CatOutputDto(id, name, dateOfBirth, miceCachedNumber, ownerIds);
+
     }
 
     public static Collection<CatOutputDto> catCollectionToCatOutputDtoCollection(Collection<Cat> cats) {
