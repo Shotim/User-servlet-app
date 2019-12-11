@@ -18,6 +18,7 @@ import java.util.Optional;
 import static com.leverx.servlet.listener.ServletListener.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
+import static com.leverx.utils.RepositoryUtils.retrievePetsByOwner;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 @Slf4j
@@ -69,6 +70,25 @@ public class CatRepositoryImpl implements CatRepository {
             log.debug("Cat with id = {} was not found", id);
             return Optional.empty();
 
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e.getMessage());
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public Collection<Cat> findByOwner(int ownerId) {
+        EntityManager entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            var cats = retrievePetsByOwner(ownerId, entityManager, Cat.class);
+            transaction.commit();
+            return cats;
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
