@@ -28,5 +28,5 @@ public class UserOutputDto {
     String name;
 
     @JsonInclude(NON_NULL)
-    Collection<PetOutputDto> cats = emptyList();
+    Collection<PetOutputDto> pets = emptyList();
 }
