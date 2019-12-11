@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static java.util.Objects.nonNull;
-
 public class DogValidator {
 
     private static final DogRepository DOG_REPOSITORY = new DogRepositoryImpl();
@@ -48,7 +46,7 @@ public class DogValidator {
     }
 
     private static boolean hasOwner(Dog dog) {
-        var owner = dog.getOwner();
-        return nonNull(owner);
+        var owners = dog.getOwners();
+        return !owners.isEmpty();
     }
 }

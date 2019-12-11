@@ -8,8 +8,6 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static java.util.Objects.nonNull;
-
 public class CatValidator {
 
     private static final CatRepository CAT_REPOSITORY = new CatRepositoryImpl();
@@ -48,7 +46,7 @@ public class CatValidator {
     }
 
     private static boolean hasOwner(Cat cat) {
-        var owner = cat.getOwner();
-        return nonNull(owner);
+        var owners = cat.getOwners();
+        return !owners.isEmpty();
     }
 }
