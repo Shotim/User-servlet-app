@@ -15,19 +15,21 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.Collection;
 
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
 import static com.leverx.validator.EntityValidator.MIN_SIZE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_DATE;
 import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
-import static javax.persistence.CascadeType.ALL;
+import static java.util.Collections.emptyList;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
 import static javax.persistence.InheritanceType.JOINED;
@@ -61,7 +63,9 @@ public abstract class Pet {
     @PastOrPresent(message = NOT_VALID_DATE)
     LocalDate dateOfBirth;
 
-    @JoinColumn(name = "ownerId")
-    @ManyToOne(fetch = EAGER, cascade = ALL)
-    User owner;
+    @ManyToMany(fetch = EAGER)
+    @JoinTable(name = "user_pet",
+            joinColumns = {@JoinColumn(name = "petId")},
+            inverseJoinColumns = {@JoinColumn(name = "petId")})
+    Collection<User> owners = emptyList();
 }
