@@ -2,6 +2,8 @@ package com.leverx.entity.user.servlet;
 
 import com.leverx.entity.cat.service.CatService;
 import com.leverx.entity.cat.service.CatServiceImpl;
+import com.leverx.entity.dog.service.DogService;
+import com.leverx.entity.dog.service.DogServiceImpl;
 import com.leverx.entity.user.dto.UserInputDto;
 import com.leverx.entity.user.service.UserService;
 import com.leverx.entity.user.service.UserServiceImpl;
@@ -18,6 +20,7 @@ import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJso
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
+import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
@@ -31,8 +34,10 @@ public class UserServlet extends HttpServlet {
 
     private final UserService userService = new UserServiceImpl();
     private final CatService catService = new CatServiceImpl();
+    private final DogService dogService = new DogServiceImpl();
 
     @Override
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         var responseWriter = response.getWriter();
@@ -53,6 +58,8 @@ public class UserServlet extends HttpServlet {
             case GET_CATS_OF_USER:
                 responseStatus = printCatsOfUser(responseWriter, requiredVariable);
                 break;
+            case GET_DOGS_OF_USER:
+                responseStatus = printDogsOfUser(responseWriter, requiredVariable);
         }
         response.setStatus(responseStatus);
         responseWriter.flush();
@@ -88,14 +95,13 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    public int printAllUsersToResponseBody(PrintWriter writer) {
+    private int printAllUsersToResponseBody(PrintWriter writer) {
         var users = userService.findAll();
-        var jsonUsers = fromEntityCollectionToJson(users);
-        jsonUsers.forEach(writer::println);
+        printEntityCollectionToResponseBody(writer, users);
         return users.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
-    public int printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printUserByIdToResponseBody(PrintWriter writer, String pathVariable) {
         var id = parseInt(pathVariable);
         try {
             var user = userService.findById(id);
@@ -107,18 +113,25 @@ public class UserServlet extends HttpServlet {
         }
     }
 
-    public int printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printUsersByNameToResponseBody(PrintWriter writer, String pathVariable) {
         var users = userService.findByName(pathVariable);
         var jsonUsers = fromEntityCollectionToJson(users);
         jsonUsers.forEach(writer::println);
         return users.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
-    public int printCatsOfUser(PrintWriter writer, String ownerId) {
+    private int printCatsOfUser(PrintWriter writer, String ownerId) {
         var id = parseInt(ownerId);
         var cats = catService.findByOwner(id);
-        var jsonCats = fromEntityCollectionToJson(cats);
-        jsonCats.forEach(writer::println);
+        printEntityCollectionToResponseBody(writer, cats);
         return cats.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
+
+    private int printDogsOfUser(PrintWriter writer, String ownerId) {
+        var id = parseInt(ownerId);
+        var dogs = dogService.findByOwner(id);
+        printEntityCollectionToResponseBody(writer, dogs);
+        return dogs.isEmpty() ? SC_NOT_FOUND : SC_OK;
+    }
+
 }

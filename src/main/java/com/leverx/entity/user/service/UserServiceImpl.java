@@ -47,9 +47,9 @@ public class UserServiceImpl implements UserService {
         var user = userInputDtoToUser(userInputDto);
         var pets = user.getPets();
         user.setPets(emptyList());
-        var createdUser = userRepository.save(user).orElseThrow();
-        createdUser.setPets(pets);
-        createdUser.getPets().forEach(pet -> pet.setOwner(user));
+        userRepository.save(user).orElseThrow();
+        user.setPets(pets);
+        user.getPets().forEach(pet -> pet.setOwner(user));
         userRepository.update(user);
         return userToUserOutputDto(user);
     }
