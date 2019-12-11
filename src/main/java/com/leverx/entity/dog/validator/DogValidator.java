@@ -28,21 +28,21 @@ public class DogValidator {
     private static Optional<String> getValidationErrors(Integer dogId) {
         var optionalDog = DOG_REPOSITORY.findById(dogId);
         if (optionalDog.isEmpty()) {
-            return Optional.of(getCatNotExistError(dogId));
+            return Optional.of(getDogNotExistError(dogId));
         } else {
             if (hasOwner(optionalDog.get())) {
-                return Optional.of(getCatHasOwnerError(dogId));
+                return Optional.of(getDogHasOwnerError(dogId));
             }
             return Optional.empty();
         }
     }
 
-    private static String getCatHasOwnerError(Integer dogId) {
+    private static String getDogHasOwnerError(Integer dogId) {
         var invalidValue = dogId.toString();
         return invalidValue + ":  " + DOG_HAS_OWNER;
     }
 
-    private static String getCatNotExistError(Integer dogId) {
+    private static String getDogNotExistError(Integer dogId) {
         var invalidValue = dogId.toString();
         return invalidValue + ":  " + DOG_DOES_NOT_EXIST;
     }
