@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         user.setPets(emptyList());
         userRepository.save(user).orElseThrow();
         user.setPets(pets);
-        user.getPets().forEach(pet -> pet.setOwner(user));
+        user.getPets().forEach(pet -> pet.getOwners().add(user));
         userRepository.update(user);
         return userToUserOutputDto(user);
     }
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
         validateUserInputDto(userInputDto);
         var userId = parseInt(id);
         var user = userInputDtoToUser(userId, userInputDto);
-        user.getPets().forEach(pet -> pet.setOwner(user));
+        user.getPets().forEach(pet -> pet.getOwners().add(user));
         userRepository.update(user);
     }
 }
