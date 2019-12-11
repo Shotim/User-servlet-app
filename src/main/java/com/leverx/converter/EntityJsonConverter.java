@@ -16,7 +16,7 @@ public class EntityJsonConverter {
         try {
             return OBJECT_MAPPER.writeValueAsString(t);
         } catch (JsonProcessingException e) {
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(e.getMessage());
         }
     }
 
@@ -30,7 +30,7 @@ public class EntityJsonConverter {
         try {
             return OBJECT_MAPPER.readValue(object, tClass);
         } catch (JsonProcessingException e) {
-            throw new InternalServerErrorException();
+            throw new InternalServerErrorException(e.getMessage());
         }
     }
 }
