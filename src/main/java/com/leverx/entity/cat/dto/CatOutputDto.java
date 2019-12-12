@@ -2,7 +2,6 @@ package com.leverx.entity.cat.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
@@ -16,6 +15,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
+import static com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator;
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
 import static com.leverx.validator.EntityValidator.MIN_SIZE;
 import static com.leverx.validator.EntityValidator.NON_NEGATIVE_NUMBER;
@@ -25,7 +25,7 @@ import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 
 @Getter
 @AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonIdentityInfo(generator = PropertyGenerator.class, property = "id")
 public class CatOutputDto {
 
     int id;

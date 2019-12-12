@@ -60,7 +60,6 @@ public class CatRepositoryImpl implements CatRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e.getMessage());
-
         } finally {
             entityManager.close();
         }
@@ -99,7 +98,6 @@ public class CatRepositoryImpl implements CatRepository {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);
             throw new InternalServerErrorException(e.getMessage());
-
         } finally {
             entityManager.close();
         }

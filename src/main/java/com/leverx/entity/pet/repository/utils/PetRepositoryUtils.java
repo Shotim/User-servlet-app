@@ -12,7 +12,6 @@ import java.util.List;
 
 public class PetRepositoryUtils {
 
-
     private static <T extends Pet> CriteriaQuery<T> getPetCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute, Class<T> t) {
 
         var builder = entityManager.getCriteriaBuilder();
@@ -48,13 +47,11 @@ public class PetRepositoryUtils {
         return getResultList(entityManager, criteriaQuery);
     }
 
-
     public static <T extends Pet> T getPetById(int id, EntityManager entityManager, Class<T> t) {
         var criteriaQuery = getPetCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id, t);
         var query = entityManager.createQuery(criteriaQuery);
         return query.getSingleResult();
     }
-
 
     public static <T extends Pet, T_ extends Pet_> Collection<T> retrievePetsByOwner(int ownerId, EntityManager entityManager, Class<T> entityClass) {
         var builder = entityManager.getCriteriaBuilder();

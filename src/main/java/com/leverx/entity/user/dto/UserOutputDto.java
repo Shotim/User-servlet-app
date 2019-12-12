@@ -13,7 +13,6 @@ import java.util.Collection;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
-import static java.util.Collections.emptyList;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -28,5 +27,5 @@ public class UserOutputDto {
     String name;
 
     @JsonInclude(NON_NULL)
-    Collection<PetOutputDto> pets = emptyList();
+    Collection<PetOutputDto> pets;
 }

@@ -15,7 +15,6 @@ import static com.leverx.entity.user.dto.converter.UserDtoConverter.userInputDto
 import static com.leverx.entity.user.dto.converter.UserDtoConverter.userToUserOutputDto;
 import static com.leverx.entity.user.validator.UserValidator.validateUserInputDto;
 import static java.lang.Integer.parseInt;
-import static java.util.Collections.emptyList;
 
 @Slf4j
 public class UserServiceImpl implements UserService {
@@ -45,12 +44,7 @@ public class UserServiceImpl implements UserService {
     public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
         validateUserInputDto(userInputDto);
         var user = userInputDtoToUser(userInputDto);
-        var pets = user.getPets();
-        user.setPets(emptyList());
         userRepository.save(user).orElseThrow();
-        user.setPets(pets);
-        user.getPets().forEach(pet -> pet.getOwners().add(user));
-        userRepository.update(user);
         return userToUserOutputDto(user);
     }
 
