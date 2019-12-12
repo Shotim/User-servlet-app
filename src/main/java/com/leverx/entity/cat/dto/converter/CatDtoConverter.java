@@ -19,6 +19,7 @@ public class CatDtoConverter {
     }
 
     public static CatOutputDto catToCatOutputDto(Cat cat) {
+        //TODO Refactoring
         var id = cat.getId();
         var name = cat.getName();
         var dateOfBirth = cat.getDateOfBirth();
