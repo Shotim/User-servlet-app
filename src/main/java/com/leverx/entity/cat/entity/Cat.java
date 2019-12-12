@@ -24,7 +24,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 @Entity
 @Table(name = "cats")
-@PrimaryKeyJoinColumn(name = "petId")
+@PrimaryKeyJoinColumn(name = "catId")
 public class Cat extends Pet {
 
     @Column

@@ -32,6 +32,12 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
+    public Collection<DogOutputDto> findByOwner(int id) {
+        var dogs = dogRepository.findByOwner(id);
+        return dogCollectionToDogOutputDtoCollection(dogs);
+    }
+
+    @Override
     public DogOutputDto save(DogInputDto dogInputDto) throws ValidationFailedException {
         validateEntity(dogInputDto);
         var dog = dogInputDtoToDog(dogInputDto);

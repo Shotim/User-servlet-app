@@ -34,6 +34,12 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
+    public Collection<CatOutputDto> findByOwner(int id) {
+        var cats = catRepository.findByOwner(id);
+        return catCollectionToCatOutputDtoCollection(cats);
+    }
+
+    @Override
     public CatOutputDto save(CatInputDto catInputDto) throws ValidationFailedException {
         validateEntity(catInputDto);
         var cat = catInputDtoToCat(catInputDto);

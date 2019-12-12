@@ -13,5 +13,7 @@ public interface DogService {
 
     DogOutputDto findById(int id) throws ElementNotFoundException;
 
+    Collection<DogOutputDto> findByOwner(int id);
+
     DogOutputDto save(DogInputDto cat) throws ValidationFailedException;
 }

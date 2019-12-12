@@ -66,6 +66,6 @@ public abstract class Pet {
     @ManyToMany(fetch = EAGER)
     @JoinTable(name = "user_pet",
             joinColumns = {@JoinColumn(name = "petId")},
-            inverseJoinColumns = {@JoinColumn(name = "petId")})
+            inverseJoinColumns = {@JoinColumn(name = "userId")})
     Collection<User> owners = emptyList();
 }

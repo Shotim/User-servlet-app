@@ -22,7 +22,7 @@ import static lombok.AccessLevel.PRIVATE;
 @FieldDefaults(level = PRIVATE)
 @Entity
 @Table(name = "dogs")
-@PrimaryKeyJoinColumn(name = "petId")
+@PrimaryKeyJoinColumn(name = "dogId")
 public class Dog extends Pet {
 
     @Column
