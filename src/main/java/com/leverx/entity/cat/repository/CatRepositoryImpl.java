@@ -1,24 +1,21 @@
 package com.leverx.entity.cat.repository;
 
 import com.leverx.entity.cat.entity.Cat;
-import com.leverx.entity.cat.entity.Cat_;
-import com.leverx.entity.pet.entity.Pet;
 import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
+import static com.leverx.entity.pet.repository.utils.PetRepositoryUtils.getAllPets;
+import static com.leverx.entity.pet.repository.utils.PetRepositoryUtils.getPetById;
+import static com.leverx.entity.pet.repository.utils.PetRepositoryUtils.retrievePetsByOwner;
 import static com.leverx.servlet.listener.ServletListener.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
-import static com.leverx.utils.RepositoryUtils.retrievePetsByOwner;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 @Slf4j
@@ -30,14 +27,7 @@ public class CatRepositoryImpl implements CatRepository {
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
-
-            var criteriaQuery = getCatCriteriaQuery(entityManager);
-            var root = criteriaQuery.from(Cat.class);
-
-            criteriaQuery.select(root);
-
-            var cats = getResultList(entityManager, criteriaQuery);
-
+            var cats = getAllPets(entityManager, Cat.class);
             transaction.commit();
             log.debug("Were received {} cats", cats.size());
             return cats;
@@ -57,11 +47,7 @@ public class CatRepositoryImpl implements CatRepository {
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
-
-            var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(id, entityManager, Cat_.id);
-            var query = entityManager.createQuery(criteriaQuery);
-            var cat = query.getSingleResult();
-
+            var cat = getPetById(id, entityManager, Cat.class);
             transaction.commit();
             log.debug("Was received cat with id = {}", id);
             return Optional.of(cat);
@@ -117,31 +103,5 @@ public class CatRepositoryImpl implements CatRepository {
         } finally {
             entityManager.close();
         }
-    }
-
-    private CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
-
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Cat.class);
-        var root = criteriaQuery.from(Cat.class);
-
-        criteriaQuery.select(root);
-
-        var path = root.get(attribute);
-        var equalCondition = builder.equal(path, id);
-
-        criteriaQuery.where(equalCondition);
-
-        return criteriaQuery;
-    }
-
-    private List<Cat> getResultList(EntityManager entityManager, CriteriaQuery<Cat> criteriaQuery) {
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
-    private CriteriaQuery<Cat> getCatCriteriaQuery(EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        return builder.createQuery(Cat.class);
     }
 }
