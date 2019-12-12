@@ -39,7 +39,7 @@ public class ServletUtils {
         responseWriter.flush();
     }
 
-    public static<T> void printEntityCollectionToResponseBody(PrintWriter writer, Collection<T> entities) {
+    public static <T> void printEntityCollectionToResponseBody(PrintWriter writer, Collection<T> entities) {
         var jsonEntities = fromEntityCollectionToJson(entities);
         jsonEntities.forEach(writer::println);
     }
