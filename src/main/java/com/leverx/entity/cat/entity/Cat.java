@@ -30,10 +30,10 @@ public class Cat extends Pet {
     @Column
     @PositiveOrZero(message = NON_NEGATIVE_NUMBER)
     @NotNull(message = SHOULD_NOT_BE_EMPTY)
-    int miceCachedNumber;
+    int miceCaughtNumber;
 
-    public Cat(String name, LocalDate dateOfBirth, int miceCachedNumber) {
+    public Cat(String name, LocalDate dateOfBirth, int miceCaughtNumber) {
         super(name, dateOfBirth);
-        this.miceCachedNumber = miceCachedNumber;
+        this.miceCaughtNumber = miceCaughtNumber;
     }
 }

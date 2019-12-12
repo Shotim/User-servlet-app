@@ -38,5 +38,5 @@ public class CatInputDto {
 
     @NotNull(message = SHOULD_NOT_BE_EMPTY)
     @PositiveOrZero(message = NON_NEGATIVE_NUMBER)
-    int miceCachedNumber;
+    int miceCaughtNumber;
 }
