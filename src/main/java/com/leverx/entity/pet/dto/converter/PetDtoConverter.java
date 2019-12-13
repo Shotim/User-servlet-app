@@ -4,6 +4,8 @@ import com.leverx.entity.pet.dto.PetOutputDto;
 import com.leverx.entity.pet.entity.Pet;
 import com.leverx.entity.user.entity.User;
 
+import java.lang.reflect.InvocationTargetException;
+import java.time.LocalDate;
 import java.util.Collection;
 
 import static java.util.stream.Collectors.toList;
@@ -11,6 +13,17 @@ import static java.util.stream.Collectors.toList;
 public class PetDtoConverter {
 
     public static PetOutputDto petToPetOutputDto(Pet pet) {
+
+        return petToPetOutputDto(pet, PetOutputDto.class);
+    }
+
+    public static Collection<PetOutputDto> petCollectionToPetOutputDtoCollection(Collection<Pet> pets) {
+        return pets.stream()
+                .map(PetDtoConverter::petToPetOutputDto)
+                .collect(toList());
+    }
+
+    public static <T extends Pet, TOutputDto extends PetOutputDto> TOutputDto petToPetOutputDto(T pet, Class<TOutputDto> tOutputDtoClass) {
         var id = pet.getId();
         var name = pet.getName();
         var dateOfBirth = pet.getDateOfBirth();
@@ -18,12 +31,15 @@ public class PetDtoConverter {
         var ownerIds = owners.stream()
                 .map(User::getId)
                 .collect(toList());
-        return new PetOutputDto(id, name, dateOfBirth, ownerIds);
-    }
+        try {
+            TOutputDto tOutputDto = tOutputDtoClass.getDeclaredConstructor(int.class, String.class, LocalDate.class)
+                    .newInstance(id, name, dateOfBirth);
+            tOutputDto.setOwnerIds(ownerIds);
+            return tOutputDto;
 
-    public static Collection<PetOutputDto> petCollectionToPetOutputDtoCollection(Collection<Pet> pets) {
-        return pets.stream()
-                .map(PetDtoConverter::petToPetOutputDto)
-                .collect(toList());
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

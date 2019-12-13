@@ -3,6 +3,7 @@ package com.leverx.entity.cat.dto;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.leverx.entity.pet.dto.PetOutputDto;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
@@ -14,6 +15,7 @@ import static com.leverx.validator.EntityValidator.NON_NEGATIVE_NUMBER;
 import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 
 @Getter
+@Setter
 @JsonIdentityInfo(generator = PropertyGenerator.class, property = "id")
 public class CatOutputDto extends PetOutputDto {
 
@@ -24,5 +26,9 @@ public class CatOutputDto extends PetOutputDto {
     public CatOutputDto(int id, String name, LocalDate dateOfBirth, List<Integer> ownerIds, int miceCaughtNumber) {
         super(id, name, dateOfBirth, ownerIds);
         this.miceCaughtNumber = miceCaughtNumber;
+    }
+
+    public CatOutputDto(int id, String name, LocalDate dateOfBirth) {
+        super(id, name, dateOfBirth);
     }
 }

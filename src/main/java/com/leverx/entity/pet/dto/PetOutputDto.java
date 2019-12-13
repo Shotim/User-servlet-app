@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
@@ -22,6 +23,7 @@ import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
 import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 
 @Getter
+@Setter
 @AllArgsConstructor
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class PetOutputDto {
@@ -39,4 +41,10 @@ public class PetOutputDto {
     LocalDate dateOfBirth;
 
     List<Integer> ownerIds;
+
+    public PetOutputDto(int id, String name, LocalDate dateOfBirth) {
+        this.id = id;
+        this.dateOfBirth = dateOfBirth;
+        this.name = name;
+    }
 }
