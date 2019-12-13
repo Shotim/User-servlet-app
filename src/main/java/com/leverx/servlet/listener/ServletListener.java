@@ -2,25 +2,16 @@ package com.leverx.servlet.listener;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
-import static com.leverx.envvar.loader.DBEnvironmentVariableLoader.getDBProperties;
-import static javax.persistence.Persistence.createEntityManagerFactory;
+import static com.leverx.config.EntityManagerFactoryConfig.closeEntityManagerFactory;
+import static com.leverx.config.EntityManagerFactoryConfig.createEntityManagerFactory;
 
 @Slf4j
 public class ServletListener implements ServletRequestListener, ServletContextListener {
-
-    public static final String PERSISTENCE_UNIT_NAME = "Persistence";
-    private static EntityManagerFactory entityManagerFactory;
-
-    public static synchronized EntityManager getEntityManager() {
-        return entityManagerFactory.createEntityManager();
-    }
 
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
@@ -38,16 +29,15 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        var context = sce.getServletContext();
-        entityManagerFactory = createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getDBProperties());
-        log.info("Context was initialized");
-        log.info("Attributes: {}", context.getAttributeNames());
-        log.info("Server info: {}", context.getServerInfo());
+        log.info("Context initialized.");
+        createEntityManagerFactory();
+        log.info("EntityManagerFactory is created");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        entityManagerFactory.close();
-        log.info("Context was destroyed");
+        log.info("Context destroyed.");
+        closeEntityManagerFactory();
+        log.info("EntityManagerFactory is closed");
     }
 }
