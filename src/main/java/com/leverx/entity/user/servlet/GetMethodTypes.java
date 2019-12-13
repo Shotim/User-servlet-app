@@ -6,6 +6,7 @@ public enum GetMethodTypes {
     GET_USER_BY_ID,
     GET_USER_BY_NAME,
     GET_CATS_OF_USER,
-    GET_DOGS_OF_USER
+    GET_DOGS_OF_USER,
+    GET_PETS_OF_USER
 
 }

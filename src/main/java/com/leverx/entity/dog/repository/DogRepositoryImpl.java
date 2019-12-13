@@ -4,7 +4,6 @@ import com.leverx.entity.dog.entity.Dog;
 import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.NoResultException;
 import java.util.Collection;
@@ -68,7 +67,7 @@ public class DogRepositoryImpl implements DogRepository {
 
     @Override
     public Collection<Dog> findByOwner(int ownerId) {
-        EntityManager entityManager = getEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
@@ -87,7 +86,7 @@ public class DogRepositoryImpl implements DogRepository {
 
     @Override
     public Optional<Dog> save(Dog dog) {
-        EntityManager entityManager = getEntityManager();
+        var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);

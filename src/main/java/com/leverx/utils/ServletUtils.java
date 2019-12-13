@@ -16,6 +16,7 @@ import static com.leverx.converter.EntityJsonConverter.fromJsonToEntity;
 import static com.leverx.entity.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.entity.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
 import static com.leverx.entity.user.servlet.GetMethodTypes.GET_DOGS_OF_USER;
+import static com.leverx.entity.user.servlet.GetMethodTypes.GET_PETS_OF_USER;
 import static com.leverx.entity.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.entity.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
 import static com.leverx.utils.RequestURLUtils.getEntityReceivedClass;
@@ -30,6 +31,7 @@ public class ServletUtils {
     private static final String USERS = "users";
     private static final String CATS = "cats";
     private static final String DOGS = "dogs";
+    private static final String PETS = "pets";
 
     public static void printValidationErrorMessages(HttpServletResponse response, ValidationFailedException e) throws IOException {
         var messagesJson = fromEntityToJson(e.getMessage());
@@ -79,6 +81,10 @@ public class ServletUtils {
                 case DOGS:
                     userId = getPreLastStringElement(splittedUrl);
                     methodTypePlusRequiredVar.setValues(GET_DOGS_OF_USER, userId);
+                    break;
+                case PETS:
+                    userId = getPreLastStringElement(splittedUrl);
+                    methodTypePlusRequiredVar.setValues(GET_PETS_OF_USER, userId);
                     break;
                 default:
                     methodTypePlusRequiredVar.setValues(GET_USER_BY_NAME, lastElement);

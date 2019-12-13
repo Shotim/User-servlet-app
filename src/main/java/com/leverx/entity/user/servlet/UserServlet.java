@@ -4,6 +4,8 @@ import com.leverx.entity.cat.service.CatService;
 import com.leverx.entity.cat.service.CatServiceImpl;
 import com.leverx.entity.dog.service.DogService;
 import com.leverx.entity.dog.service.DogServiceImpl;
+import com.leverx.entity.pet.service.PetService;
+import com.leverx.entity.pet.service.PetServiceImpl;
 import com.leverx.entity.user.dto.UserInputDto;
 import com.leverx.entity.user.service.UserService;
 import com.leverx.entity.user.service.UserServiceImpl;
@@ -35,6 +37,7 @@ public class UserServlet extends HttpServlet {
     private final UserService userService = new UserServiceImpl();
     private final CatService catService = new CatServiceImpl();
     private final DogService dogService = new DogServiceImpl();
+    private final PetService petService = new PetServiceImpl();
 
     @Override
 
@@ -60,6 +63,10 @@ public class UserServlet extends HttpServlet {
                 break;
             case GET_DOGS_OF_USER:
                 responseStatus = printDogsOfUser(responseWriter, requiredVariable);
+                break;
+            case GET_PETS_OF_USER:
+                responseStatus = printPetsOfUser(responseWriter, requiredVariable);
+                break;
         }
         response.setStatus(responseStatus);
         responseWriter.flush();
@@ -132,6 +139,13 @@ public class UserServlet extends HttpServlet {
         var dogs = dogService.findByOwner(id);
         printEntityCollectionToResponseBody(writer, dogs);
         return dogs.isEmpty() ? SC_NOT_FOUND : SC_OK;
+    }
+
+    private int printPetsOfUser(PrintWriter writer, String ownerId) {
+        var id = parseInt(ownerId);
+        var pets = petService.findByOwner(id);
+        printEntityCollectionToResponseBody(writer, pets);
+        return pets.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
 }
