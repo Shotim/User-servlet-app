@@ -13,7 +13,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.leverx.servlet.listener.ServletListener.getEntityManager;
+import static com.leverx.config.EntityManagerFactoryConfig.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;

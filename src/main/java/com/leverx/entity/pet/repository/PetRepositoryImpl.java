@@ -9,10 +9,10 @@ import javax.persistence.NoResultException;
 import java.util.Collection;
 import java.util.Optional;
 
+import static com.leverx.config.EntityManagerFactoryConfig.getEntityManager;
 import static com.leverx.entity.pet.repository.utils.PetRepositoryUtils.getAllPets;
 import static com.leverx.entity.pet.repository.utils.PetRepositoryUtils.getPetById;
 import static com.leverx.entity.pet.repository.utils.PetRepositoryUtils.retrievePetsByOwner;
-import static com.leverx.servlet.listener.ServletListener.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
