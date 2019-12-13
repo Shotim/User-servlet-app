@@ -1,20 +1,20 @@
 package com.leverx.config;
 
-import com.leverx.credloader.envvar.DBEnvironmentVariableLoader;
+import com.leverx.credloader.DBCredentialsLoader;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
+import java.util.Map;
+import java.util.ServiceLoader;
 
 public class EntityManagerFactoryConfig {
 
     private static final String PERSISTENCE_UNIT_NAME = "Persistence";
     private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
-    private static DBEnvironmentVariableLoader loader = new DBEnvironmentVariableLoader();
-    //private DBPropertiesLoader loader = new DBPropertiesLoader();
 
     public static void createEntityManagerFactory() {
-        ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, loader.getDBProperties());
+        ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getProperties());
     }
 
     public static EntityManager getEntityManager() {
@@ -23,6 +23,12 @@ public class EntityManagerFactoryConfig {
 
     public static void closeEntityManagerFactory() {
         ENTITY_MANAGER_FACTORY.close();
+    }
+
+    private static Map<String, String> getProperties() {
+        var loader = ServiceLoader.load(DBCredentialsLoader.class);
+        var dbCredentialsLoader = loader.findFirst().orElseThrow();
+        return dbCredentialsLoader.getDBProperties();
     }
 
 }
