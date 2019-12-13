@@ -5,11 +5,17 @@ import com.leverx.entity.pet.entity.Pet;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface PetRepository {
+public interface PetRepository extends PetRepositoryI {
 
-    Collection<Pet> findAll();
+    default Collection<Pet> findAll() {
+        return PetRepositoryI.super.findAll(Pet.class);
+    }
 
-    Optional<Pet> findById(int id);
+    default Optional<Pet> findById(int id) {
+        return PetRepositoryI.super.findById(id, Pet.class);
+    }
 
-    Collection<Pet> findByOwner(int ownerId);
+    default Collection<Pet> findByOwner(int ownerId) {
+        return PetRepositoryI.super.findByOwner(ownerId, Pet.class);
+    }
 }
