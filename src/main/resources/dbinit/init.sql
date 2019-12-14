@@ -1,46 +1,45 @@
-CREATE DATABASE IF NOT EXISTS 'servlet app';
-USE `servlet app`;
-create table IF NOT EXISTS pets
+CREATE DATABASE IF NOT EXISTS 'servlet_app';
+USE `servlet_app`;
+create table pets
 (
     id          int auto_increment
         primary key,
-    name        varchar(60) not null,
-    dateOfBirth date        not null
+    dateOfBirth date        not null,
+    name        varchar(60) not null
 );
 
-create table IF NOT EXISTS cats
+create table cats
 (
-    catId            int null,
     miceCaughtNumber int not null,
-    constraint cats_pets_id_fk
+    catId            int not null
+        primary key,
+    constraint FK596ma3dstf584crppx3u8gx3r
         foreign key (catId) references pets (id)
-            on update cascade on delete cascade
 );
 
-create table IF NOT EXISTS dogs
+create table dogs
 (
-    dogId     int        null,
-    isCutEars tinyint(1) not null,
-    constraint dogs_pets_id_fk
+    isCutEars bit not null,
+    dogId     int not null
+        primary key,
+    constraint FKji8snsy0t4ie04ckx7h2tahu8
         foreign key (dogId) references pets (id)
-            on update cascade on delete cascade
 );
 
-create table IF NOT EXISTS users
+create table users
 (
     id   int auto_increment
         primary key,
-    name varchar(60) not null
+    name varchar(255) null
 );
 
-create table IF NOT EXISTS user_pet
+create table user_pet
 (
     userId int not null,
     petId  int not null,
-    constraint user_pet_pets_id_fk
-        foreign key (petId) references pets (id)
-            on update cascade on delete cascade,
-    constraint user_pet_users_id_fk
+    constraint FK8fsjevt7w49xgjvw0ee9xx37p
+        foreign key (petId) references pets (id),
+    constraint FKfe2ayl6txlveaiby5u4p5vnvg
         foreign key (userId) references users (id)
-            on update cascade on delete cascade
 );
+
