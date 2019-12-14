@@ -1,7 +1,7 @@
 package com.leverx.utils;
 
-import com.leverx.entity.user.servlet.GetMethodTypes;
-import com.leverx.entity.user.servlet.MethodTypePlusRequiredVar;
+import com.leverx.model.user.servlet.GetMethodTypes;
+import com.leverx.model.user.servlet.MethodTypePlusRequiredVar;
 import com.leverx.exception.ValidationFailedException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,12 +13,12 @@ import java.util.Collection;
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.converter.EntityJsonConverter.fromJsonToEntity;
-import static com.leverx.entity.user.servlet.GetMethodTypes.GET_ALL_USERS;
-import static com.leverx.entity.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
-import static com.leverx.entity.user.servlet.GetMethodTypes.GET_DOGS_OF_USER;
-import static com.leverx.entity.user.servlet.GetMethodTypes.GET_PETS_OF_USER;
-import static com.leverx.entity.user.servlet.GetMethodTypes.GET_USER_BY_ID;
-import static com.leverx.entity.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
+import static com.leverx.model.user.servlet.GetMethodTypes.GET_ALL_USERS;
+import static com.leverx.model.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
+import static com.leverx.model.user.servlet.GetMethodTypes.GET_DOGS_OF_USER;
+import static com.leverx.model.user.servlet.GetMethodTypes.GET_PETS_OF_USER;
+import static com.leverx.model.user.servlet.GetMethodTypes.GET_USER_BY_ID;
+import static com.leverx.model.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
 import static com.leverx.utils.RequestURLUtils.getEntityReceivedClass;
 import static com.leverx.utils.RequestURLUtils.getLastStringElement;
 import static com.leverx.utils.RequestURLUtils.getPreLastStringElement;
