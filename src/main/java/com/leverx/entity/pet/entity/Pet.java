@@ -1,12 +1,10 @@
 package com.leverx.entity.pet.entity;
 
 import com.leverx.entity.user.entity.User;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -36,9 +34,7 @@ import static javax.persistence.InheritanceType.JOINED;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
-@Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE)
 @Table(name = "pets")

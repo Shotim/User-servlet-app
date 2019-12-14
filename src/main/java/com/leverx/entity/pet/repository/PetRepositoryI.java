@@ -22,8 +22,58 @@ import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 public interface PetRepositoryI {
 
-    @Slf4j
-    final class LogHolder {
+    private static <T extends Pet> CriteriaQuery<T> getPetCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute, Class<T> t) {
+
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(t);
+        var root = criteriaQuery.from(t);
+
+        criteriaQuery.select(root);
+
+        var path = root.get(attribute);
+        var equalCondition = builder.equal(path, id);
+
+        criteriaQuery.where(equalCondition);
+
+        return criteriaQuery;
+    }
+
+    private static <T extends Pet> List<T> getResultList(EntityManager entityManager, CriteriaQuery<T> criteriaQuery) {
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    private static <T extends Pet> CriteriaQuery<T> getPetCriteriaQuery(EntityManager entityManager, Class<T> t) {
+        var builder = entityManager.getCriteriaBuilder();
+        return builder.createQuery(t);
+    }
+
+    private static <T extends Pet> List<T> getAllPets(EntityManager entityManager, Class<T> petClass) {
+        var criteriaQuery = getPetCriteriaQuery(entityManager, petClass);
+        var root = criteriaQuery.from(petClass);
+
+        criteriaQuery.select(root);
+
+        return getResultList(entityManager, criteriaQuery);
+    }
+
+    private static <T extends Pet> T getPetById(int id, EntityManager entityManager, Class<T> t) {
+        var criteriaQuery = getPetCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id, t);
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getSingleResult();
+    }
+
+    private static <T extends Pet, T_ extends Pet_> Collection<T> retrievePetsByOwner(int ownerId, EntityManager entityManager, Class<T> entityClass) {
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(entityClass);
+
+        var root = criteriaQuery.from(entityClass);
+        var users = root.join(T_.owners);
+        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
+        criteriaQuery.select(root)
+                .where(idEqualToOwnerId);
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
     }
 
     default <T extends Pet> Collection<T> findAll(Class<T> tClass) {
@@ -88,57 +138,7 @@ public interface PetRepositoryI {
         }
     }
 
-    private static <T extends Pet> CriteriaQuery<T> getPetCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute, Class<T> t) {
-
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(t);
-        var root = criteriaQuery.from(t);
-
-        criteriaQuery.select(root);
-
-        var path = root.get(attribute);
-        var equalCondition = builder.equal(path, id);
-
-        criteriaQuery.where(equalCondition);
-
-        return criteriaQuery;
-    }
-
-    private static <T extends Pet> List<T> getResultList(EntityManager entityManager, CriteriaQuery<T> criteriaQuery) {
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
-    private static <T extends Pet> CriteriaQuery<T> getPetCriteriaQuery(EntityManager entityManager, Class<T> t) {
-        var builder = entityManager.getCriteriaBuilder();
-        return builder.createQuery(t);
-    }
-
-    private static <T extends Pet> List<T> getAllPets(EntityManager entityManager, Class<T> petClass) {
-        var criteriaQuery = getPetCriteriaQuery(entityManager, petClass);
-        var root = criteriaQuery.from(petClass);
-
-        criteriaQuery.select(root);
-
-        return getResultList(entityManager, criteriaQuery);
-    }
-
-    private static <T extends Pet> T getPetById(int id, EntityManager entityManager, Class<T> t) {
-        var criteriaQuery = getPetCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id, t);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getSingleResult();
-    }
-
-    private static <T extends Pet, T_ extends Pet_> Collection<T> retrievePetsByOwner(int ownerId, EntityManager entityManager, Class<T> entityClass) {
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(entityClass);
-
-        var root = criteriaQuery.from(entityClass);
-        var users = root.join(T_.owners);
-        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
-        criteriaQuery.select(root)
-                .where(idEqualToOwnerId);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
+    @Slf4j
+    final class LogHolder {
     }
 }
