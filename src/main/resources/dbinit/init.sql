@@ -1,4 +1,6 @@
-create table pets
+CREATE DATABASE IF NOT EXISTS 'servlet app';
+USE `servlet app`;
+create table IF NOT EXISTS pets
 (
     id          int auto_increment
         primary key,
@@ -7,7 +9,7 @@ create table pets
     ownerId     int         null
 );
 
-create table cats
+create table IF NOT EXISTS cats
 (
     catId            int null,
     miceCaughtNumber int not null,
@@ -16,7 +18,7 @@ create table cats
             on update cascade on delete cascade
 );
 
-create table dogs
+create table IF NOT EXISTS dogs
 (
     dogId     int        null,
     isCutEars tinyint(1) not null,
@@ -28,14 +30,14 @@ create table dogs
 create index pets_users_id_fk
     on pets (ownerId);
 
-create table users
+create table IF NOT EXISTS users
 (
     id   int auto_increment
         primary key,
     name varchar(60) not null
 );
 
-create table user_pet
+create table IF NOT EXISTS user_pet
 (
     userId int not null,
     petId  int not null,
