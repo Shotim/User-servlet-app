@@ -33,7 +33,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/2",
+							"raw": "http://localhost:8080/users/13",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -41,7 +41,7 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"2"
+								"13"
 							]
 						}
 					},
@@ -89,12 +89,43 @@
 					"response": []
 				},
 				{
-					"name": "Get user's cat by id",
+					"name": "Get user's dogs",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8080/users/1/dogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"dogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user's pets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/users/1/pets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"1",
+								"pets"
+							]
 						}
 					},
 					"response": []
@@ -113,7 +144,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"NewPersonForNothing\"\n}",
+							"raw": "{\n\t\"name\":\"NewPersonWoow\",\n\t\"catsIds\":[4,5],\n\t\"dogsIds\":[3,6,7]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -168,7 +199,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Updated4\"\n}",
+							"raw": "{\n\t\"name\":\"Updated4\"\n\t\"catsIds\":[],\n\t\"dogsIds\":[]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -185,81 +216,6 @@
 							"path": [
 								"users",
 								"4"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Assign cats to user",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\"ids\":[16]\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/users/2/cats",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"2",
-								"cats"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Move cat to another user",
-					"request": {
-						"method": "PUT",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"id\":\"25\"\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8080/users/2/cats/22",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"2",
-								"cats",
-								"22"
 							]
 						}
 					},
@@ -296,7 +252,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/cats/16",
+							"raw": "http://localhost:8080/cats/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -304,7 +260,7 @@
 							"port": "8080",
 							"path": [
 								"cats",
-								"16"
+								"4"
 							]
 						}
 					},
@@ -324,7 +280,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"NewCat20158\",\n\t\"dateOfBirth\":\"2019-09-03\"\n}",
+							"raw": "{\n\t\"name\":\"Caaaaaaaaat\",\n\t\"dateOfBirth\":\"2019-09-03\",\n\t\"miceCaughtNumber\": \"13\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -340,6 +296,131 @@
 							"port": "8080",
 							"path": [
 								"cats"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Dog Servlet Requests",
+			"item": [
+				{
+					"name": "Get all dogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/dogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dogs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get dog by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/dogs/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dogs",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create dog",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\":\"NewDog\",\n\t\"dateOfBirth\":\"2019-09-03\",\n\t\"cutEars\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/dogs",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"dogs"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Pet Servlet Requests",
+			"item": [
+				{
+					"name": "Get all pets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pets",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pets"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get pet by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/pets/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"pets",
+								"1"
 							]
 						}
 					},
