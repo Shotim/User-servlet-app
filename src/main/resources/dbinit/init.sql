@@ -5,8 +5,7 @@ create table IF NOT EXISTS pets
     id          int auto_increment
         primary key,
     name        varchar(60) not null,
-    dateOfBirth date        not null,
-    ownerId     int         null
+    dateOfBirth date        not null
 );
 
 create table IF NOT EXISTS cats
@@ -27,9 +26,6 @@ create table IF NOT EXISTS dogs
             on update cascade on delete cascade
 );
 
-create index pets_users_id_fk
-    on pets (ownerId);
-
 create table IF NOT EXISTS users
 (
     id   int auto_increment
@@ -48,4 +44,3 @@ create table IF NOT EXISTS user_pet
         foreign key (userId) references users (id)
             on update cascade on delete cascade
 );
-
