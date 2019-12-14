@@ -4,6 +4,7 @@ import com.leverx.entity.pet.entity.Pet;
 import com.leverx.entity.pet.entity.Pet_;
 import com.leverx.entity.user.entity.User_;
 import com.leverx.exception.InternalServerErrorException;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
@@ -21,6 +22,10 @@ import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 public interface PetRepositoryI {
 
+    @Slf4j
+    final class LogHolder {
+    }
+
     default <T extends Pet> Collection<T> findAll(Class<T> tClass) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
@@ -28,9 +33,11 @@ public interface PetRepositoryI {
             transaction = beginTransaction(entityManager);
             var pets = getAllPets(entityManager, tClass);
             transaction.commit();
+            LogHolder.log.debug("{}" + tClass.toString() + "were found in db", pets.size());
             return pets;
         } catch (RuntimeException e) {
             rollbackTransactionIfActive(transaction);
+            LogHolder.log.error(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
 
         } finally {
@@ -45,13 +52,16 @@ public interface PetRepositoryI {
             transaction = beginTransaction(entityManager);
             var pet = getPetById(id, entityManager, tClass);
             transaction.commit();
+            LogHolder.log.debug(tClass.toString() + "with id = {} was found in db", id);
             return Optional.of(pet);
         } catch (NoResultException e) {
             commitTransactionIfActive(transaction);
+            LogHolder.log.debug(tClass.toString() + "with id = {} was not found in db", id);
             return Optional.empty();
 
         } catch (RuntimeException e) {
             rollbackTransactionIfActive(transaction);
+            LogHolder.log.error(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
 
         } finally {
@@ -66,9 +76,11 @@ public interface PetRepositoryI {
             transaction = beginTransaction(entityManager);
             var pets = retrievePetsByOwner(ownerId, entityManager, tClass);
             transaction.commit();
+            LogHolder.log.debug(tClass.toString() + "with ownerId = {} were found in db", ownerId);
             return pets;
         } catch (RuntimeException e) {
             rollbackTransactionIfActive(transaction);
+            LogHolder.log.error(e.getMessage());
             throw new InternalServerErrorException(e.getMessage());
 
         } finally {
