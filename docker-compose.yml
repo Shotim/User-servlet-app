@@ -1,8 +1,9 @@
-version: '3.3'
+version: '2.1'
 
 services:
   database:
     container_name: database
+    hostname: database
     image: mysql:latest
     restart: always
     env_file:
@@ -11,8 +12,11 @@ services:
       - '3307:3306'
     expose:
       - '3307'
-    volumes:
-      - ./src/main/resources/dbinit:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: mysqladmin -uroot -proot ping
+      interval: 10s
+      timeout: 20s
+      retries: 30
 
   tomcat:
     image: tomcat:9.0.27-jdk13-openjdk-oracle
@@ -23,4 +27,5 @@ services:
     env_file:
       - ./tomcat.env
     depends_on:
-      - database
+      database:
+        condition: service_healthy

@@ -24,10 +24,6 @@ public class EnvironmentVariableLoader {
         return getenv(envVar);
     }
 
-    public String getEnvVariable(String envVarName) {
-        return propertiesMap.get(envVarName);
-    }
-
     public Map<String, String> getProperties() {
         return this.propertiesMap;
     }
