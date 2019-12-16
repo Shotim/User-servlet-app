@@ -1,12 +1,12 @@
 package com.leverx.model.pet.repository;
 
+import com.leverx.difactory.Injectable;
 import com.leverx.model.pet.entity.Pet;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 import java.util.Optional;
 
-@Slf4j
+@Injectable
 public class PetRepositoryImpl implements PetRepository {
 
     @Override

@@ -1,15 +1,16 @@
 package com.leverx.model.user.service;
 
+import com.leverx.difactory.Injectable;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.user.dto.UserInputDto;
 import com.leverx.model.user.dto.UserOutputDto;
 import com.leverx.model.user.repository.UserRepository;
-import com.leverx.model.user.repository.UserRepositoryImpl;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 
+import static com.leverx.difactory.DIFactory.getInstance;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userInputDtoToUser;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userToUserOutputDto;
@@ -17,9 +18,15 @@ import static com.leverx.model.user.validator.UserValidator.validateUserInputDto
 import static java.lang.Integer.parseInt;
 
 @Slf4j
+@Injectable
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository = new UserRepositoryImpl();
+    private UserRepository userRepository;
+
+    public UserServiceImpl() {
+        var diFactory = getInstance();
+        userRepository = (UserRepository) diFactory.getBean(UserRepository.class);
+    }
 
     @Override
     public Collection<UserOutputDto> findAll() {

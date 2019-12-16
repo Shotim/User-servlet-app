@@ -1,22 +1,29 @@
 package com.leverx.model.dog.service;
 
+import com.leverx.difactory.Injectable;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.dog.dto.DogInputDto;
 import com.leverx.model.dog.dto.DogOutputDto;
 import com.leverx.model.dog.repository.DogRepository;
-import com.leverx.model.dog.repository.DogRepositoryImpl;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 
 import java.util.Collection;
 
+import static com.leverx.difactory.DIFactory.getInstance;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogCollectionToDogOutputDtoCollection;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogInputDtoToDog;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogToDogOutputDto;
 import static com.leverx.validator.EntityValidator.validateEntity;
 
+@Injectable
 public class DogServiceImpl implements DogService {
 
-    private DogRepository dogRepository = new DogRepositoryImpl();
+    private DogRepository dogRepository;
+
+    public DogServiceImpl() {
+        var diFactory = getInstance();
+        dogRepository = (DogRepository) diFactory.getBean(DogRepository.class);
+    }
 
     @Override
     public Collection<DogOutputDto> findAll() {

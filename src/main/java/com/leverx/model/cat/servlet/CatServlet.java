@@ -1,10 +1,9 @@
 package com.leverx.model.cat.servlet;
 
-import com.leverx.model.cat.dto.CatInputDto;
-import com.leverx.model.cat.service.CatService;
-import com.leverx.model.cat.service.CatServiceImpl;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
+import com.leverx.model.cat.dto.CatInputDto;
+import com.leverx.model.cat.service.CatService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +13,7 @@ import java.io.PrintWriter;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.difactory.DIFactory.getInstance;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
@@ -25,7 +25,12 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class CatServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "cats";
-    CatService catService = new CatServiceImpl();
+    private CatService catService;
+
+    public CatServlet() {
+        var diFactory = getInstance();
+        catService = (CatService) diFactory.getBean(CatService.class);
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

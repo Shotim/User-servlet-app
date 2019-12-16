@@ -1,16 +1,12 @@
 package com.leverx.model.user.servlet;
 
-import com.leverx.model.cat.service.CatService;
-import com.leverx.model.cat.service.CatServiceImpl;
-import com.leverx.model.dog.service.DogService;
-import com.leverx.model.dog.service.DogServiceImpl;
-import com.leverx.model.pet.service.PetService;
-import com.leverx.model.pet.service.PetServiceImpl;
-import com.leverx.model.user.dto.UserInputDto;
-import com.leverx.model.user.service.UserService;
-import com.leverx.model.user.service.UserServiceImpl;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
+import com.leverx.model.cat.service.CatService;
+import com.leverx.model.dog.service.DogService;
+import com.leverx.model.pet.service.PetService;
+import com.leverx.model.user.dto.UserInputDto;
+import com.leverx.model.user.service.UserService;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -20,6 +16,7 @@ import java.io.PrintWriter;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.difactory.DIFactory.getInstance;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;
@@ -34,10 +31,18 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class UserServlet extends HttpServlet {
 
-    private final UserService userService = new UserServiceImpl();
-    private final CatService catService = new CatServiceImpl();
-    private final DogService dogService = new DogServiceImpl();
-    private final PetService petService = new PetServiceImpl();
+    private final UserService userService;
+    private final CatService catService;
+    private final DogService dogService;
+    private final PetService petService;
+
+    public UserServlet() {
+        var diFactory = getInstance();
+        userService = (UserService) diFactory.getBean(UserService.class);
+        catService = (CatService) diFactory.getBean(CatService.class);
+        dogService = (DogService) diFactory.getBean(DogService.class);
+        petService = (PetService) diFactory.getBean(PetService.class);
+    }
 
     @Override
 

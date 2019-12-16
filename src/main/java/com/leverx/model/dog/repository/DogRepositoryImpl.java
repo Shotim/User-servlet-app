@@ -1,5 +1,6 @@
 package com.leverx.model.dog.repository;
 
+import com.leverx.difactory.Injectable;
 import com.leverx.model.dog.entity.Dog;
 import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import static com.leverx.config.EntityManagerFactoryConfig.getEntityManager;
 import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
+@Injectable
 @Slf4j
 public class DogRepositoryImpl implements DogRepository {
 
