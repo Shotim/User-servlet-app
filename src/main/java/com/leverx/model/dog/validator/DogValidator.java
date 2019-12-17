@@ -1,7 +1,7 @@
 package com.leverx.model.dog.validator;
 
+import com.leverx.difactory.DIFactory;
 import com.leverx.model.dog.repository.DogRepository;
-import com.leverx.model.dog.repository.DogRepositoryImpl;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -9,7 +9,8 @@ import java.util.stream.*;
 
 public class DogValidator {
 
-    private static final DogRepository DOG_REPOSITORY = new DogRepositoryImpl();
+    private static final DogRepository DOG_REPOSITORY =
+            (DogRepository) DIFactory.getInstance().getBean(DogRepository.class);
     private static final String DOG_DOES_NOT_EXIST = "Dog with this id does not exist in database";
 
     public static String validateDogsIds(Collection<Integer> dogsIds) {

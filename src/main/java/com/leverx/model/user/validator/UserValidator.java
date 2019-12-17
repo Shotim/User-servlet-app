@@ -1,7 +1,9 @@
 package com.leverx.model.user.validator;
 
-import com.leverx.model.user.dto.UserInputDto;
+import com.leverx.difactory.DIFactory;
 import com.leverx.exception.ValidationFailedException;
+import com.leverx.model.user.dto.UserInputDto;
+import com.leverx.model.user.repository.UserRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +16,41 @@ import static java.util.Collections.emptyList;
 
 public class UserValidator {
 
-    public static void validateUserInputDto(UserInputDto userInputDto) throws ValidationFailedException {
+    private static UserRepository userRepository = (UserRepository)
+            DIFactory.getInstance().getBean(UserRepository.class);
+    private static final String USER_NOT_FOUND = "User with this id was not found";
+
+    public static void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {
+        List<String> errorsList = new ArrayList<>(emptyList());
+        var userIdErrors = validateUserId(id);
+        errorsList.add(userIdErrors);
+        List<String> errors = validationUserInputDtoErrors(userInputDto);
+        errorsList.addAll(errors);
+        String message = join("", errorsList);
+        if (!message.isEmpty()) {
+            throw new ValidationFailedException(message);
+        }
+    }
+
+    public static String validateUserId(int id) {
+        var user = userRepository.findById(id);
+        if (user.isEmpty()) {
+            return USER_NOT_FOUND;
+        }
+        return "";
+    }
+
+    public static void validateCreateUser(UserInputDto userInputDto) throws ValidationFailedException {
+        List<String> errorsList = new ArrayList<>(emptyList());
+        List<String> errors = validationUserInputDtoErrors(userInputDto);
+        errorsList.addAll(errors);
+        String message = join("", errorsList);
+        if (!message.isEmpty()) {
+            throw new ValidationFailedException(message);
+        }
+    }
+
+    private static List<String> validationUserInputDtoErrors(UserInputDto userInputDto) {
         List<String> errorsList = new ArrayList<>(emptyList());
         var errors = validate(userInputDto);
         errorsList.add(errors);
@@ -24,9 +60,6 @@ public class UserValidator {
         var dogsIds = userInputDto.getDogsIds();
         var dogsIdsErrors = validateDogsIds(dogsIds);
         errorsList.add(dogsIdsErrors);
-        String message = join("", errorsList);
-        if (!message.isEmpty()) {
-            throw new ValidationFailedException(message);
-        }
+        return errorsList;
     }
 }

@@ -14,7 +14,8 @@ import static com.leverx.difactory.DIFactory.getInstance;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userInputDtoToUser;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userToUserOutputDto;
-import static com.leverx.model.user.validator.UserValidator.validateUserInputDto;
+import static com.leverx.model.user.validator.UserValidator.validateCreateUser;
+import static com.leverx.model.user.validator.UserValidator.validateUpdateUser;
 import static java.lang.Integer.parseInt;
 
 @Slf4j
@@ -49,7 +50,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
-        validateUserInputDto(userInputDto);
+        validateCreateUser(userInputDto);
         var user = userInputDtoToUser(userInputDto);
         userRepository.save(user).orElseThrow();
         return userToUserOutputDto(user);
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
-        validateUserInputDto(userInputDto);
+        validateUpdateUser(parseInt(id), userInputDto);
         var userId = parseInt(id);
         var user = userInputDtoToUser(userId, userInputDto);
         user.getPets().forEach(pet -> pet.getOwners().add(user));
