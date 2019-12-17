@@ -52,27 +52,14 @@ public class UserServlet extends HttpServlet {
         var methodTypeWithPathVariable = initUserServletGetMethodType(request);
         var methodType = methodTypeWithPathVariable.getMethodType();
         var requiredVariable = methodTypeWithPathVariable.getPathVar();
-        var responseStatus = SC_OK;
-        switch (methodType) {
-            case GET_ALL_USERS:
-                responseStatus = printAllUsersToResponseBody(responseWriter);
-                break;
-            case GET_USER_BY_ID:
-                responseStatus = printUserByIdToResponseBody(responseWriter, requiredVariable);
-                break;
-            case GET_USER_BY_NAME:
-                responseStatus = printUsersByNameToResponseBody(responseWriter, requiredVariable);
-                break;
-            case GET_CATS_OF_USER:
-                responseStatus = printCatsOfUser(responseWriter, requiredVariable);
-                break;
-            case GET_DOGS_OF_USER:
-                responseStatus = printDogsOfUser(responseWriter, requiredVariable);
-                break;
-            case GET_PETS_OF_USER:
-                responseStatus = printPetsOfUser(responseWriter, requiredVariable);
-                break;
-        }
+        var responseStatus = switch (methodType) {
+            case GET_ALL_USERS -> printAllUsersToResponseBody(responseWriter);
+            case GET_USER_BY_ID -> printUserByIdToResponseBody(responseWriter, requiredVariable);
+            case GET_USER_BY_NAME -> printUsersByNameToResponseBody(responseWriter, requiredVariable);
+            case GET_CATS_OF_USER -> printCatsOfUser(responseWriter, requiredVariable);
+            case GET_DOGS_OF_USER -> printDogsOfUser(responseWriter, requiredVariable);
+            case GET_PETS_OF_USER -> printPetsOfUser(responseWriter, requiredVariable);
+        };
         response.setStatus(responseStatus);
         responseWriter.flush();
     }
