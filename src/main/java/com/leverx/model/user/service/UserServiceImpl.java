@@ -6,7 +6,6 @@ import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.user.dto.UserInputDto;
 import com.leverx.model.user.dto.UserOutputDto;
 import com.leverx.model.user.repository.UserRepository;
-import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collection;
 
@@ -18,7 +17,6 @@ import static com.leverx.model.user.validator.UserValidator.validateCreateUser;
 import static com.leverx.model.user.validator.UserValidator.validateUpdateUser;
 import static java.lang.Integer.parseInt;
 
-@Slf4j
 @Injectable
 public class UserServiceImpl implements UserService {
 
