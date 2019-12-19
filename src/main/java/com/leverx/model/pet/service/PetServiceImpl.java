@@ -7,6 +7,7 @@ import com.leverx.model.pet.repository.PetRepository;
 
 import java.util.Collection;
 
+import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.pet.dto.converter.PetDtoConverter.petCollectionToPetOutputDtoCollection;
 import static com.leverx.model.pet.dto.converter.PetDtoConverter.petToPetOutputDto;
 
@@ -14,6 +15,10 @@ import static com.leverx.model.pet.dto.converter.PetDtoConverter.petToPetOutputD
 public class PetServiceImpl implements PetService {
 
     private PetRepository petRepository;
+
+    public PetServiceImpl() {
+        petRepository = (PetRepository) getBean(PetRepository.class);
+    }
 
     @Override
     public Collection<PetOutputDto> findAll() {

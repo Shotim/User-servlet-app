@@ -32,15 +32,15 @@ public class PetServlet extends HttpServlet {
         var pathVariable = getPathVariableFromRequest(request);
         var responseStatus = SC_OK;
         if (ORIGIN_PATH.equals(pathVariable)) {
-            responseStatus = printAllDogsToResponseBody(responseWriter);
+            responseStatus = printAllPetsToResponseBody(responseWriter);
         } else {
-            responseStatus = printDogByIdToResponseBody(responseWriter, pathVariable);
+            responseStatus = printPetByIdToResponseBody(responseWriter, pathVariable);
         }
         response.setStatus(responseStatus);
         responseWriter.flush();
     }
 
-    private int printDogByIdToResponseBody(PrintWriter writer, String pathVariable) {
+    private int printPetByIdToResponseBody(PrintWriter writer, String pathVariable) {
         try {
             var id = parseInt(pathVariable);
             var dog = petService.findById(id);
@@ -52,7 +52,7 @@ public class PetServlet extends HttpServlet {
         }
     }
 
-    private int printAllDogsToResponseBody(PrintWriter writer) {
+    private int printAllPetsToResponseBody(PrintWriter writer) {
         var dog = petService.findAll();
         var dogsJson = fromEntityCollectionToJson(dog);
         dogsJson.forEach(writer::println);
