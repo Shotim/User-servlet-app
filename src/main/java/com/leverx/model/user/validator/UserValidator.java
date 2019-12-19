@@ -1,6 +1,5 @@
 package com.leverx.model.user.validator;
 
-import com.leverx.difactory.DIFactory;
 import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.user.dto.UserInputDto;
 import com.leverx.model.user.repository.UserRepository;
@@ -8,6 +7,7 @@ import com.leverx.model.user.repository.UserRepository;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.cat.validator.CatValidator.validateCatsIds;
 import static com.leverx.model.dog.validator.DogValidator.validateDogsIds;
 import static com.leverx.validator.EntityValidator.validate;
@@ -17,7 +17,7 @@ import static java.util.Collections.emptyList;
 public class UserValidator {
 
     private static UserRepository userRepository = (UserRepository)
-            DIFactory.getInstance().getBean(UserRepository.class);
+            getBean(UserRepository.class);
     private static final String USER_NOT_FOUND = "User with this id was not found";
 
     public static void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {

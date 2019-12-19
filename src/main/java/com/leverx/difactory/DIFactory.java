@@ -8,22 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Objects.isNull;
-
 @Slf4j
 public class DIFactory {
-
-    private static DIFactory diFactory;
-
-    private DIFactory() {
-    }
-
-    public static synchronized DIFactory getInstance() {
-        if (isNull(diFactory)) {
-            diFactory = new DIFactory();
-        }
-        return diFactory;
-    }
 
     private static Map<Class, Class> dependencyInjectionMap = new HashMap<>();
 
@@ -39,7 +25,7 @@ public class DIFactory {
         }
     }
 
-    public Object getBean(Class interfaceClass){
+    public static Object getBean(Class interfaceClass){
         Class implementationClass = dependencyInjectionMap.get(interfaceClass);
         if (applicationScope.containsKey(interfaceClass)) {
             return applicationScope.get(implementationClass);

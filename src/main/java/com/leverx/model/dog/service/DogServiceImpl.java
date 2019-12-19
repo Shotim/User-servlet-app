@@ -9,7 +9,7 @@ import com.leverx.model.dog.repository.DogRepository;
 
 import java.util.Collection;
 
-import static com.leverx.difactory.DIFactory.getInstance;
+import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogCollectionToDogOutputDtoCollection;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogInputDtoToDog;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogToDogOutputDto;
@@ -21,8 +21,7 @@ public class DogServiceImpl implements DogService {
     private DogRepository dogRepository;
 
     public DogServiceImpl() {
-        var diFactory = getInstance();
-        dogRepository = (DogRepository) diFactory.getBean(DogRepository.class);
+        dogRepository = (DogRepository) getBean(DogRepository.class);
     }
 
     @Override

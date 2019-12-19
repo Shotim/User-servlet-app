@@ -9,7 +9,7 @@ import com.leverx.model.cat.repository.CatRepository;
 
 import java.util.Collection;
 
-import static com.leverx.difactory.DIFactory.getInstance;
+import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.cat.dto.converter.CatDtoConverter.catCollectionToCatOutputDtoCollection;
 import static com.leverx.model.cat.dto.converter.CatDtoConverter.catInputDtoToCat;
 import static com.leverx.model.cat.dto.converter.CatDtoConverter.catToCatOutputDto;
@@ -21,8 +21,7 @@ public class CatServiceImpl implements CatService {
     private CatRepository catRepository;
 
     public CatServiceImpl() {
-        var diFactory = getInstance();
-        catRepository = (CatRepository) diFactory.getBean(CatRepository.class);
+        catRepository = (CatRepository) getBean(CatRepository.class);
     }
 
     @Override

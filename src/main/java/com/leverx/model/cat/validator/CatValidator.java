@@ -1,16 +1,17 @@
 package com.leverx.model.cat.validator;
 
-import com.leverx.difactory.DIFactory;
 import com.leverx.model.cat.repository.CatRepository;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.*;
 
+import static com.leverx.difactory.DIFactory.getBean;
+
 public class CatValidator {
 
     private static final CatRepository CAT_REPOSITORY =
-            (CatRepository) DIFactory.getInstance().getBean(CatRepository.class);
+            (CatRepository) getBean(CatRepository.class);
     private static final String CAT_DOES_NOT_EXIST = "Cat with this id does not exist in database";
 
     public static String validateCatsIds(Collection<Integer> catsIds) {

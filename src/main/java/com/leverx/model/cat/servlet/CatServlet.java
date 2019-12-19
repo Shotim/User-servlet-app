@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.difactory.DIFactory.getInstance;
+import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
@@ -28,8 +28,7 @@ public class CatServlet extends HttpServlet {
     private CatService catService;
 
     public CatServlet() {
-        var diFactory = getInstance();
-        catService = (CatService) diFactory.getBean(CatService.class);
+        catService = (CatService) getBean(CatService.class);
     }
 
     @Override
