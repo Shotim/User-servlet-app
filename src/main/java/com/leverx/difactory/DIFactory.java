@@ -20,8 +20,8 @@ public class DIFactory {
         Reflections reflections = new Reflections("");
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(Injectable.class);
         for (Class<?> implementationClass : types) {
-            for (Class iface : implementationClass.getInterfaces()) {
-                dependencyInjectionMap.put(iface, implementationClass);
+            for (Class interfaceClass : implementationClass.getInterfaces()) {
+                dependencyInjectionMap.put(interfaceClass, implementationClass);
             }
         }
     }
