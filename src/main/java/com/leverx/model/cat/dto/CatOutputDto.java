@@ -10,16 +10,14 @@ import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
 import static com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator;
-import static com.leverx.validator.EntityValidator.NON_NEGATIVE_NUMBER;
-import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 
 @Getter
 @Setter
 @JsonIdentityInfo(generator = PropertyGenerator.class, property = "id")
 public class CatOutputDto extends PetOutputDto {
 
-    @NotNull(message = SHOULD_NOT_BE_EMPTY)
-    @PositiveOrZero(message = NON_NEGATIVE_NUMBER)
+    @NotNull
+    @PositiveOrZero
     int miceCaughtNumber;
 
     public CatOutputDto(int id, String name, LocalDate dateOfBirth) {

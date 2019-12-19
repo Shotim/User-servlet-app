@@ -18,9 +18,6 @@ import java.util.List;
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.leverx.validator.EntityValidator.MAX_SIZE;
 import static com.leverx.validator.EntityValidator.MIN_SIZE;
-import static com.leverx.validator.EntityValidator.NOT_VALID_DATE;
-import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
-import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 
 @Getter
 @Setter
@@ -30,12 +27,12 @@ public class PetOutputDto {
 
     int id;
 
-    @NotNull(message = SHOULD_NOT_BE_EMPTY)
-    @Size(min = MIN_SIZE, max = MAX_SIZE, message = NOT_VALID_NAME)
+    @NotNull
+    @Size(min = MIN_SIZE, max = MAX_SIZE)
     String name;
 
-    @NotNull(message = SHOULD_NOT_BE_EMPTY)
-    @PastOrPresent(message = NOT_VALID_DATE)
+    @NotNull
+    @PastOrPresent
     @JsonSerialize(using = LocalDateSerializer.class)
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;

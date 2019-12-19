@@ -19,13 +19,11 @@ public class CatDtoConverter {
     }
 
     public static CatOutputDto catToCatOutputDto(Cat cat) {
-        //TODO Refactoring
         var catOutputDto = petToPetOutputDto(cat, CatOutputDto.class);
         var miceCaughtNumber = cat.getMiceCaughtNumber();
         catOutputDto.setMiceCaughtNumber(miceCaughtNumber);
 
         return catOutputDto;
-
     }
 
     public static Collection<CatOutputDto> catCollectionToCatOutputDtoCollection(Collection<Cat> cats) {

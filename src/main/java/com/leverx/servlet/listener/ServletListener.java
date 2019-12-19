@@ -6,6 +6,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+import java.util.Locale;
 
 import static com.leverx.config.EntityManagerFactoryConfig.closeEntityManagerFactory;
 import static com.leverx.config.EntityManagerFactoryConfig.createEntityManagerFactory;
@@ -20,6 +21,8 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
         log.info("Protocol: {}", request.getProtocol());
         log.info("Context type: {}", request.getContentType());
         log.info("Remote address: {}", request.getLocalAddr());
+        var locale = request.getLocale();
+        Locale.setDefault(locale);
     }
 
     @Override

@@ -13,7 +13,6 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
-import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -26,7 +25,7 @@ import static lombok.AccessLevel.PRIVATE;
 public class Dog extends Pet {
 
     @Column
-    @NotNull(message = SHOULD_NOT_BE_EMPTY)
+    @NotNull
     boolean isCutEars;
 
     public Dog(String name, LocalDate dateOfBirth, boolean isCutEars) {

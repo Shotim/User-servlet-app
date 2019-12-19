@@ -14,8 +14,6 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
-import static com.leverx.validator.EntityValidator.NON_NEGATIVE_NUMBER;
-import static com.leverx.validator.EntityValidator.SHOULD_NOT_BE_EMPTY;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -28,8 +26,8 @@ import static lombok.AccessLevel.PRIVATE;
 public class Cat extends Pet {
 
     @Column
-    @PositiveOrZero(message = NON_NEGATIVE_NUMBER)
-    @NotNull(message = SHOULD_NOT_BE_EMPTY)
+    @PositiveOrZero
+    @NotNull
     int miceCaughtNumber;
 
     public Cat(String name, LocalDate dateOfBirth, int miceCaughtNumber) {

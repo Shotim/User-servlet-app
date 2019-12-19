@@ -6,13 +6,14 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.*;
 
+import static com.leverx.bundle.BundleConstants.DOG_DOES_NOT_EXIST;
+import static com.leverx.bundle.BundleConstants.getLocalizedMessage;
 import static com.leverx.difactory.DIFactory.getBean;
 
 public class DogValidator {
 
     private static final DogRepository DOG_REPOSITORY =
             (DogRepository) getBean(DogRepository.class);
-    private static final String DOG_DOES_NOT_EXIST = "Dog with this id does not exist in database";
 
     public static String validateDogsIds(Collection<Integer> dogsIds) {
 
@@ -26,14 +27,11 @@ public class DogValidator {
     private static Optional<String> getValidationErrors(Integer dogId) {
         var optionalDog = DOG_REPOSITORY.findById(dogId);
         if (optionalDog.isEmpty()) {
-            return Optional.of(getDogNotExistError(dogId));
+            var message = getLocalizedMessage(DOG_DOES_NOT_EXIST);
+            var value = dogId.toString() + ": " + message;
+            return Optional.of(value);
         } else {
             return Optional.empty();
         }
-    }
-
-    private static String getDogNotExistError(Integer dogId) {
-        var invalidValue = dogId.toString();
-        return invalidValue + ":  " + DOG_DOES_NOT_EXIST;
     }
 }
