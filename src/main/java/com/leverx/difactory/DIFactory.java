@@ -12,22 +12,22 @@ import java.util.Set;
 @Slf4j
 public class DIFactory {
 
-    private static Map<Class, Class> dependencyInjectionMap = new HashMap<>();
+    private static Map<Class<?>, Class<?>> dependencyInjectionMap = new HashMap<>();
 
-    private static Map<Class, Object> applicationScope = new HashMap<>();
+    private static final Map<Class<?>, Object> applicationScope = new HashMap<>();
 
     static {
         Reflections reflections = new Reflections("");
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(Injectable.class);
         for (Class<?> implementationClass : types) {
-            for (Class interfaceClass : implementationClass.getInterfaces()) {
+            for (Class<?> interfaceClass : implementationClass.getInterfaces()) {
                 dependencyInjectionMap.put(interfaceClass, implementationClass);
             }
         }
     }
 
-    public static Object getBean(Class interfaceClass) {
-        Class implementationClass = dependencyInjectionMap.get(interfaceClass);
+    public static Object getBean(Class<?> interfaceClass) {
+        Class<?> implementationClass = dependencyInjectionMap.get(interfaceClass);
         if (applicationScope.containsKey(interfaceClass)) {
             return applicationScope.get(implementationClass);
         }
