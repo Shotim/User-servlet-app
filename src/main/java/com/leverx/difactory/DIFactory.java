@@ -14,9 +14,10 @@ public class DIFactory {
 
     private static final Map<Class<?>, Object> applicationScope = new HashMap<>();
     private static Map<Class<?>, Class<?>> dependencyInjectionMap = new HashMap<>();
+    private static final String CLASS_PATH = "com.leverx.model";
 
     static {
-        Reflections reflections = new Reflections("");
+        Reflections reflections = new Reflections(CLASS_PATH);
         Set<Class<?>> types = reflections.getTypesAnnotatedWith(Injectable.class);
         for (Class<?> implementationClass : types) {
             for (Class<?> interfaceClass : implementationClass.getInterfaces()) {
