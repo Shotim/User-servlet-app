@@ -33,7 +33,9 @@ mvn clean install
 1) Open tomcat_template.env and db_template.env and fill variables with your values
 2) Rename accordingly this files as `tomcat.env` and `db.env` or in `docker-compose.yml` rename .env-files as
 tomcat_template.db and db_template.env
-*  Start docker containers by docker-compose:
+* Check `src/main/resources/META-INF/services/com.leverx.credloader.DBCredentialsLoader` file. It should contain the following:
+`com.leverx.credloader.envvar.DBEnvironmentVariableLoader`. If not rewrite it.
+* Start docker containers by docker-compose:
 `
 docker-compose up -d
 `
@@ -50,6 +52,8 @@ Stop docker containers with command
 #### * Local Deployment:
 * Copy war file you have just created to `CATALINA_HOME/webapps`, e.g.
 `C:/Tomcat9/webapps`
+* Check `src/main/resources/META-INF/services/com.leverx.credloader.DBCredentialsLoader` file. It should contain the following:
+`com.leverx.credloader.props.DBPropertiesLoader`. If not rewrite it.
 * Start Tomcat server. On Windows run as Administrator file `startup.bat`
 * Write the following Url: `https://localhost/YOUR_WAR_FILE_NAME/users`
 Response will contain the list of already stored users
