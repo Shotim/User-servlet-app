@@ -37,7 +37,6 @@ public class DIFactory {
                 applicationScope.put(implementationClass, inheritedClass);
                 return inheritedClass;
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                log.error(e.getMessage());
                 throw new InternalServerErrorException(e.getMessage());
             }
         }
