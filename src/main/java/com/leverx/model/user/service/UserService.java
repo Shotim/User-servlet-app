@@ -1,9 +1,9 @@
 package com.leverx.model.user.service;
 
-import com.leverx.model.user.dto.UserInputDto;
-import com.leverx.model.user.dto.UserOutputDto;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
+import com.leverx.model.user.dto.UserInputDto;
+import com.leverx.model.user.dto.UserOutputDto;
 
 import java.util.Collection;
 

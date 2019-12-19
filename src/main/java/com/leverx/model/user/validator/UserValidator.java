@@ -16,9 +16,9 @@ import static java.util.Collections.emptyList;
 
 public class UserValidator {
 
+    private static final String USER_NOT_FOUND = "User with this id was not found";
     private static UserRepository userRepository = (UserRepository)
             getBean(UserRepository.class);
-    private static final String USER_NOT_FOUND = "User with this id was not found";
 
     public static void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {
         List<String> errorsList = new ArrayList<>(emptyList());

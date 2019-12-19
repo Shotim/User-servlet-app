@@ -1,9 +1,9 @@
 package com.leverx.model.pet.repository;
 
+import com.leverx.exception.InternalServerErrorException;
 import com.leverx.model.pet.entity.Pet;
 import com.leverx.model.pet.entity.Pet_;
 import com.leverx.model.user.entity.User_;
-import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;

@@ -12,9 +12,8 @@ import java.util.Set;
 @Slf4j
 public class DIFactory {
 
-    private static Map<Class<?>, Class<?>> dependencyInjectionMap = new HashMap<>();
-
     private static final Map<Class<?>, Object> applicationScope = new HashMap<>();
+    private static Map<Class<?>, Class<?>> dependencyInjectionMap = new HashMap<>();
 
     static {
         Reflections reflections = new Reflections("");

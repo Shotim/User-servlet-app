@@ -1,8 +1,8 @@
 package com.leverx.model.cat.repository;
 
 import com.leverx.difactory.Injectable;
-import com.leverx.model.cat.entity.Cat;
 import com.leverx.exception.InternalServerErrorException;
+import com.leverx.model.cat.entity.Cat;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityTransaction;

@@ -1,9 +1,9 @@
 package com.leverx.model.dog.service;
 
-import com.leverx.model.dog.dto.DogInputDto;
-import com.leverx.model.dog.dto.DogOutputDto;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
+import com.leverx.model.dog.dto.DogInputDto;
+import com.leverx.model.dog.dto.DogOutputDto;
 
 import java.util.Collection;
 

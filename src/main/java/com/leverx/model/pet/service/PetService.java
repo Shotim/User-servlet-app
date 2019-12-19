@@ -1,7 +1,7 @@
 package com.leverx.model.pet.service;
 
-import com.leverx.model.pet.dto.PetOutputDto;
 import com.leverx.exception.ElementNotFoundException;
+import com.leverx.model.pet.dto.PetOutputDto;
 
 import java.util.Collection;
 
