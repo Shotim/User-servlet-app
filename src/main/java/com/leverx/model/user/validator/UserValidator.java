@@ -46,7 +46,8 @@ public class UserValidator {
     public static String validateUserId(int id) {
         var user = userRepository.findById(id);
         if (user.isEmpty()) {
-            return getLocalizedMessage(USER_NOT_FOUND);
+            var message = getLocalizedMessage(USER_NOT_FOUND);
+            return id + ": " + message;
         }
         return "";
     }
