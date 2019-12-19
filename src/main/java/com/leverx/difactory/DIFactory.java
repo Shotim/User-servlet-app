@@ -1,5 +1,6 @@
 package com.leverx.difactory;
 
+import com.leverx.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 import org.reflections.Reflections;
 
@@ -25,20 +26,20 @@ public class DIFactory {
         }
     }
 
-    public static Object getBean(Class interfaceClass){
+    public static Object getBean(Class interfaceClass) {
         Class implementationClass = dependencyInjectionMap.get(interfaceClass);
         if (applicationScope.containsKey(interfaceClass)) {
             return applicationScope.get(implementationClass);
         }
         synchronized (applicationScope) {
-            Object inheritedClass = null;
             try {
-                inheritedClass = implementationClass.getDeclaredConstructor().newInstance();
+                var inheritedClass = implementationClass.getDeclaredConstructor().newInstance();
+                applicationScope.put(implementationClass, inheritedClass);
+                return inheritedClass;
             } catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
                 log.error(e.getMessage());
+                throw new InternalServerErrorException(e.getMessage());
             }
-            applicationScope.put(implementationClass, inheritedClass);
-            return inheritedClass;
         }
     }
 }
