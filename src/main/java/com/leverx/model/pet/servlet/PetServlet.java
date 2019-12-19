@@ -20,11 +20,7 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class PetServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "pets";
-    private PetService petService;
-
-    public PetServlet() {
-        petService = (PetService) getBean(PetService.class);
-    }
+    private PetService petService = getBean(PetService.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

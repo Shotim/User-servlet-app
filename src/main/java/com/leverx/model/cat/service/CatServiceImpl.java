@@ -6,6 +6,7 @@ import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.cat.dto.CatInputDto;
 import com.leverx.model.cat.dto.CatOutputDto;
 import com.leverx.model.cat.repository.CatRepository;
+import com.leverx.validator.EntityValidator;
 
 import java.util.Collection;
 
@@ -13,16 +14,12 @@ import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.cat.dto.converter.CatDtoConverter.catCollectionToCatOutputDtoCollection;
 import static com.leverx.model.cat.dto.converter.CatDtoConverter.catInputDtoToCat;
 import static com.leverx.model.cat.dto.converter.CatDtoConverter.catToCatOutputDto;
-import static com.leverx.validator.EntityValidator.validateEntity;
 
 @Injectable
 public class CatServiceImpl implements CatService {
 
-    private CatRepository catRepository;
-
-    public CatServiceImpl() {
-        catRepository = (CatRepository) getBean(CatRepository.class);
-    }
+    private CatRepository catRepository = getBean(CatRepository.class);
+    private EntityValidator validator = new EntityValidator();
 
     @Override
     public Collection<CatOutputDto> findAll() {
@@ -45,7 +42,7 @@ public class CatServiceImpl implements CatService {
 
     @Override
     public CatOutputDto save(CatInputDto catInputDto) throws ValidationFailedException {
-        validateEntity(catInputDto);
+        validator.validateEntity(catInputDto);
         var cat = catInputDtoToCat(catInputDto);
         catRepository.save(cat);
         return catToCatOutputDto(cat);

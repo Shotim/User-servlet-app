@@ -25,11 +25,7 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class CatServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "cats";
-    private CatService catService;
-
-    public CatServlet() {
-        catService = (CatService) getBean(CatService.class);
-    }
+    private CatService catService = getBean(CatService.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

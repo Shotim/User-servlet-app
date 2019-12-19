@@ -12,8 +12,7 @@ import static com.leverx.difactory.DIFactory.getBean;
 
 public class DogValidator {
 
-    private static final DogRepository DOG_REPOSITORY =
-            (DogRepository) getBean(DogRepository.class);
+    private static final DogRepository DOG_REPOSITORY = getBean(DogRepository.class);
 
     public static String validateDogsIds(Collection<Integer> dogsIds) {
 

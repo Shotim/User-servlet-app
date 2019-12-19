@@ -14,11 +14,7 @@ import static com.leverx.model.pet.dto.converter.PetDtoConverter.petToPetOutputD
 @Injectable
 public class PetServiceImpl implements PetService {
 
-    private PetRepository petRepository;
-
-    public PetServiceImpl() {
-        petRepository = (PetRepository) getBean(PetRepository.class);
-    }
+    private PetRepository petRepository = getBean(PetRepository.class);
 
     @Override
     public Collection<PetOutputDto> findAll() {

@@ -6,6 +6,7 @@ import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.dog.dto.DogInputDto;
 import com.leverx.model.dog.dto.DogOutputDto;
 import com.leverx.model.dog.repository.DogRepository;
+import com.leverx.validator.EntityValidator;
 
 import java.util.Collection;
 
@@ -13,16 +14,12 @@ import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogCollectionToDogOutputDtoCollection;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogInputDtoToDog;
 import static com.leverx.model.dog.dto.converter.DogDtoConverter.dogToDogOutputDto;
-import static com.leverx.validator.EntityValidator.validateEntity;
 
 @Injectable
 public class DogServiceImpl implements DogService {
 
-    private DogRepository dogRepository;
-
-    public DogServiceImpl() {
-        dogRepository = (DogRepository) getBean(DogRepository.class);
-    }
+    private DogRepository dogRepository = getBean(DogRepository.class);
+    private EntityValidator validator = new EntityValidator();
 
     @Override
     public Collection<DogOutputDto> findAll() {
@@ -45,7 +42,7 @@ public class DogServiceImpl implements DogService {
 
     @Override
     public DogOutputDto save(DogInputDto dogInputDto) throws ValidationFailedException {
-        validateEntity(dogInputDto);
+        validator.validateEntity(dogInputDto);
         var dog = dogInputDtoToDog(dogInputDto);
         dogRepository.save(dog);
         return dogToDogOutputDto(dog);

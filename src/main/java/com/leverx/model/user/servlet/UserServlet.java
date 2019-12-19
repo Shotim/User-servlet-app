@@ -31,17 +31,10 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class UserServlet extends HttpServlet {
 
-    private final UserService userService;
-    private final CatService catService;
-    private final DogService dogService;
-    private final PetService petService;
-
-    public UserServlet() {
-        userService = (UserService) getBean(UserService.class);
-        catService = (CatService) getBean(CatService.class);
-        dogService = (DogService) getBean(DogService.class);
-        petService = (PetService) getBean(PetService.class);
-    }
+    private final UserService userService = getBean(UserService.class);
+    private final CatService catService = getBean(CatService.class);
+    private final DogService dogService = getBean(DogService.class);
+    private final PetService petService = getBean(PetService.class);
 
     @Override
 

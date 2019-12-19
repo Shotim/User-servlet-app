@@ -6,6 +6,7 @@ import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.user.dto.UserInputDto;
 import com.leverx.model.user.dto.UserOutputDto;
 import com.leverx.model.user.repository.UserRepository;
+import com.leverx.model.user.validator.UserValidator;
 
 import java.util.Collection;
 
@@ -13,18 +14,13 @@ import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userInputDtoToUser;
 import static com.leverx.model.user.dto.converter.UserDtoConverter.userToUserOutputDto;
-import static com.leverx.model.user.validator.UserValidator.validateCreateUser;
-import static com.leverx.model.user.validator.UserValidator.validateUpdateUser;
 import static java.lang.Integer.parseInt;
 
 @Injectable
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
-
-    public UserServiceImpl() {
-        userRepository = (UserRepository) getBean(UserRepository.class);
-    }
+    private UserRepository userRepository = getBean(UserRepository.class);
+    private UserValidator validator = new UserValidator();
 
     @Override
     public Collection<UserOutputDto> findAll() {
@@ -47,7 +43,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
-        validateCreateUser(userInputDto);
+        validator.validateCreateUser(userInputDto);
         var user = userInputDtoToUser(userInputDto);
         userRepository.save(user).orElseThrow();
         return userToUserOutputDto(user);
@@ -61,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
-        validateUpdateUser(parseInt(id), userInputDto);
+        validator.validateUpdateUser(parseInt(id), userInputDto);
         var userId = parseInt(id);
         var user = userInputDtoToUser(userId, userInputDto);
         user.getPets().forEach(pet -> pet.getOwners().add(user));

@@ -3,6 +3,7 @@ package com.leverx.model.user.validator;
 import com.leverx.exception.ValidationFailedException;
 import com.leverx.model.user.dto.UserInputDto;
 import com.leverx.model.user.repository.UserRepository;
+import com.leverx.validator.EntityValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,16 +13,15 @@ import static com.leverx.bundle.BundleConstants.getLocalizedMessage;
 import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.model.cat.validator.CatValidator.validateCatsIds;
 import static com.leverx.model.dog.validator.DogValidator.validateDogsIds;
-import static com.leverx.validator.EntityValidator.validate;
 import static java.lang.String.join;
 import static java.util.Collections.emptyList;
 
 public class UserValidator {
 
-    private static UserRepository userRepository = (UserRepository)
-            getBean(UserRepository.class);
+    private UserRepository userRepository = getBean(UserRepository.class);
+    private EntityValidator validator = new EntityValidator();
 
-    public static void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {
+    public void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {
         List<String> errorsList = new ArrayList<>(emptyList());
         var userIdErrors = validateUserId(id);
         errorsList.add(userIdErrors);
@@ -33,7 +33,7 @@ public class UserValidator {
         }
     }
 
-    public static void validateCreateUser(UserInputDto userInputDto) throws ValidationFailedException {
+    public void validateCreateUser(UserInputDto userInputDto) throws ValidationFailedException {
         List<String> errorsList = new ArrayList<>(emptyList());
         List<String> errors = validationUserInputDtoErrors(userInputDto);
         errorsList.addAll(errors);
@@ -43,7 +43,7 @@ public class UserValidator {
         }
     }
 
-    public static String validateUserId(int id) {
+    public String validateUserId(int id) {
         var user = userRepository.findById(id);
         if (user.isEmpty()) {
             var message = getLocalizedMessage(USER_NOT_FOUND);
@@ -52,9 +52,9 @@ public class UserValidator {
         return "";
     }
 
-    private static List<String> validationUserInputDtoErrors(UserInputDto userInputDto) {
+    private List<String> validationUserInputDtoErrors(UserInputDto userInputDto) {
         List<String> errorsList = new ArrayList<>(emptyList());
-        var errors = validate(userInputDto);
+        var errors = validator.validate(userInputDto);
         errorsList.add(errors);
         var catsIds = userInputDto.getCatsIds();
         var catsIdsErrors = validateCatsIds(catsIds);

@@ -12,8 +12,7 @@ import static com.leverx.difactory.DIFactory.getBean;
 
 public class CatValidator {
 
-    private static final CatRepository CAT_REPOSITORY =
-            (CatRepository) getBean(CatRepository.class);
+    private static final CatRepository CAT_REPOSITORY = getBean(CatRepository.class);
 
     public static String validateCatsIds(Collection<Integer> catsIds) {
 

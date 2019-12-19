@@ -25,11 +25,7 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class DogServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "dogs";
-    private DogService dogService;
-
-    public DogServlet() {
-        dogService = (DogService) getBean(DogService.class);
-    }
+    private DogService dogService = getBean(DogService.class);
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
