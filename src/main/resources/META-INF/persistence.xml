@@ -7,10 +7,10 @@
     <persistence-unit name="Persistence">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
 
-        <class>com.leverx.model.pet.entity.Pet</class>
-        <class>com.leverx.model.cat.entity.Cat</class>
-        <class>com.leverx.model.dog.entity.Dog</class>
-        <class>com.leverx.model.user.entity.User</class>
+        <class>com.leverx.pet.entity.Pet</class>
+        <class>com.leverx.cat.entity.Cat</class>
+        <class>com.leverx.dog.entity.Dog</class>
+        <class>com.leverx.user.entity.User</class>
 
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
