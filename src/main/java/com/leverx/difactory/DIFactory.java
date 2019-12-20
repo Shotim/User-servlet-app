@@ -13,7 +13,7 @@ import java.util.Set;
 public class DIFactory {
 
     private static final Map<Class<?>, Object> applicationScope = new HashMap<>();
-    private static final String CLASS_PATH = "com.leverx.model";
+    private static final String CLASS_PATH = "com.leverx";
     private static Map<Class<?>, Class<?>> dependencyInjectionMap = new HashMap<>();
 
     static {

@@ -3,6 +3,7 @@ package com.leverx.user.dto;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.Collection;
@@ -19,6 +20,9 @@ public class UserInputDto {
     @Size(min = MIN_SIZE, max = MAX_SIZE)
     @NotNull
     String name;
+
+    @Email
+    String email;
 
     Collection<Integer> catsIds = emptyList();
 

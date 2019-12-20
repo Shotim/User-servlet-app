@@ -6,8 +6,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.leverx.pet.dto.PetOutputDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -24,6 +26,10 @@ public class UserOutputDto {
 
     @NotNull
     String name;
+
+    @NonNull
+    @Email
+    String email;
 
     @JsonInclude(NON_NULL)
     Collection<PetOutputDto> pets;

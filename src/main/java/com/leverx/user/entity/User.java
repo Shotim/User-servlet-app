@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import java.util.Collection;
 
 import static java.util.Collections.emptyList;
@@ -39,6 +40,11 @@ public class User {
     @Column
     @NonNull
     String name;
+
+    @Column
+    @NonNull
+    @Email
+    String email;
 
     @ManyToMany(fetch = EAGER)
     @JoinTable(name = "user_pet",
