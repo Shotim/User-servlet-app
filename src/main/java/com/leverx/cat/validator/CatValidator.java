@@ -14,13 +14,14 @@ public class CatValidator {
 
     private static final CatRepository CAT_REPOSITORY = getBean(CatRepository.class);
 
-    public static String validateCatsIds(Collection<Integer> catsIds) {
+    public static Optional<String> validateCatsIds(Collection<Integer> catsIds) {
 
-        return catsIds.stream()
+        String validationErrors = catsIds.stream()
                 .map(CatValidator::getValidationErrors)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.joining(";\n"));
+        return Optional.of(validationErrors);
     }
 
     private static Optional<String> getValidationErrors(Integer catId) {

@@ -14,13 +14,14 @@ public class DogValidator {
 
     private static final DogRepository DOG_REPOSITORY = getBean(DogRepository.class);
 
-    public static String validateDogsIds(Collection<Integer> dogsIds) {
+    public static Optional<String> validateDogsIds(Collection<Integer> dogsIds) {
 
-        return dogsIds.stream()
+        String validationErrors = dogsIds.stream()
                 .map(DogValidator::getValidationErrors)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.joining(";\n"));
+        return Optional.of(validationErrors);
     }
 
     private static Optional<String> getValidationErrors(Integer dogId) {

@@ -4,6 +4,7 @@ import com.leverx.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintViolation;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.joining;
 import static javax.validation.Validation.buildDefaultValidatorFactory;
@@ -15,23 +16,24 @@ public class EntityValidator {
     public static final int MAX_SIZE = 60;
 
     public <T> void validateEntity(T entity) throws ValidationFailedException {
-        String errors = validate(entity);
-        if (!errors.isEmpty()) {
-            throw new ValidationFailedException(errors);
+        var errors = validate(entity);
+        if (errors.isPresent()) {
+            throw new ValidationFailedException(errors.get());
         }
     }
 
-    public <T> String validate(T entity) {
+    public <T> Optional<String> validate(T entity) {
         var validator = buildDefaultValidatorFactory().getValidator();
         var violations = validator.validate(entity);
         var violationAmount = violations.size();
 
         if (violationAmount == 0) {
-            return "";
+            return Optional.empty();
         }
 
-        return violations.stream()
+        var message = violations.stream()
                 .map(ConstraintViolation::getMessage)
                 .collect(joining("; "));
+        return Optional.of(message);
     }
 }
