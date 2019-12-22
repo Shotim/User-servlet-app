@@ -8,7 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
+import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
@@ -36,7 +38,8 @@ public class UserRepositoryImpl implements UserRepository {
 
             criteriaQuery.select(root);
 
-            var query = entityManager.createQuery(criteriaQuery);
+            var query = entityManager.createQuery(criteriaQuery)
+                    .setLockMode(LockModeType.PESSIMISTIC_WRITE);
             var users = query.getResultList();
             transaction.commit();
             log.debug("Were received {} users", users.size());
@@ -59,7 +62,8 @@ public class UserRepositoryImpl implements UserRepository {
             transaction = beginTransaction(entityManager);
 
             var criteriaQuery = getUserCriteriaQueryEqualToParameter(id, User_.id, entityManager);
-            var query = entityManager.createQuery(criteriaQuery);
+            var query = entityManager.createQuery(criteriaQuery)
+                    .setLockMode(LockModeType.PESSIMISTIC_WRITE);
             var user = query.getSingleResult();
 
             transaction.commit();
@@ -88,7 +92,8 @@ public class UserRepositoryImpl implements UserRepository {
             transaction = beginTransaction(entityManager);
 
             var criteriaQuery = getUserCriteriaQueryEqualToParameter(name, User_.name, entityManager);
-            var query = entityManager.createQuery(criteriaQuery);
+            var query = entityManager.createQuery(criteriaQuery)
+                    .setLockMode(LockModeType.PESSIMISTIC_WRITE);
             var users = query.getResultList();
 
             transaction.commit();
@@ -171,6 +176,41 @@ public class UserRepositoryImpl implements UserRepository {
         } finally {
             entityManager.close();
         }
+    }
+
+    @Override
+    public void pointsTransfer(int senderId, int recipientId, int points) {
+        var entityManager = getEntityManager();
+        var builder = entityManager.getCriteriaBuilder();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+
+            addAnimalPointsToUser(recipientId, entityManager, builder, points);
+
+            entityManager.joinTransaction();
+
+            addAnimalPointsToUser(senderId, entityManager, builder, -points);
+            transaction.commit();
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e.getMessage());
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    private void addAnimalPointsToUser(int userId, EntityManager entityManager, CriteriaBuilder builder, int points) {
+        var criteriaUpdate = builder.createCriteriaUpdate(User.class);
+        var root = criteriaUpdate.from(User.class);
+        var user = builder.equal(root.get(User_.id), userId);
+        var addPoints = builder.sum(root.get(User_.animalPoints), points);
+        criteriaUpdate.where(user)
+                .set(root.get(User_.animalPoints), addPoints);
+        var query = entityManager.createQuery(criteriaUpdate);
+        query.executeUpdate();
     }
 
     private <T> CriteriaQuery<User> getUserCriteriaQueryEqualToParameter(T parameter, SingularAttribute<User, ?> attribute, EntityManager entityManager) {

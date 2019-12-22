@@ -1,10 +1,11 @@
 package com.leverx.user.servlet;
 
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 import com.leverx.cat.service.CatService;
 import com.leverx.dog.service.DogService;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 import com.leverx.pet.service.PetService;
+import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.service.UserService;
 
@@ -23,6 +24,7 @@ import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
+import static java.util.Objects.nonNull;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -30,6 +32,8 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 
 public class UserServlet extends HttpServlet {
+
+    private static final String TRANSFER_POINTS = "transferPoints";
 
     private final UserService userService = getBean(UserService.class);
     private final CatService catService = getBean(CatService.class);
@@ -76,13 +80,26 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var userDto = readJsonBody(request, UserInputDto.class);
-        var pathVariable = getPathVariableFromRequest(request);
-        try {
-            userService.updateById(pathVariable, userDto);
-            response.setStatus(SC_OK);
-        } catch (ValidationFailedException e) {
-            printValidationErrorMessages(response, e);
+        var action = request.getParameter("action");
+        if (nonNull(action)) {
+            if (TRANSFER_POINTS.equals(action)) {
+                var transferPointsDto = readJsonBody(request, PointsTransferDto.class);
+                var variable = getPathVariableFromRequest(request);
+                try {
+                    userService.pointsTransfer(variable, transferPointsDto);
+                } catch (ValidationFailedException e) {
+                    printValidationErrorMessages(response, e);
+                }
+            }
+        } else {
+            var userDto = readJsonBody(request, UserInputDto.class);
+            var variable = getPathVariableFromRequest(request);
+            try {
+                userService.updateById(variable, userDto);
+                response.setStatus(SC_OK);
+            } catch (ValidationFailedException e) {
+                printValidationErrorMessages(response, e);
+            }
         }
     }
 

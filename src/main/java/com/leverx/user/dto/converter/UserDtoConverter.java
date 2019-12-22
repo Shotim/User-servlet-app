@@ -24,6 +24,7 @@ public class UserDtoConverter {
     public static User userInputDtoToUser(int id, UserInputDto userInputDto) {
         var name = userInputDto.getName();
         var email = userInputDto.getEmail();
+        var animalPoints = userInputDto.getAnimalPoints();
         var cats = userInputDto.getCatsIds().stream()
                 .map(catRepository::findById)
                 .map(Optional::orElseThrow)
@@ -34,7 +35,7 @@ public class UserDtoConverter {
                 .collect(toList());
         var pets = Stream.concat(cats.stream(), dogs.stream())
                 .collect(toList());
-        return new User(id, name, email, pets);
+        return new User(id, name, email, animalPoints, pets);
     }
 
     public static User userInputDtoToUser(UserInputDto userInputDto) {
@@ -46,8 +47,9 @@ public class UserDtoConverter {
         var id = user.getId();
         var name = user.getName();
         var email = user.getEmail();
+        var animalPoints = user.getAnimalPoints();
         var pets = nonNull(user.getPets()) ? petCollectionToPetOutputDtoCollection(user.getPets()) : null;
-        return new UserOutputDto(id, name, email, pets);
+        return new UserOutputDto(id, name, email, animalPoints, pets);
     }
 
     public static Collection<UserOutputDto> userCollectionToUserOutputDtoCollection(Collection<User> users) {

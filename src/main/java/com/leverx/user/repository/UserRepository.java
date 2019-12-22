@@ -18,4 +18,6 @@ public interface UserRepository {
     void deleteById(int id);
 
     void update(User user);
+
+    void pointsTransfer(int senderId, int recipientId, int points);
 }

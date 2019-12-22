@@ -11,6 +11,7 @@ import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
@@ -30,6 +31,9 @@ public class UserOutputDto {
     @NonNull
     @Email
     String email;
+
+    @PositiveOrZero
+    int animalPoints;
 
     @JsonInclude(NON_NULL)
     Collection<PetOutputDto> pets;

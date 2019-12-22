@@ -3,6 +3,7 @@ package com.leverx.user.service;
 import com.leverx.difactory.Injectable;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
+import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.repository.UserRepository;
@@ -51,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteById(String id) {
-        int parsedId = parseInt(id);
+        var parsedId = parseInt(id);
         userRepository.deleteById(parsedId);
     }
 
@@ -62,5 +63,14 @@ public class UserServiceImpl implements UserService {
         var user = userInputDtoToUser(userId, userInputDto);
         user.getPets().forEach(pet -> pet.getOwners().add(user));
         userRepository.update(user);
+    }
+
+    @Override
+    public void pointsTransfer(String senderIdStr, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
+        validator.validatePointsTransfer(senderIdStr, pointsTransferDto);
+        var senderId = parseInt(senderIdStr);
+        var recipientId = pointsTransferDto.getRecipientId();
+        var animalPoints = pointsTransferDto.getAnimalPoints();
+        userRepository.pointsTransfer(senderId, recipientId, animalPoints);
     }
 }

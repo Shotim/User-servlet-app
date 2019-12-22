@@ -16,6 +16,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.Collection;
 
 import static java.util.Collections.emptyList;
@@ -45,6 +46,10 @@ public class User {
     @NonNull
     @Email
     String email;
+
+    @Column
+    @PositiveOrZero
+    int animalPoints;
 
     @ManyToMany(fetch = EAGER)
     @JoinTable(name = "user_pet",
