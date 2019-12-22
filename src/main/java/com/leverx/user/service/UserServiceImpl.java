@@ -1,6 +1,5 @@
 package com.leverx.user.service;
 
-import com.leverx.difactory.Injectable;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.exception.ValidationFailedException;
 import com.leverx.user.dto.PointsTransferDto;
@@ -8,20 +7,21 @@ import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.validator.UserValidator;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 
-import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
 import static com.leverx.user.dto.converter.UserDtoConverter.userInputDtoToUser;
 import static com.leverx.user.dto.converter.UserDtoConverter.userToUserOutputDto;
 import static java.lang.Integer.parseInt;
 
-@Injectable
+
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository = getBean(UserRepository.class);
-    private UserValidator validator = new UserValidator();
+    private UserRepository userRepository;
+    private final UserValidator validator;
 
     @Override
     public Collection<UserOutputDto> findAll() {

@@ -1,20 +1,20 @@
 package com.leverx.pet.service;
 
-import com.leverx.difactory.Injectable;
 import com.leverx.exception.ElementNotFoundException;
 import com.leverx.pet.dto.PetOutputDto;
 import com.leverx.pet.repository.PetRepository;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 
-import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.pet.dto.converter.PetDtoConverter.petCollectionToPetOutputDtoCollection;
 import static com.leverx.pet.dto.converter.PetDtoConverter.petToPetOutputDto;
 
-@Injectable
+
+@AllArgsConstructor
 public class PetServiceImpl implements PetService {
 
-    private PetRepository petRepository = getBean(PetRepository.class);
+    private PetRepository petRepository;
 
     @Override
     public Collection<PetOutputDto> findAll() {

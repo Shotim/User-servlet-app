@@ -1,4 +1,4 @@
-package com.leverx.credloader.envvar;
+package com.leverx.credentialsLoader.envvar;
 
 import java.util.Collection;
 import java.util.Map;

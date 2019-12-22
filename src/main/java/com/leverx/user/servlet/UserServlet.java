@@ -17,7 +17,10 @@ import java.io.PrintWriter;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.difactory.DIFactory.getBean;
+import static com.leverx.applicationContext.ApplicationContext.getCatService;
+import static com.leverx.applicationContext.ApplicationContext.getDogService;
+import static com.leverx.applicationContext.ApplicationContext.getPetService;
+import static com.leverx.applicationContext.ApplicationContext.getUserService;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;
@@ -35,10 +38,17 @@ public class UserServlet extends HttpServlet {
 
     private static final String TRANSFER_POINTS = "transferPoints";
 
-    private final UserService userService = getBean(UserService.class);
-    private final CatService catService = getBean(CatService.class);
-    private final DogService dogService = getBean(DogService.class);
-    private final PetService petService = getBean(PetService.class);
+    private UserService userService;
+    private CatService catService;
+    private DogService dogService;
+    private PetService petService;
+
+    public UserServlet() {
+        this.userService = getUserService();
+        this.catService = getCatService();
+        this.dogService = getDogService();
+        this.petService = getPetService();
+    }
 
     @Override
 

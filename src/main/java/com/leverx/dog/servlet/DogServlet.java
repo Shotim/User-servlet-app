@@ -1,9 +1,9 @@
 package com.leverx.dog.servlet;
 
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.service.DogService;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -13,7 +13,7 @@ import java.io.PrintWriter;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.difactory.DIFactory.getBean;
+import static com.leverx.applicationContext.ApplicationContext.getDogService;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
@@ -25,7 +25,11 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class DogServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "dogs";
-    private DogService dogService = getBean(DogService.class);
+    private DogService dogService;
+
+    public DogServlet() {
+        this.dogService = getDogService();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

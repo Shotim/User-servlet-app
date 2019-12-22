@@ -1,4 +1,4 @@
-package com.leverx.credloader.constants;
+package com.leverx.credentialsLoader.constants;
 
 public class DBPropertiesConstants {
 

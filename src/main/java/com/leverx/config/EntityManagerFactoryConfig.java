@@ -1,6 +1,6 @@
 package com.leverx.config;
 
-import com.leverx.credloader.DBCredentialsLoader;
+import com.leverx.credentialsLoader.DBCredentialsLoader;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

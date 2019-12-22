@@ -1,6 +1,5 @@
 package com.leverx.user.repository;
 
-import com.leverx.difactory.Injectable;
 import com.leverx.exception.InternalServerErrorException;
 import com.leverx.user.entity.User;
 import com.leverx.user.entity.User_;
@@ -22,7 +21,7 @@ import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 @Slf4j
-@Injectable
+
 public class UserRepositoryImpl implements UserRepository {
 
     @Override

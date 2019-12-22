@@ -1,10 +1,13 @@
 package com.leverx.user.validator;
 
+import com.leverx.cat.validator.CatValidator;
+import com.leverx.dog.validator.DogValidator;
 import com.leverx.exception.ValidationFailedException;
 import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.validator.EntityValidator;
+import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,16 +18,16 @@ import static com.leverx.bundle.BundleConstants.EQUAL_SENDER_AND_RECIPIENT;
 import static com.leverx.bundle.BundleConstants.NOT_ENOUGH_MONEY;
 import static com.leverx.bundle.BundleConstants.USER_NOT_FOUND;
 import static com.leverx.bundle.BundleConstants.getLocalizedMessage;
-import static com.leverx.cat.validator.CatValidator.validateCatsIds;
-import static com.leverx.difactory.DIFactory.getBean;
-import static com.leverx.dog.validator.DogValidator.validateDogsIds;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 
+@AllArgsConstructor
 public class UserValidator {
 
-    private UserRepository userRepository = getBean(UserRepository.class);
-    private EntityValidator validator = new EntityValidator();
+    private UserRepository userRepository;
+    private CatValidator catValidator;
+    private DogValidator dogValidator;
+    private final EntityValidator validator = new EntityValidator();
 
     public void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {
         var errorsList = new ArrayList<Optional<String>>(emptyList());
@@ -90,10 +93,10 @@ public class UserValidator {
         var errors = validator.validate(userInputDto);
         errorsList.add(errors);
         var catsIds = userInputDto.getCatsIds();
-        var catsIdsErrors = validateCatsIds(catsIds);
+        var catsIdsErrors = catValidator.validateCatsIds(catsIds);
         errorsList.add(catsIdsErrors);
         var dogsIds = userInputDto.getDogsIds();
-        var dogsIdsErrors = validateDogsIds(dogsIds);
+        var dogsIdsErrors = dogValidator.validateDogsIds(dogsIds);
         errorsList.add(dogsIdsErrors);
         return errorsList;
     }

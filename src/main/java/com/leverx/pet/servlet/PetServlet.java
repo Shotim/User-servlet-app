@@ -11,7 +11,7 @@ import java.io.PrintWriter;
 
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.difactory.DIFactory.getBean;
+import static com.leverx.applicationContext.ApplicationContext.getPetService;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
@@ -20,7 +20,11 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 public class PetServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "pets";
-    private PetService petService = getBean(PetService.class);
+    private PetService petService;
+
+    public PetServlet() {
+        this.petService = getPetService();
+    }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {

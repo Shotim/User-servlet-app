@@ -1,6 +1,7 @@
 package com.leverx.cat.validator;
 
 import com.leverx.cat.repository.CatRepository;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -8,16 +9,16 @@ import java.util.stream.*;
 
 import static com.leverx.bundle.BundleConstants.CAT_DOES_NOT_EXIST;
 import static com.leverx.bundle.BundleConstants.getLocalizedMessage;
-import static com.leverx.difactory.DIFactory.getBean;
 
+@AllArgsConstructor
 public class CatValidator {
 
-    private static final CatRepository CAT_REPOSITORY = getBean(CatRepository.class);
+    private CatRepository catRepository;
 
-    public static Optional<String> validateCatsIds(Collection<Integer> catsIds) {
+    public Optional<String> validateCatsIds(Collection<Integer> catsIds) {
 
         var validationErrors = catsIds.stream()
-                .map(CatValidator::getValidationErrors)
+                .map(this::getValidationErrors)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .collect(Collectors.joining("; "));
@@ -27,8 +28,8 @@ public class CatValidator {
         return Optional.of(validationErrors);
     }
 
-    private static Optional<String> getValidationErrors(Integer catId) {
-        var optionalCat = CAT_REPOSITORY.findById(catId);
+    private Optional<String> getValidationErrors(Integer catId) {
+        var optionalCat = catRepository.findById(catId);
         if (optionalCat.isEmpty()) {
             var message = getLocalizedMessage(CAT_DOES_NOT_EXIST);
             var value = catId.toString() + ": " + message;

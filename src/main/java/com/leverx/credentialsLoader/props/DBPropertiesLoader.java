@@ -1,10 +1,10 @@
-package com.leverx.credloader.props;
+package com.leverx.credentialsLoader.props;
 
-import com.leverx.credloader.DBCredentialsLoader;
+import com.leverx.credentialsLoader.DBCredentialsLoader;
 
 import java.util.Map;
 
-import static com.leverx.credloader.constants.DBPropertiesConstants.PROPERTY_FILE_NAME;
+import static com.leverx.credentialsLoader.constants.DBPropertiesConstants.PROPERTY_FILE_NAME;
 
 public class DBPropertiesLoader implements DBCredentialsLoader {
 

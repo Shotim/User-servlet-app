@@ -1,25 +1,25 @@
 package com.leverx.cat.service;
 
-import com.leverx.difactory.Injectable;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.repository.CatRepository;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 import com.leverx.validator.EntityValidator;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 
-import static com.leverx.difactory.DIFactory.getBean;
 import static com.leverx.cat.dto.converter.CatDtoConverter.catCollectionToCatOutputDtoCollection;
 import static com.leverx.cat.dto.converter.CatDtoConverter.catInputDtoToCat;
 import static com.leverx.cat.dto.converter.CatDtoConverter.catToCatOutputDto;
 
-@Injectable
+
+@AllArgsConstructor
 public class CatServiceImpl implements CatService {
 
-    private CatRepository catRepository = getBean(CatRepository.class);
-    private EntityValidator validator = new EntityValidator();
+    private CatRepository catRepository;
+    private final EntityValidator validator = new EntityValidator();
 
     @Override
     public Collection<CatOutputDto> findAll() {
