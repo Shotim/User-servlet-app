@@ -1,9 +1,9 @@
-package com.leverx.bundle;
+package com.leverx.validator;
 
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-public class BundleConstants {
+public class ValidationErrorMessages {
 
     public static final String FILE_NAME = "messages";
     public static final String CAT_DOES_NOT_EXIST = "CAT_DOES_NOT_EXIST";

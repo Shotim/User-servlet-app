@@ -14,10 +14,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static com.leverx.bundle.BundleConstants.EQUAL_SENDER_AND_RECIPIENT;
-import static com.leverx.bundle.BundleConstants.NOT_ENOUGH_MONEY;
-import static com.leverx.bundle.BundleConstants.USER_NOT_FOUND;
-import static com.leverx.bundle.BundleConstants.getLocalizedMessage;
+import static com.leverx.validator.ValidationErrorMessages.EQUAL_SENDER_AND_RECIPIENT;
+import static com.leverx.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY;
+import static com.leverx.validator.ValidationErrorMessages.USER_NOT_FOUND;
+import static com.leverx.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 
