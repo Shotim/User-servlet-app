@@ -71,24 +71,20 @@ public class ServletUtils {
         } else {
             String userId;
             switch (lastElement) {
-                case USERS:
-                    methodTypePlusRequiredVar.setValues(GET_ALL_USERS, lastElement);
-                    break;
-                case CATS:
+                case USERS -> methodTypePlusRequiredVar.setValues(GET_ALL_USERS, lastElement);
+                case CATS -> {
                     userId = getPreLastStringElement(splittedUrl);
                     methodTypePlusRequiredVar.setValues(GET_CATS_OF_USER, userId);
-                    break;
-                case DOGS:
+                }
+                case DOGS -> {
                     userId = getPreLastStringElement(splittedUrl);
                     methodTypePlusRequiredVar.setValues(GET_DOGS_OF_USER, userId);
-                    break;
-                case PETS:
+                }
+                case PETS -> {
                     userId = getPreLastStringElement(splittedUrl);
                     methodTypePlusRequiredVar.setValues(GET_PETS_OF_USER, userId);
-                    break;
-                default:
-                    methodTypePlusRequiredVar.setValues(GET_USER_BY_NAME, lastElement);
-                    break;
+                }
+                default -> methodTypePlusRequiredVar.setValues(GET_USER_BY_NAME, lastElement);
             }
         }
         return methodTypePlusRequiredVar;
