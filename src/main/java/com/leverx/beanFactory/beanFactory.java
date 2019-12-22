@@ -1,4 +1,4 @@
-package com.leverx.applicationContext;
+package com.leverx.beanFactory;
 
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
@@ -21,7 +21,7 @@ import com.leverx.user.service.UserServiceImpl;
 import com.leverx.user.validator.UserValidator;
 import com.leverx.validator.EntityValidator;
 
-public class ApplicationContext {
+public class beanFactory {
 
     private static UserRepository userRepository = new UserRepositoryImpl();
     private static PetRepository petRepository = new PetRepositoryImpl();
