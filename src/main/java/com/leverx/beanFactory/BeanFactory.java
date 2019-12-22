@@ -21,7 +21,7 @@ import com.leverx.user.service.UserServiceImpl;
 import com.leverx.user.validator.UserValidator;
 import com.leverx.validator.EntityValidator;
 
-public class beanFactory {
+public class BeanFactory {
 
     private static UserRepository userRepository = new UserRepositoryImpl();
     private static PetRepository petRepository = new PetRepositoryImpl();

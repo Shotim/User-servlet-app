@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.beanFactory.beanFactory.getDogService;
+import static com.leverx.beanFactory.BeanFactory.getDogService;
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
