@@ -20,7 +20,7 @@ import static com.leverx.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 
-public interface PetRepositoryI {
+public interface PetGenericRepository {
 
     private static <T extends Pet> CriteriaQuery<T> getPetCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute, Class<T> t) {
 
