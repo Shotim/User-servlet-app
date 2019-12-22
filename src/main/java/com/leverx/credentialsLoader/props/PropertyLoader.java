@@ -42,10 +42,6 @@ public class PropertyLoader {
         return propertiesMap;
     }
 
-    public String getProperty(String propertyKey) {
-        return propertiesMap.get(propertyKey);
-    }
-
     public Map<String, String> getPropertiesMap() {
         return this.propertiesMap;
     }
