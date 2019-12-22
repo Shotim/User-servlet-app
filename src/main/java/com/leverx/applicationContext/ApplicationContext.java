@@ -19,6 +19,7 @@ import com.leverx.user.repository.UserRepositoryImpl;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 import com.leverx.user.validator.UserValidator;
+import com.leverx.validator.EntityValidator;
 
 public class ApplicationContext {
 
@@ -26,12 +27,13 @@ public class ApplicationContext {
     private static PetRepository petRepository = new PetRepositoryImpl();
     private static CatRepository catRepository = new CatRepositoryImpl();
     private static DogRepository dogRepository = new DogRepositoryImpl();
+    private static EntityValidator entityValidator = new EntityValidator();
     private static CatValidator catValidator = new CatValidator(catRepository);
     private static DogValidator dogValidator = new DogValidator(dogRepository);
-    private static UserValidator userValidator = new UserValidator(userRepository, catValidator, dogValidator);
+    private static UserValidator userValidator = new UserValidator(entityValidator, userRepository, catValidator, dogValidator);
     private static PetService petService = new PetServiceImpl(petRepository);
-    private static DogService dogService = new DogServiceImpl(dogRepository);
-    private static CatService catService = new CatServiceImpl(catRepository);
+    private static DogService dogService = new DogServiceImpl(entityValidator, dogRepository);
+    private static CatService catService = new CatServiceImpl(entityValidator, catRepository);
     private static UserService userService = new UserServiceImpl(userValidator, userRepository);
 
     public static PetService getPetService() {

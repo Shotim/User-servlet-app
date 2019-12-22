@@ -24,7 +24,7 @@ import static java.util.Collections.emptyList;
 @AllArgsConstructor
 public class UserValidator {
 
-    private final EntityValidator validator = new EntityValidator();
+    private EntityValidator validator;
     private UserRepository userRepository;
     private CatValidator catValidator;
     private DogValidator dogValidator;

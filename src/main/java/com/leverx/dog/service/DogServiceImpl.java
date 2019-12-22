@@ -18,7 +18,7 @@ import static com.leverx.dog.dto.converter.DogDtoConverter.dogToDogOutputDto;
 @AllArgsConstructor
 public class DogServiceImpl implements DogService {
 
-    private final EntityValidator validator = new EntityValidator();
+    private EntityValidator validator;
     private DogRepository dogRepository;
 
     @Override

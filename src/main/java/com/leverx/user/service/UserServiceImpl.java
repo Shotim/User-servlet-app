@@ -20,7 +20,7 @@ import static java.lang.Integer.parseInt;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private final UserValidator validator;
+    private UserValidator validator;
     private UserRepository userRepository;
 
     @Override

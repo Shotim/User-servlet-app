@@ -18,7 +18,7 @@ import static com.leverx.cat.dto.converter.CatDtoConverter.catToCatOutputDto;
 @AllArgsConstructor
 public class CatServiceImpl implements CatService {
 
-    private final EntityValidator validator = new EntityValidator();
+    private EntityValidator validator;
     private CatRepository catRepository;
 
     @Override
