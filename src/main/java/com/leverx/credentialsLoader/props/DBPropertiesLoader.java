@@ -4,10 +4,9 @@ import com.leverx.credentialsLoader.DBCredentialsLoader;
 
 import java.util.Map;
 
-import static com.leverx.credentialsLoader.constants.DBPropertiesConstants.PROPERTY_FILE_NAME;
-
 public class DBPropertiesLoader implements DBCredentialsLoader {
 
+    public static final String PROPERTY_FILE_NAME = "db.properties";
     private PropertyLoader loader;
 
     public DBPropertiesLoader() {
