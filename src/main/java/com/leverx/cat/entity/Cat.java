@@ -10,7 +10,6 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
@@ -27,7 +26,6 @@ public class Cat extends Pet {
 
     @Column
     @PositiveOrZero
-    @NotNull
     int miceCaughtNumber;
 
     public Cat(String name, LocalDate dateOfBirth, int miceCaughtNumber) {

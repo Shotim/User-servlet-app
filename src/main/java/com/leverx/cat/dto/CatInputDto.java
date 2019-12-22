@@ -31,7 +31,6 @@ public class CatInputDto {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate dateOfBirth;
 
-    @NotNull
     @PositiveOrZero
     int miceCaughtNumber;
 }

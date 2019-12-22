@@ -5,7 +5,6 @@ import com.leverx.pet.dto.PetOutputDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
@@ -16,7 +15,6 @@ import static com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenera
 @JsonIdentityInfo(generator = PropertyGenerator.class, property = "id")
 public class CatOutputDto extends PetOutputDto {
 
-    @NotNull
     @PositiveOrZero
     int miceCaughtNumber;
 
