@@ -1,9 +1,9 @@
 package com.leverx.cat.service;
 
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
 
 import java.util.Collection;
 

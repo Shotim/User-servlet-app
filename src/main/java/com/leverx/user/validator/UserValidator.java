@@ -24,10 +24,10 @@ import static java.util.Collections.emptyList;
 @AllArgsConstructor
 public class UserValidator {
 
+    private final EntityValidator validator = new EntityValidator();
     private UserRepository userRepository;
     private CatValidator catValidator;
     private DogValidator dogValidator;
-    private final EntityValidator validator = new EntityValidator();
 
     public void validateUpdateUser(int id, UserInputDto userInputDto) throws ValidationFailedException {
         var errorsList = new ArrayList<Optional<String>>(emptyList());

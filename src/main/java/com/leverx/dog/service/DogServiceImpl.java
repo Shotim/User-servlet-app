@@ -18,8 +18,8 @@ import static com.leverx.dog.dto.converter.DogDtoConverter.dogToDogOutputDto;
 @AllArgsConstructor
 public class DogServiceImpl implements DogService {
 
-    private DogRepository dogRepository;
     private final EntityValidator validator = new EntityValidator();
+    private DogRepository dogRepository;
 
     @Override
     public Collection<DogOutputDto> findAll() {

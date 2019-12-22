@@ -22,6 +22,18 @@ import com.leverx.user.validator.UserValidator;
 
 public class ApplicationContext {
 
+    private static UserRepository userRepository = new UserRepositoryImpl();
+    private static PetRepository petRepository = new PetRepositoryImpl();
+    private static CatRepository catRepository = new CatRepositoryImpl();
+    private static DogRepository dogRepository = new DogRepositoryImpl();
+    private static CatValidator catValidator = new CatValidator(catRepository);
+    private static DogValidator dogValidator = new DogValidator(dogRepository);
+    private static UserValidator userValidator = new UserValidator(userRepository, catValidator, dogValidator);
+    private static PetService petService = new PetServiceImpl(petRepository);
+    private static DogService dogService = new DogServiceImpl(dogRepository);
+    private static CatService catService = new CatServiceImpl(catRepository);
+    private static UserService userService = new UserServiceImpl(userValidator, userRepository);
+
     public static PetService getPetService() {
         return petService;
     }
@@ -37,17 +49,5 @@ public class ApplicationContext {
     public static UserService getUserService() {
         return userService;
     }
-
-    private static UserRepository userRepository = new UserRepositoryImpl();
-    private static PetRepository petRepository = new PetRepositoryImpl();
-    private static CatRepository catRepository = new CatRepositoryImpl();
-    private static DogRepository dogRepository = new DogRepositoryImpl();
-    private static CatValidator catValidator = new CatValidator(catRepository);
-    private static DogValidator dogValidator = new DogValidator(dogRepository);
-    private static UserValidator userValidator = new UserValidator(userRepository, catValidator, dogValidator);
-    private static PetService petService = new PetServiceImpl(petRepository);
-    private static DogService dogService = new DogServiceImpl(dogRepository);
-    private static CatService catService = new CatServiceImpl(catRepository);
-    private static UserService userService = new UserServiceImpl(userRepository, userValidator);
 
 }

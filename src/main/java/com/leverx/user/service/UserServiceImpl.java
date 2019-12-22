@@ -20,8 +20,8 @@ import static java.lang.Integer.parseInt;
 @AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
     private final UserValidator validator;
+    private UserRepository userRepository;
 
     @Override
     public Collection<UserOutputDto> findAll() {
