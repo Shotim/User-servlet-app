@@ -1,24 +1,17 @@
 package com.leverx.cat.repository;
 
 import com.leverx.cat.entity.Cat;
-import com.leverx.pet.repository.PetGenericRepository;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface CatRepository extends PetGenericRepository {
+public interface CatRepository {
 
-    default Collection<Cat> findAll() {
-        return PetGenericRepository.super.findAll(Cat.class);
-    }
+    Collection<Cat> findAll();
 
-    default Optional<Cat> findById(int id) {
-        return PetGenericRepository.super.findById(id, Cat.class);
-    }
+    Optional<Cat> findById(int id);
 
-    default Collection<Cat> findByOwner(int ownerId) {
-        return PetGenericRepository.super.findByOwner(ownerId, Cat.class);
-    }
+    Collection<Cat> findByOwner(int ownerId);
 
     Optional<Cat> save(Cat cat);
 }

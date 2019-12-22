@@ -1,24 +1,17 @@
 package com.leverx.dog.repository;
 
 import com.leverx.dog.entity.Dog;
-import com.leverx.pet.repository.PetGenericRepository;
 
 import java.util.Collection;
 import java.util.Optional;
 
-public interface DogRepository extends PetGenericRepository {
+public interface DogRepository {
 
-    default Collection<Dog> findAll() {
-        return PetGenericRepository.super.findAll(Dog.class);
-    }
+    Collection<Dog> findAll();
 
-    default Optional<Dog> findById(int id) {
-        return PetGenericRepository.super.findById(id, Dog.class);
-    }
+    Optional<Dog> findById(int id);
 
-    default Collection<Dog> findByOwner(int ownerId) {
-        return PetGenericRepository.super.findByOwner(ownerId, Dog.class);
-    }
+    Collection<Dog> findByOwner(int ownerId);
 
     Optional<Dog> save(Dog cat);
 }
