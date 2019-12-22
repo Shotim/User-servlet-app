@@ -4,17 +4,18 @@ import com.leverx.credentialsLoader.DBCredentialsLoader;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import java.util.Map;
-import java.util.ServiceLoader;
+
+import static java.util.ServiceLoader.load;
+import static javax.persistence.Persistence.createEntityManagerFactory;
 
 public class EntityManagerFactoryConfig {
 
     private static final String PERSISTENCE_UNIT_NAME = "Persistence";
     private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
 
-    public static void createEntityManagerFactory() {
-        ENTITY_MANAGER_FACTORY = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getProperties());
+    public static void getEntityManagerFactory() {
+        ENTITY_MANAGER_FACTORY = createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getProperties());
     }
 
     public static EntityManager getEntityManager() {
@@ -26,7 +27,7 @@ public class EntityManagerFactoryConfig {
     }
 
     private static Map<String, String> getProperties() {
-        var loader = ServiceLoader.load(DBCredentialsLoader.class);
+        var loader = load(DBCredentialsLoader.class);
         var dbCredentialsLoader = loader.findFirst().orElseThrow();
         return dbCredentialsLoader.getDBProperties();
     }

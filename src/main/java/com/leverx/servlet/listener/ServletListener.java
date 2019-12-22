@@ -8,7 +8,7 @@ import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
 import static com.leverx.config.EntityManagerFactoryConfig.closeEntityManagerFactory;
-import static com.leverx.config.EntityManagerFactoryConfig.createEntityManagerFactory;
+import static com.leverx.config.EntityManagerFactoryConfig.getEntityManagerFactory;
 import static java.util.Locale.setDefault;
 
 @Slf4j
@@ -33,7 +33,7 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         log.info("Context initialized.");
-        createEntityManagerFactory();
+        getEntityManagerFactory();
         log.info("EntityManagerFactory is created");
     }
 
