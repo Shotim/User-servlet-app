@@ -16,11 +16,14 @@ public class CatValidator {
 
     public static Optional<String> validateCatsIds(Collection<Integer> catsIds) {
 
-        String validationErrors = catsIds.stream()
+        var validationErrors = catsIds.stream()
                 .map(CatValidator::getValidationErrors)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.joining(";\n"));
+                .collect(Collectors.joining("; "));
+        if (validationErrors.isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.of(validationErrors);
     }
 

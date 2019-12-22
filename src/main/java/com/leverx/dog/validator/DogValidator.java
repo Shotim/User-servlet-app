@@ -16,11 +16,14 @@ public class DogValidator {
 
     public static Optional<String> validateDogsIds(Collection<Integer> dogsIds) {
 
-        String validationErrors = dogsIds.stream()
+        var validationErrors = dogsIds.stream()
                 .map(DogValidator::getValidationErrors)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
-                .collect(Collectors.joining(";\n"));
+                .collect(Collectors.joining("; "));
+        if (validationErrors.isEmpty()) {
+            return Optional.empty();
+        }
         return Optional.of(validationErrors);
     }
 

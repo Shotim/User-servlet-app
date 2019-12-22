@@ -59,12 +59,16 @@ public class UserValidator {
         var errorsList = new ArrayList<Optional<String>>();
         var errors = validator.validate(pointsTransferDto);
         errorsList.add(errors);
-        var notExistError = validateRecipientExistence(pointsTransferDto);
-        errorsList.add(notExistError);
+        var senderExistence = validateSenderExistence(senderId);
+        errorsList.add(senderExistence);
+        var recipientExistence = validateRecipientExistence(pointsTransferDto);
+        errorsList.add(recipientExistence);
         var equalIdsError = validateSenderAndRecipientEqualId(senderId, pointsTransferDto);
         errorsList.add(equalIdsError);
-        var balanceError = validatePointsBalance(senderId, pointsTransferDto);
-        errorsList.add(balanceError);
+        if (recipientExistence.isPresent()) {
+            var balanceError = validatePointsBalance(senderId, pointsTransferDto);
+            errorsList.add(balanceError);
+        }
         String message = createMessageFromList(errorsList);
         if (!message.isEmpty()) {
             throw new ValidationFailedException(message);
@@ -114,11 +118,10 @@ public class UserValidator {
 
     private Optional<String> validateRecipientExistence(PointsTransferDto pointsTransferDto) {
         var recipientId = pointsTransferDto.getRecipientId();
-        var user = userRepository.findById(recipientId);
-        if (user.isPresent()) {
-            return Optional.empty();
-        }
-        String message = getLocalizedMessage(USER_NOT_FOUND);
-        return Optional.of(message);
+        return validateUserId(recipientId);
+    }
+
+    private Optional<String> validateSenderExistence(String senderId) {
+        return validateUserId(parseInt(senderId));
     }
 }
