@@ -30,6 +30,5 @@ public class DogInputDto {
     @JsonDeserialize(using = LocalDateDeserializer.class)
     LocalDate dateOfBirth;
 
-    @NotNull
     boolean isCutEars;
 }

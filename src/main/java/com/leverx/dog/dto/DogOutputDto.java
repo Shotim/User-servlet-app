@@ -6,7 +6,6 @@ import com.leverx.pet.dto.PetOutputDto;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
 @Getter
@@ -14,7 +13,6 @@ import java.time.LocalDate;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class DogOutputDto extends PetOutputDto {
 
-    @NotNull
     boolean isCutEars;
 
     public DogOutputDto(int id, String name, LocalDate dateOfBirth) {
