@@ -33,7 +33,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/13",
+							"raw": "http://localhost:8080/users/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -41,7 +41,7 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"13"
+								"1"
 							]
 						}
 					},
@@ -53,16 +53,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/Stas",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"users",
-								"Stas"
-							]
+							"raw": ""
 						}
 					},
 					"response": []
@@ -73,7 +64,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/2/cats",
+							"raw": "http://localhost:8080/users/1/cats",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -81,7 +72,7 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"2",
+								"1",
 								"cats"
 							]
 						}
@@ -140,11 +131,16 @@
 								"name": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "en-US",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"NewPersonWoow\",\n\t\"catsIds\":[4,5],\n\t\"dogsIds\":[3,6,7]\n}",
+							"raw": "{\n\t\"name\":\"Noweqwert\",\n\t\"email\":\"qwerty@qwerty\",\n\t\"animalPoints\": 78,\n\t\"catsIds\":[1],\n\t\"dogsIds\":[2]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -171,7 +167,7 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users/15",
+							"raw": "http://localhost:8080/users/4",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -179,7 +175,7 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"15"
+								"4"
 							]
 						}
 					},
@@ -195,11 +191,16 @@
 								"name": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "ru-RU",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Updated4\"\n\t\"catsIds\":[],\n\t\"dogsIds\":[]\n}",
+							"raw": "{\n\t\"name\":\"Updated4\",\n\t\"email\":\"qwert@qwer\",\n\t\"animalPoints\": 78,\n\t\"catsIds\":[1],\n\t\"dogsIds\":[2]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -207,7 +208,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/4",
+							"raw": "http://localhost:8080/users/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -215,7 +216,49 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"4"
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TransferAnimalPoints",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"recipientId\": 1,\n\t\"animalPoints\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/users/5?action=transferPoints",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users",
+								"5"
+							],
+							"query": [
+								{
+									"key": "action",
+									"value": "transferPoints"
+								}
 							]
 						}
 					},
@@ -252,7 +295,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/cats/4",
+							"raw": "http://localhost:8080/cats/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -260,7 +303,7 @@
 							"port": "8080",
 							"path": [
 								"cats",
-								"4"
+								"1"
 							]
 						}
 					},
@@ -276,11 +319,16 @@
 								"name": "Content-Type",
 								"value": "application/json",
 								"type": "text"
+							},
+							{
+								"key": "Accept-Language",
+								"value": "ru-RU",
+								"type": "text"
 							}
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\":\"Caaaaaaaaat\",\n\t\"dateOfBirth\":\"2019-09-03\",\n\t\"miceCaughtNumber\": \"13\"\n}",
+							"raw": "{\n\t\"name\":\"Caaaaaaaaat\",\n\t\"dateOfBirth\":\"2019-09-03\",\n\t\"miceCaughtNumber\": \"-13\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -332,7 +380,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/dogs/3",
+							"raw": "http://localhost:8080/dogs/2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -340,7 +388,7 @@
 							"port": "8080",
 							"path": [
 								"dogs",
-								"3"
+								"2"
 							]
 						}
 					},
@@ -410,7 +458,14 @@
 					"name": "Get pet by id",
 					"request": {
 						"method": "GET",
-						"header": [],
+						"header": [
+							{
+								"key": "Accept-Language",
+								"value": "en",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"url": {
 							"raw": "http://localhost:8080/pets/1",
 							"protocol": "http",

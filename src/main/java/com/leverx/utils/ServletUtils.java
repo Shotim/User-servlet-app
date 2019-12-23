@@ -23,6 +23,7 @@ import static com.leverx.utils.RequestURLUtils.getEntityReceivedClass;
 import static com.leverx.utils.RequestURLUtils.getLastStringElement;
 import static com.leverx.utils.RequestURLUtils.getPreLastStringElement;
 import static com.leverx.utils.RequestURLUtils.getSplittedUrl;
+import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
@@ -32,6 +33,7 @@ public class ServletUtils {
     private static final String CATS = "cats";
     private static final String DOGS = "dogs";
     private static final String PETS = "pets";
+    private static final String USER_NAME = "name";
 
     public static void printValidationErrorMessages(HttpServletResponse response, ValidationFailedException e) throws IOException {
         var messagesJson = fromEntityToJson(e.getMessage());
@@ -62,7 +64,10 @@ public class ServletUtils {
         var splittedUrl = getSplittedUrl(request);
         var lastElement = getLastStringElement(splittedUrl);
 
-        if (isParsable(lastElement)) {
+        var parameter = request.getParameter(USER_NAME);
+        if (nonNull(parameter)) {
+            methodTypePlusRequiredVar.setValues(GET_USER_BY_NAME, parameter);
+        } else if (isParsable(lastElement)) {
             String entityClass = getEntityReceivedClass(splittedUrl).orElseThrow();
             if (USERS.equals(entityClass)) {
                 methodTypePlusRequiredVar.setValues(GET_USER_BY_ID, lastElement);
@@ -84,7 +89,6 @@ public class ServletUtils {
                     userId = getPreLastStringElement(splittedUrl);
                     methodTypePlusRequiredVar.setValues(GET_PETS_OF_USER, userId);
                 }
-                default -> methodTypePlusRequiredVar.setValues(GET_USER_BY_NAME, lastElement);
             }
         }
         return methodTypePlusRequiredVar;
