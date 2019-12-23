@@ -1,69 +1,76 @@
 package com.leverx.user.service;
 
+import com.leverx.exception.ElementNotFoundException;
+import com.leverx.exception.ValidationFailedException;
+import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
-import com.leverx.user.entity.User;
+import com.leverx.user.dto.converter.UserDtoConverter;
 import com.leverx.user.repository.UserRepository;
-import com.leverx.user.repository.UserRepositoryImpl;
-import lombok.extern.slf4j.Slf4j;
+import com.leverx.user.validator.UserValidator;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
-import java.util.NoSuchElementException;
 
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserCollectionToUserOutputDtoCollection;
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserInputDtoToUser;
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserToUserOutputDto;
-import static com.leverx.validator.EntityValidator.isValid;
 import static java.lang.Integer.parseInt;
-import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 
-@Slf4j
+
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository = new UserRepositoryImpl();
+    private UserValidator validator;
+    private UserRepository userRepository;
+    private UserDtoConverter converter;
 
     @Override
     public Collection<UserOutputDto> findAll() {
-        Collection<User> users = userRepository.findAll();
-        return convertUserCollectionToUserOutputDtoCollection(users);
+        var users = userRepository.findAll();
+        return converter.userCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
-    public UserOutputDto findById(int id) throws NoSuchElementException {
+    public UserOutputDto findById(int id) throws ElementNotFoundException {
         var optionalUser = userRepository.findById(id);
-        var user = optionalUser.orElseThrow();
-        return convertUserToUserOutputDto(user);
+        var user = optionalUser.orElseThrow(ElementNotFoundException::new);
+        return converter.userToUserOutputDto(user);
     }
 
     @Override
     public Collection<UserOutputDto> findByName(String name) {
         var users = userRepository.findByName(name);
-        return convertUserCollectionToUserOutputDtoCollection(users);
+        return converter.userCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
-    public UserOutputDto save(UserInputDto userInputDto) {
-        User user = convertUserInputDtoToUser(userInputDto);
-        userRepository.save(user);
-        return convertUserToUserOutputDto(user);
+    public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
+        validator.validateCreateUser(userInputDto);
+        var user = converter.userInputDtoToUser(userInputDto);
+        userRepository.save(user).orElseThrow();
+        return converter.userToUserOutputDto(user);
     }
 
     @Override
     public void deleteById(String id) {
-        if (isParsable(id)) {
-            int parsedId = parseInt(id);
-            userRepository.deleteById(parsedId);
-        } else {
-            log.debug("User was not updated. Check if id was correct");
-        }
+        var parsedId = parseInt(id);
+        userRepository.deleteById(parsedId);
     }
 
     @Override
-    public UserOutputDto updateById(String id, UserInputDto userInputDto) {
+    public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
+        validator.validateUpdateUser(parseInt(id), userInputDto);
         var userId = parseInt(id);
-        User user = convertUserInputDtoToUser(userId, userInputDto);
-        isValid(userInputDto);
+        var user = converter.userInputDtoToUser(userId, userInputDto);
+        user.getPets().forEach(pet -> pet.getOwners().add(user));
         userRepository.update(user);
-        return convertUserToUserOutputDto(user);
+    }
+
+    //TODO: not finished
+    @Override
+    public void pointsTransfer(String senderIdStr, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
+        validator.validatePointsTransfer(senderIdStr, pointsTransferDto);
+        var senderId = parseInt(senderIdStr);
+        var recipientId = pointsTransferDto.getRecipientId();
+        var animalPoints = pointsTransferDto.getAnimalPoints();
+        userRepository.pointsTransfer(senderId, recipientId, animalPoints);
     }
 }

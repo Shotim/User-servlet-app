@@ -11,10 +11,11 @@ import javax.servlet.ServletResponse;
 import java.io.IOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 
 @Slf4j
 public class ServletFilter implements Filter {
+
+    private static final String APPLICATION_JSON = "application/json";
 
     @Override
     public void init(FilterConfig filterConfig) {

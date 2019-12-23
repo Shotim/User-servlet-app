@@ -1,41 +1,24 @@
 package com.leverx.cat.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
-import com.leverx.user.dto.UserOutputDto;
-import lombok.AllArgsConstructor;
+import com.leverx.pet.dto.PetOutputDto;
 import lombok.Getter;
+import lombok.Setter;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
 
-import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
-import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
-import static com.leverx.validator.EntityValidator.NOT_VALID_NAME;
+import static com.fasterxml.jackson.annotation.ObjectIdGenerators.PropertyGenerator;
 
 @Getter
-@AllArgsConstructor
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class CatOutputDto {
+@Setter
+@JsonIdentityInfo(generator = PropertyGenerator.class, property = "id")
+public class CatOutputDto extends PetOutputDto {
 
-    int id;
+    @PositiveOrZero
+    int miceCaughtNumber;
 
-    @NotNull
-    @Size(min = 5, max = 60, message = NOT_VALID_NAME)
-    String name;
-
-    @NotNull
-    @PastOrPresent
-    @JsonSerialize(using = LocalDateSerializer.class)
-    @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
-    LocalDate dateOfBirth;
-
-    @JsonInclude(NON_NULL)
-    UserOutputDto owner;
+    public CatOutputDto(int id, String name, LocalDate dateOfBirth) {
+        super(id, name, dateOfBirth);
+    }
 }

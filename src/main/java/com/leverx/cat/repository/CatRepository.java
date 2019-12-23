@@ -9,11 +9,9 @@ public interface CatRepository {
 
     Collection<Cat> findAll();
 
-    Collection<Cat> findByOwner(int ownerId);
-
     Optional<Cat> findById(int id);
 
-    Optional<Cat> save(Cat cat);
+    Collection<Cat> findByOwner(int ownerId);
 
-    Optional<Cat> update(Cat cat);
+    Optional<Cat> save(Cat cat);
 }
