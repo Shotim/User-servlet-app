@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.factory.BeanFactory.getCatService;
-import static com.leverx.factory.BeanFactory.getDogService;
-import static com.leverx.factory.BeanFactory.getPetService;
-import static com.leverx.factory.BeanFactory.getUserService;
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.factory.beanFactory.BeanFactory.getCatService;
+import static com.leverx.factory.beanFactory.BeanFactory.getDogService;
+import static com.leverx.factory.beanFactory.BeanFactory.getPetService;
+import static com.leverx.factory.beanFactory.BeanFactory.getUserService;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;

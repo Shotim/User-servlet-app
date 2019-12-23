@@ -5,15 +5,13 @@ import com.leverx.exception.ValidationFailedException;
 import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
+import com.leverx.user.dto.converter.UserDtoConverter;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.validator.UserValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 
-import static com.leverx.user.dto.converter.UserDtoConverter.userCollectionToUserOutputDtoCollection;
-import static com.leverx.user.dto.converter.UserDtoConverter.userInputDtoToUser;
-import static com.leverx.user.dto.converter.UserDtoConverter.userToUserOutputDto;
 import static java.lang.Integer.parseInt;
 
 
@@ -22,32 +20,33 @@ public class UserServiceImpl implements UserService {
 
     private UserValidator validator;
     private UserRepository userRepository;
+    private UserDtoConverter converter;
 
     @Override
     public Collection<UserOutputDto> findAll() {
         var users = userRepository.findAll();
-        return userCollectionToUserOutputDtoCollection(users);
+        return converter.userCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
     public UserOutputDto findById(int id) throws ElementNotFoundException {
         var optionalUser = userRepository.findById(id);
         var user = optionalUser.orElseThrow(ElementNotFoundException::new);
-        return userToUserOutputDto(user);
+        return converter.userToUserOutputDto(user);
     }
 
     @Override
     public Collection<UserOutputDto> findByName(String name) {
         var users = userRepository.findByName(name);
-        return userCollectionToUserOutputDtoCollection(users);
+        return converter.userCollectionToUserOutputDtoCollection(users);
     }
 
     @Override
     public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
         validator.validateCreateUser(userInputDto);
-        var user = userInputDtoToUser(userInputDto);
+        var user = converter.userInputDtoToUser(userInputDto);
         userRepository.save(user).orElseThrow();
-        return userToUserOutputDto(user);
+        return converter.userToUserOutputDto(user);
     }
 
     @Override
@@ -60,7 +59,7 @@ public class UserServiceImpl implements UserService {
     public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
         validator.validateUpdateUser(parseInt(id), userInputDto);
         var userId = parseInt(id);
-        var user = userInputDtoToUser(userId, userInputDto);
+        var user = converter.userInputDtoToUser(userId, userInputDto);
         user.getPets().forEach(pet -> pet.getOwners().add(user));
         userRepository.update(user);
     }

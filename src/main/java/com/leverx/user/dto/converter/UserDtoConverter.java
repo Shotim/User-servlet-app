@@ -1,27 +1,28 @@
 package com.leverx.user.dto.converter;
 
 import com.leverx.cat.repository.CatRepository;
-import com.leverx.cat.repository.CatRepositoryImpl;
 import com.leverx.dog.repository.DogRepository;
-import com.leverx.dog.repository.DogRepositoryImpl;
+import com.leverx.pet.dto.converter.PetDtoConverter;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.entity.User;
+import lombok.AllArgsConstructor;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static com.leverx.pet.dto.converter.PetDtoConverter.petCollectionToPetOutputDtoCollection;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
+@AllArgsConstructor
 public class UserDtoConverter {
 
-    private static final CatRepository catRepository = new CatRepositoryImpl();
-    private static final DogRepository dogRepository = new DogRepositoryImpl();
+    private CatRepository catRepository;
+    private DogRepository dogRepository;
+    private final PetDtoConverter converter = new PetDtoConverter();
 
-    public static User userInputDtoToUser(int id, UserInputDto userInputDto) {
+    public User userInputDtoToUser(int id, UserInputDto userInputDto) {
         var name = userInputDto.getName();
         var email = userInputDto.getEmail();
         var animalPoints = userInputDto.getAnimalPoints();
@@ -38,23 +39,23 @@ public class UserDtoConverter {
         return new User(id, name, email, animalPoints, pets);
     }
 
-    public static User userInputDtoToUser(UserInputDto userInputDto) {
+    public User userInputDtoToUser(UserInputDto userInputDto) {
         var DEFAULT_USER_ID = 0;
         return userInputDtoToUser(DEFAULT_USER_ID, userInputDto);
     }
 
-    public static UserOutputDto userToUserOutputDto(User user) {
+    public UserOutputDto userToUserOutputDto(User user) {
         var id = user.getId();
         var name = user.getName();
         var email = user.getEmail();
         var animalPoints = user.getAnimalPoints();
-        var pets = nonNull(user.getPets()) ? petCollectionToPetOutputDtoCollection(user.getPets()) : null;
+        var pets = nonNull(user.getPets()) ? converter.petCollectionToPetOutputDtoCollection(user.getPets()) : null;
         return new UserOutputDto(id, name, email, animalPoints, pets);
     }
 
-    public static Collection<UserOutputDto> userCollectionToUserOutputDtoCollection(Collection<User> users) {
+    public Collection<UserOutputDto> userCollectionToUserOutputDtoCollection(Collection<User> users) {
         return users.stream()
-                .map(UserDtoConverter::userToUserOutputDto)
+                .map(this::userToUserOutputDto)
                 .collect(toList());
     }
 }

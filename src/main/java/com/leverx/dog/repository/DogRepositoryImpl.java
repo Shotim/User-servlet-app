@@ -26,90 +26,6 @@ import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
 @Slf4j
 public class DogRepositoryImpl implements DogRepository {
 
-    @Override
-    public Collection<Dog> findAll() {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var dogs= getAllDogs(entityManager);
-            transaction.commit();
-            log.debug("{} dogswere found in db", dogs.size());
-            return dogs;
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
-            throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public Optional<Dog> findById(int id) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var dog = getDogById(id, entityManager);
-            transaction.commit();
-            log.debug("Dog with id = {} was found in db", id);
-            return Optional.of(dog);
-        } catch (NoResultException e) {
-            commitTransactionIfActive(transaction);
-            log.debug("Dog with id = {} was not found in db", id);
-            return Optional.empty();
-
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
-            throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public Collection<Dog> findByOwner(int ownerId) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var dogs= retrieveDogsByOwner(ownerId, entityManager);
-            transaction.commit();
-            log.debug("Dog with ownerId = {} were found in db", ownerId);
-            return dogs;
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
-            throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
-    public Optional<Dog> save(Dog cat) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            entityManager.persist(cat);
-            transaction.commit();
-            log.debug("Dog was saved");
-            return Optional.of(cat);
-        } catch (RuntimeException e) {
-            log.error(e.getMessage());
-            rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e.getMessage());
-        } finally {
-            entityManager.close();
-        }
-    }
-
     private static CriteriaQuery<Dog> getDogCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
 
         var builder = entityManager.getCriteriaBuilder();
@@ -162,5 +78,89 @@ public class DogRepositoryImpl implements DogRepository {
                 .where(idEqualToOwnerId);
         var query = entityManager.createQuery(criteriaQuery);
         return query.getResultList();
+    }
+
+    @Override
+    public Collection<Dog> findAll() {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            var dogs = getAllDogs(entityManager);
+            transaction.commit();
+            log.debug("{} dogswere found in db", dogs.size());
+            return dogs;
+        } catch (RuntimeException e) {
+            rollbackTransactionIfActive(transaction);
+            log.error(e.getMessage());
+            throw new InternalServerErrorException(e.getMessage());
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public Optional<Dog> findById(int id) {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            var dog = getDogById(id, entityManager);
+            transaction.commit();
+            log.debug("Dog with id = {} was found in db", id);
+            return Optional.of(dog);
+        } catch (NoResultException e) {
+            commitTransactionIfActive(transaction);
+            log.debug("Dog with id = {} was not found in db", id);
+            return Optional.empty();
+
+        } catch (RuntimeException e) {
+            rollbackTransactionIfActive(transaction);
+            log.error(e.getMessage());
+            throw new InternalServerErrorException(e.getMessage());
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public Collection<Dog> findByOwner(int ownerId) {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            var dogs = retrieveDogsByOwner(ownerId, entityManager);
+            transaction.commit();
+            log.debug("Dog with ownerId = {} were found in db", ownerId);
+            return dogs;
+        } catch (RuntimeException e) {
+            rollbackTransactionIfActive(transaction);
+            log.error(e.getMessage());
+            throw new InternalServerErrorException(e.getMessage());
+
+        } finally {
+            entityManager.close();
+        }
+    }
+
+    @Override
+    public Optional<Dog> save(Dog cat) {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            entityManager.persist(cat);
+            transaction.commit();
+            log.debug("Dog was saved");
+            return Optional.of(cat);
+        } catch (RuntimeException e) {
+            log.error(e.getMessage());
+            rollbackTransactionIfActive(transaction);
+            throw new InternalServerErrorException(e.getMessage());
+        } finally {
+            entityManager.close();
+        }
     }
 }

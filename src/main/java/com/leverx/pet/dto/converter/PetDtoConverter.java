@@ -12,18 +12,18 @@ import static java.util.stream.Collectors.toList;
 
 public class PetDtoConverter {
 
-    public static PetOutputDto petToPetOutputDto(Pet pet) {
+    public PetOutputDto petToPetOutputDto(Pet pet) {
 
         return petToPetOutputDto(pet, PetOutputDto.class);
     }
 
-    public static Collection<PetOutputDto> petCollectionToPetOutputDtoCollection(Collection<Pet> pets) {
+    public Collection<PetOutputDto> petCollectionToPetOutputDtoCollection(Collection<Pet> pets) {
         return pets.stream()
-                .map(PetDtoConverter::petToPetOutputDto)
+                .map(this::petToPetOutputDto)
                 .collect(toList());
     }
 
-    public static <T extends Pet, TOutputDto extends PetOutputDto> TOutputDto petToPetOutputDto(T pet, Class<TOutputDto> tOutputDtoClass) {
+    public <T extends Pet, TOutputDto extends PetOutputDto> TOutputDto petToPetOutputDto(T pet, Class<TOutputDto> tOutputDtoClass) {
         var id = pet.getId();
         var name = pet.getName();
         var dateOfBirth = pet.getDateOfBirth();

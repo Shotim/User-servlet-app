@@ -11,9 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.factory.BeanFactory.getCatService;
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.factory.beanFactory.BeanFactory.getCatService;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
 import static com.leverx.utils.ServletUtils.readJsonBody;
