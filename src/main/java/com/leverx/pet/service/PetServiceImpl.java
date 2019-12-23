@@ -1,6 +1,6 @@
 package com.leverx.pet.service;
 
-import com.leverx.exception.ElementNotFoundException;
+import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.pet.dto.PetOutputDto;
 import com.leverx.pet.dto.converter.PetDtoConverter;
 import com.leverx.pet.repository.PetRepository;

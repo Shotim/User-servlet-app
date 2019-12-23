@@ -1,9 +1,9 @@
-package com.leverx.exception;
+package com.leverx.core.exception;
 
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
-import static com.leverx.exception.ErrorCode.ELEMENT_NOT_FOUND;
+import static com.leverx.core.exception.ErrorCode.ELEMENT_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static lombok.AccessLevel.PRIVATE;
 

@@ -1,6 +1,6 @@
 package com.leverx.utils;
 
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.MethodTypePlusRequiredVar;
 

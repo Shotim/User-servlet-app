@@ -1,9 +1,9 @@
-package com.leverx.exception;
+package com.leverx.core.exception;
 
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
-import static com.leverx.exception.ErrorCode.VALIDATION_FAILED;
+import static com.leverx.core.exception.ErrorCode.VALIDATION_FAILED;
 import static lombok.AccessLevel.PRIVATE;
 
 @FieldDefaults(level = PRIVATE)

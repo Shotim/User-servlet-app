@@ -4,8 +4,8 @@ import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.dto.DogOutputDto;
 import com.leverx.dog.dto.converter.DogDtoConverter;
 import com.leverx.dog.repository.DogRepository;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 

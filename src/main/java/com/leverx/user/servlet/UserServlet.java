@@ -2,8 +2,8 @@ package com.leverx.user.servlet;
 
 import com.leverx.cat.service.CatService;
 import com.leverx.dog.service.DogService;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.pet.service.PetService;
 import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;

@@ -1,6 +1,6 @@
 package com.leverx.user.repository;
 
-import com.leverx.exception.InternalServerErrorException;
+import com.leverx.core.exception.InternalServerErrorException;
 import com.leverx.user.entity.User;
 import com.leverx.user.entity.User_;
 import lombok.extern.slf4j.Slf4j;

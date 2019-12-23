@@ -1,6 +1,6 @@
 package com.leverx.validator;
 
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.validation.ConstraintViolation;

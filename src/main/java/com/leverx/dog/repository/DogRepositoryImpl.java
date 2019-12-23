@@ -2,7 +2,7 @@ package com.leverx.dog.repository;
 
 import com.leverx.dog.entity.Dog;
 import com.leverx.dog.entity.Dog_;
-import com.leverx.exception.InternalServerErrorException;
+import com.leverx.core.exception.InternalServerErrorException;
 import com.leverx.pet.entity.Pet;
 import com.leverx.pet.entity.Pet_;
 import com.leverx.user.entity.User_;

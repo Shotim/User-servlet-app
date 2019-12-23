@@ -2,8 +2,8 @@ package com.leverx.dog.servlet;
 
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.service.DogService;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;

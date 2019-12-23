@@ -1,7 +1,7 @@
 package com.leverx.user.service;
 
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;

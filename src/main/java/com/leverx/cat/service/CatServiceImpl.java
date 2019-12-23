@@ -4,8 +4,8 @@ import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.dto.converter.CatDtoConverter;
 import com.leverx.cat.repository.CatRepository;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 

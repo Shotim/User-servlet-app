@@ -1,9 +1,9 @@
-package com.leverx.exception;
+package com.leverx.core.exception;
 
 import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
-import static com.leverx.exception.ErrorCode.INTERNAL_SERVER_ERROR;
+import static com.leverx.core.exception.ErrorCode.INTERNAL_SERVER_ERROR;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static lombok.AccessLevel.PRIVATE;
 

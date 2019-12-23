@@ -1,4 +1,4 @@
-package com.leverx.exception;
+package com.leverx.core.exception;
 
 public class ErrorCode {
 
