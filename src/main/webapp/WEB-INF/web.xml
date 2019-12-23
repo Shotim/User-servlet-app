@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://xmlns.jcp.org/xml/ns/javaee"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
                       http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
@@ -15,6 +15,16 @@
         <servlet-class>com.leverx.cat.servlet.CatServlet</servlet-class>
     </servlet>
 
+    <servlet>
+        <servlet-name>DogServlet</servlet-name>
+        <servlet-class>com.leverx.dog.servlet.DogServlet</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PetServlet</servlet-name>
+        <servlet-class>com.leverx.pet.servlet.PetServlet</servlet-class>
+    </servlet>
+
     <servlet-mapping>
         <servlet-name>UserServlet</servlet-name>
         <url-pattern>/users</url-pattern>
@@ -27,6 +37,18 @@
         <url-pattern>/cats/*</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>DogServlet</servlet-name>
+        <url-pattern>/dogs</url-pattern>
+        <url-pattern>/dogs/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PetServlet</servlet-name>
+        <url-pattern>/pets</url-pattern>
+        <url-pattern>/pets/*</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>ServletFilter</filter-name>
         <filter-class>com.leverx.servlet.filter.ServletFilter</filter-class>
@@ -37,6 +59,10 @@
         <url-pattern>/users/*</url-pattern>
         <url-pattern>/cats</url-pattern>
         <url-pattern>/cats/*</url-pattern>
+        <url-pattern>/dogs</url-pattern>
+        <url-pattern>/dogs/*</url-pattern>
+        <url-pattern>/pets</url-pattern>
+        <url-pattern>/pets/*</url-pattern>
     </filter-mapping>
 
     <listener>

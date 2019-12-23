@@ -24,6 +24,7 @@
         <hibernate.version>5.4.9.Final</hibernate.version>
         <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
         <jackson.version>2.10.1</jackson.version>
+        <reflections.version>0.9.11</reflections.version>
     </properties>
 
     <dependencies>
@@ -32,12 +33,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${apache.commoms.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>javax.ws.rs</groupId>
-            <artifactId>javax.ws.rs-api</artifactId>
-            <version>${javax.ws.version}</version>
         </dependency>
 
         <dependency>
@@ -97,5 +92,35 @@
             <version>${hibernate.validator.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+            <version>${hibernate.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.reflections</groupId>
+            <artifactId>reflections</artifactId>
+            <version>${reflections.version}</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.8.0</version>
+                    <configuration>
+                        <release>13</release>
+                        <compilerArgs>
+                            --enable-preview
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>

@@ -3,39 +3,34 @@ package com.leverx.cat.dto.converter;
 import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.entity.Cat;
+import com.leverx.pet.dto.converter.PetDtoConverter;
 
 import java.util.Collection;
 
-import static com.leverx.user.dto.converter.UserDtoConverter.convertUserToUserOutputDto;
-import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.toList;
 
 public class CatDtoConverter {
 
-    public static Cat convertCatInputDtoToCat(CatInputDto catInputDto) {
+    private final PetDtoConverter converter = new PetDtoConverter();
+
+    public Cat catInputDtoToCat(CatInputDto catInputDto) {
         var name = catInputDto.getName();
         var dateOfBirth = catInputDto.getDateOfBirth();
-        return new Cat(name, dateOfBirth);
+        int miceCaughtNumber = catInputDto.getMiceCaughtNumber();
+        return new Cat(name, dateOfBirth, miceCaughtNumber);
     }
 
-    public static CatOutputDto convertCatToCatOutputDto(Cat cat) {
-        var id = cat.getId();
-        var name = cat.getName();
-        var dateOfBirth = cat.getDateOfBirth();
-        var owner = nonNull(cat.getOwner()) ? convertUserToUserOutputDto(cat.getOwner()) : null;
-        return new CatOutputDto(id, name, dateOfBirth, owner);
+    public CatOutputDto catToCatOutputDto(Cat cat) {
+        var catOutputDto = converter.petToPetOutputDto(cat, CatOutputDto.class);
+        var miceCaughtNumber = cat.getMiceCaughtNumber();
+        catOutputDto.setMiceCaughtNumber(miceCaughtNumber);
+
+        return catOutputDto;
     }
 
-    public static CatOutputDto convertCatToCatOutputDtoWithoutOwner(Cat cat) {
-        var id = cat.getId();
-        var name = cat.getName();
-        var dateOfBirth = cat.getDateOfBirth();
-        return new CatOutputDto(id, name, dateOfBirth, null);
-    }
-
-    public static Collection<CatOutputDto> convertCatCollectionToCatOutputDtoCollection(Collection<Cat> cats) {
+    public Collection<CatOutputDto> catCollectionToCatOutputDtoCollection(Collection<Cat> cats) {
         return cats.stream()
-                .map(CatDtoConverter::convertCatToCatOutputDtoWithoutOwner)
+                .map(this::catToCatOutputDto)
                 .collect(toList());
     }
 }

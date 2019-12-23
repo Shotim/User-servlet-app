@@ -8,11 +8,10 @@ import static java.util.Objects.nonNull;
 public class RepositoryUtils {
 
     public static EntityTransaction beginTransaction(EntityManager entityManager) {
-        EntityTransaction transaction = entityManager.getTransaction();
+        var transaction = entityManager.getTransaction();
         transaction.begin();
         return transaction;
     }
-
 
     public static void rollbackTransactionIfActive(EntityTransaction transaction) {
         if (nonNull(transaction) && transaction.isActive()) {

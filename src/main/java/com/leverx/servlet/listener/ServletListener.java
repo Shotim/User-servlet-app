@@ -2,29 +2,23 @@ package com.leverx.servlet.listener;
 
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+
+import static com.leverx.config.EntityManagerFactoryConfig.closeEntityManagerFactory;
+import static com.leverx.config.EntityManagerFactoryConfig.getEntityManagerFactory;
+import static java.util.Locale.setDefault;
 
 @Slf4j
 public class ServletListener implements ServletRequestListener, ServletContextListener {
 
-    public static final String PERSISTENCE_UNIT_NAME = "Persistence";
-    private static EntityManagerFactory entityManagerFactory;
-
-    public static synchronized EntityManager getEntityManager() {
-        return entityManagerFactory.createEntityManager();
-    }
-
     @Override
     public void requestInitialized(ServletRequestEvent sre) {
-        ServletRequest request = sre.getServletRequest();
+        var request = sre.getServletRequest();
+        var locale = request.getLocale();
+        setDefault(locale);
         log.info("Request initialized");
         log.info("Protocol: {}", request.getProtocol());
         log.info("Context type: {}", request.getContentType());
@@ -38,16 +32,15 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        ServletContext context = sce.getServletContext();
-        entityManagerFactory = Persistence.createEntityManagerFactory(PERSISTENCE_UNIT_NAME);
-        log.info("Context was initialized");
-        log.info("Attributes: {}", context.getAttributeNames());
-        log.info("Server info: {}", context.getServerInfo());
+        log.info("Context initialized.");
+        getEntityManagerFactory();
+        log.info("EntityManagerFactory is created");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        entityManagerFactory.close();
-        log.info("Context was destroyed");
+        log.info("Context destroyed.");
+        closeEntityManagerFactory();
+        log.info("EntityManagerFactory is closed");
     }
 }

@@ -17,5 +17,7 @@ public interface UserRepository {
 
     void deleteById(int id);
 
-    Optional<User> update(User user);
+    void update(User user);
+
+    void pointsTransfer(int senderId, int recipientId, int points);
 }
