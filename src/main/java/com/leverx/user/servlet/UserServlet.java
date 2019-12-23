@@ -15,10 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.beanFactory.BeanFactory.getCatService;
-import static com.leverx.beanFactory.BeanFactory.getDogService;
-import static com.leverx.beanFactory.BeanFactory.getPetService;
-import static com.leverx.beanFactory.BeanFactory.getUserService;
+import static com.leverx.factory.BeanFactory.getCatService;
+import static com.leverx.factory.BeanFactory.getDogService;
+import static com.leverx.factory.BeanFactory.getPetService;
+import static com.leverx.factory.BeanFactory.getUserService;
 import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
@@ -88,6 +88,7 @@ public class UserServlet extends HttpServlet {
         response.setStatus(SC_NO_CONTENT);
     }
 
+    //TODO: pointsTransfer refactor
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
         var action = request.getParameter("action");

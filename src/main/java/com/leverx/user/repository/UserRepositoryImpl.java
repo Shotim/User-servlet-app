@@ -177,6 +177,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    //TODO: not finished points transfer
     @Override
     public void pointsTransfer(int senderId, int recipientId, int points) {
         var entityManager = getEntityManager();

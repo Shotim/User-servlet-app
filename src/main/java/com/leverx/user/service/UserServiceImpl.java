@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
         userRepository.update(user);
     }
 
+    //TODO: not finished
     @Override
     public void pointsTransfer(String senderIdStr, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
         validator.validatePointsTransfer(senderIdStr, pointsTransferDto);
