@@ -1,4 +1,4 @@
-package com.leverx.config;
+package com.leverx.core.config;
 
 import com.leverx.credentialsLoader.DBCredentialsLoader;
 

@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
 
-import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
-import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.converter.EntityJsonConverter.fromJsonToEntity;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromJsonToEntity;
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_DOGS_OF_USER;

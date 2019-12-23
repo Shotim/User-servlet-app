@@ -7,8 +7,8 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
 
-import static com.leverx.config.EntityManagerFactoryConfig.closeEntityManagerFactory;
-import static com.leverx.config.EntityManagerFactoryConfig.getEntityManagerFactory;
+import static com.leverx.core.config.EntityManagerFactoryConfig.closeEntityManagerFactory;
+import static com.leverx.core.config.EntityManagerFactoryConfig.getEntityManagerFactory;
 import static java.util.Locale.setDefault;
 
 @Slf4j

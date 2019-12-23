@@ -1,4 +1,4 @@
-package com.leverx.factory.beanFactory;
+package com.leverx.core.config.beanFactory;
 
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
