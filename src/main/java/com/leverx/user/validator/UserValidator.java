@@ -2,7 +2,7 @@ package com.leverx.user.validator;
 
 import com.leverx.cat.validator.CatValidator;
 import com.leverx.dog.validator.DogValidator;
-import com.leverx.exception.ValidationFailedException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;

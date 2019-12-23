@@ -1,6 +1,6 @@
 package com.leverx.pet.servlet;
 
-import com.leverx.exception.ElementNotFoundException;
+import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.pet.service.PetService;
 
 import javax.servlet.http.HttpServlet;

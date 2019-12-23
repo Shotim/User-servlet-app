@@ -1,6 +1,6 @@
 package com.leverx.credentialsLoader.props;
 
-import com.leverx.exception.InternalServerErrorException;
+import com.leverx.core.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;

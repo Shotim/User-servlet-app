@@ -2,7 +2,7 @@ package com.leverx.core.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.leverx.exception.InternalServerErrorException;
+import com.leverx.core.exception.InternalServerErrorException;
 
 import java.util.Collection;
 
