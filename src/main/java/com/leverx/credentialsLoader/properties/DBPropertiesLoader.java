@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.props;
+package com.leverx.credentialsLoader.properties;
 
 import com.leverx.credentialsLoader.DBCredentialsLoader;
 

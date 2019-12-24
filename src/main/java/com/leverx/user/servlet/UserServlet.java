@@ -1,9 +1,9 @@
 package com.leverx.user.servlet;
 
 import com.leverx.cat.service.CatService;
-import com.leverx.dog.service.DogService;
 import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.core.exception.ValidationFailedException;
+import com.leverx.dog.service.DogService;
 import com.leverx.pet.service.PetService;
 import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
@@ -15,12 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
-import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.core.config.beanFactory.BeanFactory.getCatService;
 import static com.leverx.core.config.beanFactory.BeanFactory.getDogService;
 import static com.leverx.core.config.beanFactory.BeanFactory.getPetService;
 import static com.leverx.core.config.beanFactory.BeanFactory.getUserService;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
 import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
 import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;

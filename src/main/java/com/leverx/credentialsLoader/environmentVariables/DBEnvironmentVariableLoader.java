@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.envvar;
+package com.leverx.credentialsLoader.environmentVariables;
 
 import com.leverx.credentialsLoader.DBCredentialsLoader;
 

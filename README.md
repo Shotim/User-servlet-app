@@ -34,7 +34,7 @@ mvn clean install
 2) Rename accordingly this files as `tomcat.env` and `db.env` or in `docker-compose.yml` rename .env-files as
 tomcat_template.db and db_template.env
 * Check `src/main/resources/META-INF/services/com.leverx.credentialsLoader.DBCredentialsLoader` file. It should contain the following:
-`com.leverx.credentialsLoader.envvar.DBEnvironmentVariableLoader`. If not rewrite it.
+`com.leverx.credentialsLoader.environmentVariables.DBEnvironmentVariableLoader`. If not rewrite it.
 * Start docker containers by docker-compose:
 `
 docker-compose up -d
@@ -53,7 +53,7 @@ Stop docker containers with command
 * Copy war file you have just created to `CATALINA_HOME/webapps`, e.g.
 `C:/Tomcat9/webapps`
 * Check `src/main/resources/META-INF/services/com.leverx.credentialsLoader.DBCredentialsLoader` file. It should contain the following:
-`com.leverx.credentialsLoader.props.DBPropertiesLoader`. If not rewrite it.
+`com.leverx.credentialsLoader.properties.DBPropertiesLoader`. If not rewrite it.
 * Start Tomcat server. On Windows run as Administrator file `startup.bat`
 * Write the following Url: `https://localhost/YOUR_WAR_FILE_NAME/users`
 Response will contain the list of already stored users
