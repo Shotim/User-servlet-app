@@ -1,11 +1,11 @@
 package com.leverx.dog.service;
 
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.dto.DogOutputDto;
 import com.leverx.dog.dto.converter.DogDtoConverter;
 import com.leverx.dog.repository.DogRepository;
-import com.leverx.core.exception.ElementNotFoundException;
-import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
@@ -15,9 +15,9 @@ import java.util.Collection;
 @AllArgsConstructor
 public class DogServiceImpl implements DogService {
 
+    private final DogDtoConverter converter = new DogDtoConverter();
     private EntityValidator validator;
     private DogRepository dogRepository;
-    private final DogDtoConverter converter = new DogDtoConverter();
 
     @Override
     public Collection<DogOutputDto> findAll() {

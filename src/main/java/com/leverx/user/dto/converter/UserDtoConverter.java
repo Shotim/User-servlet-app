@@ -18,9 +18,9 @@ import static java.util.stream.Collectors.toList;
 @AllArgsConstructor
 public class UserDtoConverter {
 
+    private final PetDtoConverter converter = new PetDtoConverter();
     private CatRepository catRepository;
     private DogRepository dogRepository;
-    private final PetDtoConverter converter = new PetDtoConverter();
 
     public User userInputDtoToUser(int id, UserInputDto userInputDto) {
         var name = userInputDto.getName();

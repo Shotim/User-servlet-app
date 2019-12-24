@@ -15,9 +15,9 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CatServiceImpl implements CatService {
 
+    private final CatDtoConverter converter = new CatDtoConverter();
     private EntityValidator validator;
     private CatRepository catRepository;
-    private final CatDtoConverter converter = new CatDtoConverter();
 
     @Override
     public Collection<CatOutputDto> findAll() {

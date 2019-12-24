@@ -12,8 +12,8 @@ import java.util.Collection;
 @AllArgsConstructor
 public class PetServiceImpl implements PetService {
 
-    private PetRepository petRepository;
     private final PetDtoConverter converter = new PetDtoConverter();
+    private PetRepository petRepository;
 
     @Override
     public Collection<PetOutputDto> findAll() {
