@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import static com.leverx.core.config.beanFactory.BeanFactory.getPetService;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
+import static com.leverx.core.utils.RequestURLUtils.getPathVariableFromRequest;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;

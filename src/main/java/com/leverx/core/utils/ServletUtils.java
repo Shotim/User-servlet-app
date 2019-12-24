@@ -1,4 +1,4 @@
-package com.leverx.utils;
+package com.leverx.core.utils;
 
 import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.servlet.GetMethodTypes;
@@ -13,16 +13,16 @@ import java.util.Collection;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.core.converter.EntityJsonConverter.fromJsonToEntity;
+import static com.leverx.core.utils.RequestURLUtils.getEntityReceivedClass;
+import static com.leverx.core.utils.RequestURLUtils.getLastStringElement;
+import static com.leverx.core.utils.RequestURLUtils.getPreLastStringElement;
+import static com.leverx.core.utils.RequestURLUtils.getSplittedUrl;
 import static com.leverx.user.servlet.GetMethodTypes.GET_ALL_USERS;
 import static com.leverx.user.servlet.GetMethodTypes.GET_CATS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_DOGS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_PETS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
-import static com.leverx.utils.RequestURLUtils.getEntityReceivedClass;
-import static com.leverx.utils.RequestURLUtils.getLastStringElement;
-import static com.leverx.utils.RequestURLUtils.getPreLastStringElement;
-import static com.leverx.utils.RequestURLUtils.getSplittedUrl;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
