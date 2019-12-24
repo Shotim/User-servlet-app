@@ -68,7 +68,7 @@ public class UserValidator {
         errorsList.add(recipientExistence);
         var equalIdsError = validateSenderAndRecipientEqualId(senderId, pointsTransferDto);
         errorsList.add(equalIdsError);
-        if (recipientExistence.isPresent()) {
+        if (recipientExistence.isEmpty()) {
             var balanceError = validatePointsBalance(senderId, pointsTransferDto);
             errorsList.add(balanceError);
         }
