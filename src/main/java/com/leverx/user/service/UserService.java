@@ -2,7 +2,6 @@ package com.leverx.user.service;
 
 import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.core.exception.ValidationFailedException;
-import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 
@@ -22,5 +21,5 @@ public interface UserService {
 
     void updateById(String id, UserInputDto user) throws ValidationFailedException;
 
-    void pointsTransfer(String senderId, PointsTransferDto pointsTransferDto) throws ValidationFailedException;
+    void pointsTransfer(String senderIdStr, String recipientId, String points) throws ValidationFailedException;
 }

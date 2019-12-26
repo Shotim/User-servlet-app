@@ -3,7 +3,6 @@ package com.leverx.user.validator;
 import com.leverx.cat.validator.CatValidator;
 import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.validator.DogValidator;
-import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.validator.EntityValidator;
@@ -58,18 +57,16 @@ public class UserValidator {
                 .collect(Collectors.joining("; "));
     }
 
-    public void validatePointsTransfer(String senderId, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
+    public void validatePointsTransfer(String senderId, String recipientId, String points) throws ValidationFailedException {
         var errorsList = new ArrayList<Optional<String>>();
-        var errors = validator.validate(pointsTransferDto);
-        errorsList.add(errors);
-        var senderExistence = validateSenderExistence(senderId);
-        errorsList.add(senderExistence);
-        var recipientExistence = validateRecipientExistence(pointsTransferDto);
-        errorsList.add(recipientExistence);
-        var equalIdsError = validateSenderAndRecipientEqualId(senderId, pointsTransferDto);
+        var senderExistenceError = validateSenderExistence(senderId);
+        errorsList.add(senderExistenceError);
+        var recipientExistenceError = validateRecipientExistence(recipientId);
+        errorsList.add(recipientExistenceError);
+        var equalIdsError = validateSenderAndRecipientEqualId(senderId, recipientId);
         errorsList.add(equalIdsError);
-        if (recipientExistence.isEmpty()) {
-            var balanceError = validatePointsBalance(senderId, pointsTransferDto);
+        if (senderExistenceError.isEmpty()) {
+            var balanceError = validatePointsBalance(senderId, points);
             errorsList.add(balanceError);
         }
         String message = createMessageFromList(errorsList);
@@ -101,27 +98,27 @@ public class UserValidator {
         return errorsList;
     }
 
-    private Optional<String> validateSenderAndRecipientEqualId(String id, PointsTransferDto pointsTransferDto) {
-        if (parseInt(id) == pointsTransferDto.getRecipientId()) {
+    private Optional<String> validateSenderAndRecipientEqualId(String senderId, String recipientId) {
+        if (senderId.equals(recipientId)) {
             var message = getLocalizedMessage(EQUAL_SENDER_AND_RECIPIENT);
             return Optional.of(message);
         }
         return Optional.empty();
     }
 
-    private Optional<String> validatePointsBalance(String senderId, PointsTransferDto pointsTransferDto) {
+    private Optional<String> validatePointsBalance(String senderId, String points) {
         var user = userRepository.findById(parseInt(senderId));
         var animalPointsBalance = user.orElseThrow().getAnimalPoints();
-        if (animalPointsBalance < pointsTransferDto.getAnimalPoints()) {
+        if (animalPointsBalance < parseInt(points)) {
             var message = getLocalizedMessage(NOT_ENOUGH_MONEY);
             return Optional.of(message);
         }
         return Optional.empty();
     }
 
-    private Optional<String> validateRecipientExistence(PointsTransferDto pointsTransferDto) {
-        var recipientId = pointsTransferDto.getRecipientId();
-        return validateUserId(recipientId);
+    private Optional<String> validateRecipientExistence(String recipientId) {
+        var parsedRecipientId = parseInt(recipientId);
+        return validateUserId(parsedRecipientId);
     }
 
     private Optional<String> validateSenderExistence(String senderId) {

@@ -2,7 +2,6 @@ package com.leverx.user.service;
 
 import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.core.exception.ValidationFailedException;
-import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
@@ -66,11 +65,11 @@ public class UserServiceImpl implements UserService {
 
     //TODO: not finished
     @Override
-    public void pointsTransfer(String senderIdStr, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
-        validator.validatePointsTransfer(senderIdStr, pointsTransferDto);
+    public void pointsTransfer(String senderIdStr, String recipientIdStr, String pointsStr) throws ValidationFailedException {
+        validator.validatePointsTransfer(senderIdStr, recipientIdStr, pointsStr);
         var senderId = parseInt(senderIdStr);
-        var recipientId = pointsTransferDto.getRecipientId();
-        var animalPoints = pointsTransferDto.getAnimalPoints();
-        userRepository.pointsTransfer(senderId, recipientId, animalPoints);
+        var recipientId = parseInt(recipientIdStr);
+        var points = parseInt(pointsStr);
+        userRepository.pointsTransfer(senderId, recipientId, points);
     }
 }

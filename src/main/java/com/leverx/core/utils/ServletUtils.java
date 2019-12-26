@@ -3,6 +3,7 @@ package com.leverx.core.utils;
 import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.servlet.GetMethodTypes;
 import com.leverx.user.servlet.MethodTypePlusRequiredVar;
+import com.leverx.user.servlet.PostMethodTypes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,6 +24,8 @@ import static com.leverx.user.servlet.GetMethodTypes.GET_DOGS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_PETS_OF_USER;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_ID;
 import static com.leverx.user.servlet.GetMethodTypes.GET_USER_BY_NAME;
+import static com.leverx.user.servlet.PostMethodTypes.CREATE_USER;
+import static com.leverx.user.servlet.PostMethodTypes.TRANSFER_POINTS;
 import static java.util.Objects.nonNull;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.math.NumberUtils.isParsable;
@@ -30,6 +33,7 @@ import static org.apache.commons.lang3.math.NumberUtils.isParsable;
 public class ServletUtils {
 
     private static final String USERS = "users";
+    private static final String ACTION_TRANSFER = "transfer";
     private static final String CATS = "cats";
     private static final String DOGS = "dogs";
     private static final String PETS = "pets";
@@ -89,6 +93,20 @@ public class ServletUtils {
                     userId = getPreLastStringElement(splittedUrl);
                     methodTypePlusRequiredVar.setValues(GET_PETS_OF_USER, userId);
                 }
+            }
+        }
+        return methodTypePlusRequiredVar;
+    }
+
+    public static MethodTypePlusRequiredVar<PostMethodTypes, String> initUserServletPostMethodType(HttpServletRequest request) {
+        var methodTypePlusRequiredVar = new MethodTypePlusRequiredVar<PostMethodTypes, String>();
+        var splittedUrl = getSplittedUrl(request);
+        String lastElement = getLastStringElement(splittedUrl);
+        switch (lastElement) {
+            case USERS -> methodTypePlusRequiredVar.setValues(CREATE_USER, lastElement);
+            case ACTION_TRANSFER -> {
+                var senderId = getPreLastStringElement(splittedUrl);
+                methodTypePlusRequiredVar.setValues(TRANSFER_POINTS, senderId);
             }
         }
         return methodTypePlusRequiredVar;
