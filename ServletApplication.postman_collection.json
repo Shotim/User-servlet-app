@@ -53,7 +53,21 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": ""
+							"raw": "http://localhost:8080/users?name=Noweqwert",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "Noweqwert"
+								}
+							]
 						}
 					},
 					"response": []
@@ -225,7 +239,7 @@
 				{
 					"name": "TransferAnimalPoints",
 					"request": {
-						"method": "PUT",
+						"method": "POST",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -236,7 +250,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"recipientId\": 1,\n\t\"animalPoints\": 2\n}",
+							"raw": "",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -244,7 +258,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/users/5?action=transferPoints",
+							"raw": "http://localhost:8080/users/5/transfer/?recipientId=1&points=3",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -252,12 +266,18 @@
 							"port": "8080",
 							"path": [
 								"users",
-								"5"
+								"5",
+								"transfer",
+								""
 							],
 							"query": [
 								{
-									"key": "action",
-									"value": "transferPoints"
+									"key": "recipientId",
+									"value": "1"
+								},
+								{
+									"key": "points",
+									"value": "3"
 								}
 							]
 						}
