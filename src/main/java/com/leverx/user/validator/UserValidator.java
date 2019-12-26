@@ -59,16 +59,10 @@ public class UserValidator {
 
     public void validatePointsTransfer(String senderId, String recipientId, String points) throws ValidationFailedException {
         var errorsList = new ArrayList<Optional<String>>();
-        var senderExistenceError = validateSenderExistence(senderId);
-        errorsList.add(senderExistenceError);
-        var recipientExistenceError = validateRecipientExistence(recipientId);
-        errorsList.add(recipientExistenceError);
         var equalIdsError = validateSenderAndRecipientEqualId(senderId, recipientId);
         errorsList.add(equalIdsError);
-        if (senderExistenceError.isEmpty()) {
-            var balanceError = validatePointsBalance(senderId, points);
-            errorsList.add(balanceError);
-        }
+        var balanceError = validatePointsBalance(senderId, points);
+        errorsList.add(balanceError);
         String message = createMessageFromList(errorsList);
         if (!message.isEmpty()) {
             throw new ValidationFailedException(message);
@@ -114,14 +108,5 @@ public class UserValidator {
             return Optional.of(message);
         }
         return Optional.empty();
-    }
-
-    private Optional<String> validateRecipientExistence(String recipientId) {
-        var parsedRecipientId = parseInt(recipientId);
-        return validateUserId(parsedRecipientId);
-    }
-
-    private Optional<String> validateSenderExistence(String senderId) {
-        return validateUserId(parseInt(senderId));
     }
 }

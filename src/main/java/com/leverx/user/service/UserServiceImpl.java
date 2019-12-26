@@ -1,15 +1,20 @@
 package com.leverx.user.service;
 
 import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
+import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.validator.UserValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
+import static com.leverx.validator.ValidationErrorMessages.USER_NOT_FOUND;
+import static com.leverx.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.lang.Integer.parseInt;
 
 
@@ -64,10 +69,34 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void pointsTransfer(String senderIdStr, String recipientIdStr, String pointsStr) {
-        validator.validatePointsTransfer(senderIdStr, recipientIdStr, pointsStr);
         var senderId = parseInt(senderIdStr);
         var recipientId = parseInt(recipientIdStr);
-        var points = parseInt(pointsStr);
-        userRepository.pointsTransfer(senderId, recipientId, points);
+        int points = parseInt(pointsStr);
+        var sender = getUserById(senderId);
+        var recipient = getUserById(recipientId);
+        validator.validatePointsTransfer(senderIdStr, recipientIdStr, pointsStr);
+        removePointsFromSender(points, sender);
+        addPointsToRecipient(points, recipient);
+        userRepository.update(sender);
+        userRepository.update(recipient);
+    }
+
+    public User getUserById(int id) {
+        try {
+            return userRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            var message = getLocalizedMessage(USER_NOT_FOUND);
+            throw new ValidationFailedException(id + ": " + message);
+        }
+    }
+
+    private void addPointsToRecipient(int points, User recipient) {
+        var recipientBalance = recipient.getAnimalPoints();
+        recipient.setAnimalPoints(recipientBalance + points);
+    }
+
+    private void removePointsFromSender(int points, User sender) {
+        var senderBalance = sender.getAnimalPoints();
+        sender.setAnimalPoints(senderBalance - points);
     }
 }
