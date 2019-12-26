@@ -22,7 +22,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
-    public PetOutputDto findById(int id) throws ElementNotFoundException {
+    public PetOutputDto findById(int id) {
         var optionalPet = petRepository.findById(id);
         var pet = optionalPet.orElseThrow(ElementNotFoundException::new);
         return converter.petToPetOutputDto(pet);

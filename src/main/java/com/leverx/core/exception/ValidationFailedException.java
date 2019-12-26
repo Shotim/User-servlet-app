@@ -7,7 +7,7 @@ import static com.leverx.core.exception.ErrorCode.VALIDATION_FAILED;
 import static lombok.AccessLevel.PRIVATE;
 
 @FieldDefaults(level = PRIVATE)
-public class ValidationFailedException extends Exception {
+public class ValidationFailedException extends RuntimeException {
 
     public static final int SC_UNPROCESSABLE_ENTITY = 422;
     @Getter

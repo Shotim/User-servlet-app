@@ -1,7 +1,6 @@
 package com.leverx.dog.service;
 
 import com.leverx.core.exception.ElementNotFoundException;
-import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.dto.DogOutputDto;
 import com.leverx.dog.dto.converter.DogDtoConverter;
@@ -26,7 +25,7 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public DogOutputDto findById(int id) throws ElementNotFoundException {
+    public DogOutputDto findById(int id) {
         var optionalCat = dogRepository.findById(id);
         var cat = optionalCat.orElseThrow(ElementNotFoundException::new);
         return converter.dogToDogOutputDto(cat);
@@ -39,7 +38,7 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-    public DogOutputDto save(DogInputDto dogInputDto) throws ValidationFailedException {
+    public DogOutputDto save(DogInputDto dogInputDto) {
         validator.validateEntity(dogInputDto);
         var dog = converter.dogInputDtoToDog(dogInputDto);
         dogRepository.save(dog);

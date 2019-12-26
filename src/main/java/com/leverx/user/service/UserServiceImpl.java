@@ -1,7 +1,6 @@
 package com.leverx.user.service;
 
 import com.leverx.core.exception.ElementNotFoundException;
-import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
@@ -28,7 +27,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto findById(int id) throws ElementNotFoundException {
+    public UserOutputDto findById(int id) {
         var optionalUser = userRepository.findById(id);
         var user = optionalUser.orElseThrow(ElementNotFoundException::new);
         return converter.userToUserOutputDto(user);
@@ -41,7 +40,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
+    public UserOutputDto save(UserInputDto userInputDto) {
         validator.validateCreateUser(userInputDto);
         var user = converter.userInputDtoToUser(userInputDto);
         userRepository.save(user).orElseThrow();
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
+    public void updateById(String id, UserInputDto userInputDto) {
         validator.validateUpdateUser(parseInt(id), userInputDto);
         var userId = parseInt(id);
         var user = converter.userInputDtoToUser(userId, userInputDto);
@@ -64,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void pointsTransfer(String senderIdStr, String recipientIdStr, String pointsStr) throws ValidationFailedException {
+    public void pointsTransfer(String senderIdStr, String recipientIdStr, String pointsStr) {
         validator.validatePointsTransfer(senderIdStr, recipientIdStr, pointsStr);
         var senderId = parseInt(senderIdStr);
         var recipientId = parseInt(recipientIdStr);

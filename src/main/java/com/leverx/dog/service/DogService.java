@@ -1,7 +1,5 @@
 package com.leverx.dog.service;
 
-import com.leverx.core.exception.ElementNotFoundException;
-import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.dto.DogOutputDto;
 
@@ -11,9 +9,9 @@ public interface DogService {
 
     Collection<DogOutputDto> findAll();
 
-    DogOutputDto findById(int id) throws ElementNotFoundException;
+    DogOutputDto findById(int id);
 
     Collection<DogOutputDto> findByOwner(int id);
 
-    DogOutputDto save(DogInputDto cat) throws ValidationFailedException;
+    DogOutputDto save(DogInputDto cat);
 }
