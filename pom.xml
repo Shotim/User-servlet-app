@@ -25,6 +25,7 @@
         <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
         <jackson.version>2.10.1</jackson.version>
         <reflections.version>0.9.11</reflections.version>
+        <hikariCP.version>3.4.1</hikariCP.version>
     </properties>
 
     <dependencies>
@@ -99,9 +100,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>${reflections.version}</version>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>${hikariCP.version}</version>
         </dependency>
 
     </dependencies>

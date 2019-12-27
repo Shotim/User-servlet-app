@@ -45,4 +45,8 @@ public class PropertyLoader {
     public Map<String, String> getPropertiesMap() {
         return this.propertiesMap;
     }
+
+    public String getProperty(String propertyName) {
+        return this.propertiesMap.get(propertyName);
+    }
 }

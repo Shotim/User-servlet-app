@@ -1,12 +1,10 @@
 package com.leverx.core.config;
 
-import com.leverx.credentialsLoader.DBCredentialsLoader;
-
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.Map;
 
-import static java.util.ServiceLoader.load;
+import static com.leverx.credentialsLoader.DBCredentialsLoaderProvider.getDBCredentialsLoader;
 import static javax.persistence.Persistence.createEntityManagerFactory;
 
 public class EntityManagerFactoryConfig {
@@ -27,9 +25,8 @@ public class EntityManagerFactoryConfig {
     }
 
     private static Map<String, String> getProperties() {
-        var loader = load(DBCredentialsLoader.class);
-        var dbCredentialsLoader = loader.findFirst().orElseThrow();
-        return dbCredentialsLoader.getDBProperties();
+        var dbCredentialsLoader = getDBCredentialsLoader();
+        return dbCredentialsLoader.getDBPropertiesMap();
     }
 
 }

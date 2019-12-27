@@ -26,60 +26,6 @@ import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
 @Slf4j
 public class CatRepositoryImpl implements CatRepository {
 
-    private static CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
-
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Cat.class);
-        var root = criteriaQuery.from(Cat.class);
-
-        criteriaQuery.select(root);
-
-        var path = root.get(attribute);
-        var equalCondition = builder.equal(path, id);
-
-        criteriaQuery.where(equalCondition);
-
-        return criteriaQuery;
-    }
-
-    private static List<Cat> getResultList(EntityManager entityManager, CriteriaQuery<Cat> criteriaQuery) {
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
-    private static CriteriaQuery<Cat> getCatCriteriaQuery(EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        return builder.createQuery(Cat.class);
-    }
-
-    private static List<Cat> getAllCats(EntityManager entityManager) {
-        var criteriaQuery = getCatCriteriaQuery(entityManager);
-        var root = criteriaQuery.from(Cat.class);
-
-        criteriaQuery.select(root);
-
-        return getResultList(entityManager, criteriaQuery);
-    }
-
-    private static Cat getCatById(int id, EntityManager entityManager) {
-        var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getSingleResult();
-    }
-
-    private static Collection<Cat> retrieveCatsByOwner(int ownerId, EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Cat.class);
-
-        var root = criteriaQuery.from(Cat.class);
-        var users = root.join(Cat_.owners);
-        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
-        criteriaQuery.select(root)
-                .where(idEqualToOwnerId);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
     @Override
     public Collection<Cat> findAll() {
         var entityManager = getEntityManager();
@@ -162,5 +108,59 @@ public class CatRepositoryImpl implements CatRepository {
         } finally {
             entityManager.close();
         }
+    }
+
+    private CriteriaQuery<Cat> getCatCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
+
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Cat.class);
+        var root = criteriaQuery.from(Cat.class);
+
+        criteriaQuery.select(root);
+
+        var path = root.get(attribute);
+        var equalCondition = builder.equal(path, id);
+
+        criteriaQuery.where(equalCondition);
+
+        return criteriaQuery;
+    }
+
+    private List<Cat> getResultList(EntityManager entityManager, CriteriaQuery<Cat> criteriaQuery) {
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    private CriteriaQuery<Cat> getCatCriteriaQuery(EntityManager entityManager) {
+        var builder = entityManager.getCriteriaBuilder();
+        return builder.createQuery(Cat.class);
+    }
+
+    private List<Cat> getAllCats(EntityManager entityManager) {
+        var criteriaQuery = getCatCriteriaQuery(entityManager);
+        var root = criteriaQuery.from(Cat.class);
+
+        criteriaQuery.select(root);
+
+        return getResultList(entityManager, criteriaQuery);
+    }
+
+    private Cat getCatById(int id, EntityManager entityManager) {
+        var criteriaQuery = getCatCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id);
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getSingleResult();
+    }
+
+    private Collection<Cat> retrieveCatsByOwner(int ownerId, EntityManager entityManager) {
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Cat.class);
+
+        var root = criteriaQuery.from(Cat.class);
+        var users = root.join(Cat_.owners);
+        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
+        criteriaQuery.select(root)
+                .where(idEqualToOwnerId);
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
     }
 }

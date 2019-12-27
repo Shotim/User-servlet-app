@@ -2,8 +2,8 @@ package com.leverx.credentialsLoader.constants;
 
 public class DBEnvironmentVariableConstants {
 
-    public static final String DB_USERNAME_ENV = "hibernate.connection.username";
-    public static final String DB_PASSWORD_ENV = "hibernate.connection.password";
-    public static final String DB_URL_ENV = "hibernate.connection.url";
+    public static final String DB_USERNAME = "hibernate.connection.username";
+    public static final String DB_PASSWORD = "hibernate.connection.password";
+    public static final String DB_URL = "hibernate.connection.url";
 
 }
