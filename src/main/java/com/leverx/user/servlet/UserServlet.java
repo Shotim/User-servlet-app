@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.core.config.beanFactory.BeanFactory.getCatService;
-import static com.leverx.core.config.beanFactory.BeanFactory.getDogService;
-import static com.leverx.core.config.beanFactory.BeanFactory.getPetService;
-import static com.leverx.core.config.beanFactory.BeanFactory.getUserService;
+import static com.leverx.core.config.BeanFactory.getCatService;
+import static com.leverx.core.config.BeanFactory.getDogService;
+import static com.leverx.core.config.BeanFactory.getPetService;
+import static com.leverx.core.config.BeanFactory.getUserService;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
 import static com.leverx.core.utils.RequestURLUtils.getPathVariableFromRequest;
