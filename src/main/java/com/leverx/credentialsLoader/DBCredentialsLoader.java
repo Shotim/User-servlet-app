@@ -5,10 +5,4 @@ import java.util.Map;
 public interface DBCredentialsLoader {
 
     Map<String, String> getDBPropertiesMap();
-
-    String getDBUrl();
-
-    String getUsername();
-
-    String getPassword();
 }
