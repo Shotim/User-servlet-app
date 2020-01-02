@@ -72,26 +72,6 @@ public class CatRepositoryImpl implements CatRepository {
     }
 
     @Override
-    public Collection<Cat> findByOwner(int ownerId) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var cats = retrieveCatsByOwner(ownerId, entityManager);
-            transaction.commit();
-            log.debug("Cat with ownerId = {} were found in db", ownerId);
-            return cats;
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
-            throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
     public Optional<Cat> save(Cat cat) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;

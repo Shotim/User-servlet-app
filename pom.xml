@@ -24,8 +24,8 @@
         <hibernate.version>5.4.9.Final</hibernate.version>
         <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
         <jackson.version>2.10.1</jackson.version>
-        <reflections.version>0.9.11</reflections.version>
         <hikariCP.version>3.4.1</hikariCP.version>
+        <tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
     </properties>
 
     <dependencies>
@@ -108,6 +108,13 @@
             <artifactId>HikariCP</artifactId>
             <version>${hikariCP.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-jdbc</artifactId>
+            <version>${tomcat-jdbc.version}</version>
+        </dependency>
+
 
     </dependencies>
 

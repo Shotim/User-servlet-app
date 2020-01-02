@@ -18,4 +18,19 @@ public class DBEnvironmentVariableLoader implements DBCredentialsLoader {
     public Map<String, String> getDBPropertiesMap() {
         return loader.getPropertiesMap();
     }
+
+    @Override
+    public String getUrl() {
+        return loader.getEnvVarValue(DB_URL);
+    }
+
+    @Override
+    public String getPassword() {
+        return loader.getEnvVarValue(DB_PASSWORD);
+    }
+
+    @Override
+    public String getUsername() {
+        return loader.getEnvVarValue(DB_USERNAME);
+    }
 }

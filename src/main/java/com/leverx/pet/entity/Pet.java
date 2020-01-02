@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -31,6 +32,7 @@ import static javax.persistence.InheritanceType.JOINED;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE)

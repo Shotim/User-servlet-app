@@ -72,26 +72,6 @@ public class DogRepositoryImpl implements DogRepository {
     }
 
     @Override
-    public Collection<Dog> findByOwner(int ownerId) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var dogs = retrieveDogsByOwner(ownerId, entityManager);
-            transaction.commit();
-            log.debug("Dog with ownerId = {} were found in db", ownerId);
-            return dogs;
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
-            throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    @Override
     public Optional<Dog> save(Dog cat) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;

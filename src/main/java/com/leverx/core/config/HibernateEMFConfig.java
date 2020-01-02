@@ -10,18 +10,18 @@ import static javax.persistence.Persistence.createEntityManagerFactory;
 public class HibernateEMFConfig {
 
     private static final String PERSISTENCE_UNIT_NAME = "Persistence";
-    private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
+    private static EntityManagerFactory entityManagerFactory;
 
     public static void getEntityManagerFactory() {
-        ENTITY_MANAGER_FACTORY = createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getProperties());
+        entityManagerFactory = createEntityManagerFactory(PERSISTENCE_UNIT_NAME, getProperties());
     }
 
     public static EntityManager getEntityManager() {
-        return ENTITY_MANAGER_FACTORY.createEntityManager();
+        return entityManagerFactory.createEntityManager();
     }
 
     public static void closeEntityManagerFactory() {
-        ENTITY_MANAGER_FACTORY.close();
+        entityManagerFactory.close();
     }
 
     private static Map<String, String> getProperties() {

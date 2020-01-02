@@ -9,6 +9,7 @@ import javax.servlet.ServletRequestListener;
 
 import static com.leverx.core.config.HibernateEMFConfig.closeEntityManagerFactory;
 import static com.leverx.core.config.HibernateEMFConfig.getEntityManagerFactory;
+import static com.leverx.core.config.TomcatCPConfig.createConnectionPool;
 import static java.util.Locale.setDefault;
 
 @Slf4j
@@ -34,6 +35,7 @@ public class ServletListener implements ServletRequestListener, ServletContextLi
     public void contextInitialized(ServletContextEvent sce) {
         log.info("Context initialized.");
         getEntityManagerFactory();
+        createConnectionPool();
         log.info("EntityManagerFactory is created");
     }
 

@@ -22,7 +22,7 @@ public class DBPropertiesLoader implements DBCredentialsLoader {
         return loader.getPropertiesMap();
     }
 
-    public String getDBUrl() {
+    public String getUrl() {
         return loader.getProperty(DB_URL);
     }
 
