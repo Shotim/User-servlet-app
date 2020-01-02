@@ -14,7 +14,7 @@ import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.leverx.core.config.EntityManagerFactoryConfig.getEntityManager;
+import static com.leverx.core.config.HibernateEMFConfig.getEntityManager;
 import static com.leverx.core.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.core.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
