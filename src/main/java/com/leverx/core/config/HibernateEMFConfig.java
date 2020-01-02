@@ -7,7 +7,7 @@ import java.util.Map;
 import static com.leverx.credentialsLoader.DBCredentialsLoaderProvider.getDBCredentialsLoader;
 import static javax.persistence.Persistence.createEntityManagerFactory;
 
-public class EntityManagerFactoryConfig {
+public class HibernateEMFConfig {
 
     private static final String PERSISTENCE_UNIT_NAME = "Persistence";
     private static EntityManagerFactory ENTITY_MANAGER_FACTORY;
