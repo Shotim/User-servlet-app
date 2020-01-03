@@ -13,8 +13,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
-import static com.leverx.validator.EntityValidator.MAX_SIZE;
-import static com.leverx.validator.EntityValidator.MIN_SIZE;
+import static com.leverx.core.validator.EntityValidator.MAX_SIZE;
+import static com.leverx.core.validator.EntityValidator.MIN_SIZE;
 import static lombok.AccessLevel.PRIVATE;
 
 @Data

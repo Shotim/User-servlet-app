@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static com.leverx.validator.ValidationErrorMessages.CAT_DOES_NOT_EXIST;
-import static com.leverx.validator.ValidationErrorMessages.getLocalizedMessage;
+import static com.leverx.core.validator.ValidationErrorMessages.CAT_DOES_NOT_EXIST;
+import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 
 @AllArgsConstructor
 public class CatValidator {

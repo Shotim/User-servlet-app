@@ -5,7 +5,7 @@ import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.validator.DogValidator;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;
-import com.leverx.validator.EntityValidator;
+import com.leverx.core.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -13,10 +13,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static com.leverx.validator.ValidationErrorMessages.EQUAL_SENDER_AND_RECIPIENT;
-import static com.leverx.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY;
-import static com.leverx.validator.ValidationErrorMessages.USER_NOT_FOUND;
-import static com.leverx.validator.ValidationErrorMessages.getLocalizedMessage;
+import static com.leverx.core.validator.ValidationErrorMessages.EQUAL_SENDER_AND_RECIPIENT;
+import static com.leverx.core.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY;
+import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
+import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 

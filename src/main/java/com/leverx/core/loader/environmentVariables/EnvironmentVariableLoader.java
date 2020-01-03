@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.environmentVariables;
+package com.leverx.core.loader.environmentVariables;
 
 import java.util.Collection;
 import java.util.Map;

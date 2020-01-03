@@ -5,7 +5,7 @@ import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.dto.converter.CatDtoConverter;
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.core.exception.ElementNotFoundException;
-import com.leverx.validator.EntityValidator;
+import com.leverx.core.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;

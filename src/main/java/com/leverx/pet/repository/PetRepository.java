@@ -10,4 +10,6 @@ public interface PetRepository {
     Collection<Pet> findAll();
 
     Optional<Pet> findById(int id);
+
+    Collection<Pet> findByOwner(int ownerId);
 }

@@ -11,5 +11,7 @@ public interface CatRepository {
 
     Optional<Cat> findById(int id);
 
+    Collection<Cat> findByOwner(int ownerId);
+
     Optional<Cat> save(Cat cat);
 }

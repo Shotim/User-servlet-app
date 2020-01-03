@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.constants;
+package com.leverx.core.loader.constants;
 
 public class DBEnvironmentVariableConstants {
 

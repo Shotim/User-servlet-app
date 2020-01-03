@@ -5,7 +5,7 @@ import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.dto.DogOutputDto;
 import com.leverx.dog.dto.converter.DogDtoConverter;
 import com.leverx.dog.repository.DogRepository;
-import com.leverx.validator.EntityValidator;
+import com.leverx.core.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;

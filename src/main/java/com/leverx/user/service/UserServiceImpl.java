@@ -13,8 +13,8 @@ import lombok.AllArgsConstructor;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
-import static com.leverx.validator.ValidationErrorMessages.USER_NOT_FOUND;
-import static com.leverx.validator.ValidationErrorMessages.getLocalizedMessage;
+import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
+import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.lang.Integer.parseInt;
 
 

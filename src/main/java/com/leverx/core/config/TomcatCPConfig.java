@@ -6,7 +6,7 @@ import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-import static com.leverx.credentialsLoader.DBCredentialsLoaderProvider.getDBCredentialsLoader;
+import static com.leverx.core.loader.DBCredentialsLoaderProvider.getDBCredentialsLoader;
 
 public class TomcatCPConfig {
 

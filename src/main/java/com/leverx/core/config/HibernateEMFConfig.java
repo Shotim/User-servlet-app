@@ -4,7 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import java.util.Map;
 
-import static com.leverx.credentialsLoader.DBCredentialsLoaderProvider.getDBCredentialsLoader;
+import static com.leverx.core.loader.DBCredentialsLoaderProvider.getDBCredentialsLoader;
 import static javax.persistence.Persistence.createEntityManagerFactory;
 
 public class HibernateEMFConfig {

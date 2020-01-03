@@ -23,8 +23,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import static com.leverx.validator.EntityValidator.MAX_SIZE;
-import static com.leverx.validator.EntityValidator.MIN_SIZE;
+import static com.leverx.core.validator.EntityValidator.MAX_SIZE;
+import static com.leverx.core.validator.EntityValidator.MIN_SIZE;
 import static java.util.Collections.emptyList;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;

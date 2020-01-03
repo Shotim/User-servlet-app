@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader;
+package com.leverx.core.loader;
 
 import java.util.Map;
 

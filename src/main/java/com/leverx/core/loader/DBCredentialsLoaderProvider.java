@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader;
+package com.leverx.core.loader;
 
 import static java.util.ServiceLoader.load;
 

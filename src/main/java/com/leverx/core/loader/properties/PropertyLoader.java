@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.properties;
+package com.leverx.core.loader.properties;
 
 import com.leverx.core.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;

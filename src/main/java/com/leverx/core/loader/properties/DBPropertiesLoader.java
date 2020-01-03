@@ -1,12 +1,12 @@
-package com.leverx.credentialsLoader.properties;
+package com.leverx.core.loader.properties;
 
-import com.leverx.credentialsLoader.DBCredentialsLoader;
+import com.leverx.core.loader.DBCredentialsLoader;
 
 import java.util.Map;
 
-import static com.leverx.credentialsLoader.constants.DBEnvironmentVariableConstants.DB_PASSWORD;
-import static com.leverx.credentialsLoader.constants.DBEnvironmentVariableConstants.DB_URL;
-import static com.leverx.credentialsLoader.constants.DBEnvironmentVariableConstants.DB_USERNAME;
+import static com.leverx.core.loader.constants.DBEnvironmentVariableConstants.DB_PASSWORD;
+import static com.leverx.core.loader.constants.DBEnvironmentVariableConstants.DB_URL;
+import static com.leverx.core.loader.constants.DBEnvironmentVariableConstants.DB_USERNAME;
 
 public class DBPropertiesLoader implements DBCredentialsLoader {
 

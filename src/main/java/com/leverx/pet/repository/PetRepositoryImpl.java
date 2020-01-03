@@ -46,6 +46,20 @@ public class PetRepositoryImpl implements PetRepository {
         }
     }
 
+    @Override
+    public Collection<Pet> findByOwner(int ownerId) {
+        try (var connection = getConnection();
+             var preparedStatement = connection.prepareStatement("select * from servlet_app.pets left join dogs d on pets.id = d.dogId left join cats c on pets.id = c.catId join user_pet up on pets.id = up.petId where userId=?")) {
+            preparedStatement.setInt(1, ownerId);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                return getPetsCollectionFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            log.error(e.getSQLState());
+            throw new InternalServerErrorException(e.getMessage());
+        }
+    }
+
     private Optional<Pet> getPetFromResultSet(ResultSet resultSet) throws SQLException {
         var pets = getPetsCollectionFromResultSet(resultSet);
         return pets.stream().findFirst();
