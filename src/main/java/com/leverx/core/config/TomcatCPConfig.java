@@ -10,7 +10,7 @@ import static com.leverx.core.loader.DBCredentialsLoaderProvider.getDBCredential
 
 public class TomcatCPConfig {
 
-    private static final String DRIVER_CLASSNAME = "com.mysql.jdbc.Driver";
+    private static final String DRIVER_CLASSNAME = "com.mysql.cj.jdbc.Driver";
     private static DataSource dataSource;
 
     public static final int IDLE_NUMBER = 20;
