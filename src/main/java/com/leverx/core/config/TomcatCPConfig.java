@@ -27,6 +27,7 @@ public class TomcatCPConfig {
         properties.setDriverClassName(DRIVER_CLASSNAME);
         properties.setMaxIdle(IDLE_NUMBER);
         properties.setMinIdle(IDLE_NUMBER);
+
         dataSource = new org.apache.tomcat.jdbc.pool.DataSource(properties);
     }
 

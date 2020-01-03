@@ -13,9 +13,14 @@ public class ValidationFailedException extends RuntimeException {
     @Getter
     static final int errorCode = VALIDATION_FAILED;
     @Getter
-    final int statusCode = SC_UNPROCESSABLE_ENTITY;
+    int statusCode = SC_UNPROCESSABLE_ENTITY;
 
     public ValidationFailedException(String errorMessage) {
         super(errorMessage);
+    }
+
+    public ValidationFailedException(String errorMessage, int statusCode) {
+        super(errorMessage);
+        this.statusCode = statusCode;
     }
 }

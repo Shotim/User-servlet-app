@@ -18,6 +18,7 @@ import static com.leverx.core.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY
 import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
 import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.util.Collections.emptyList;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 @AllArgsConstructor
 public class UserValidator {
@@ -64,7 +65,7 @@ public class UserValidator {
         errorsList.add(balanceError);
         String message = createMessageFromList(errorsList);
         if (!message.isEmpty()) {
-            throw new ValidationFailedException(message);
+            throw new ValidationFailedException(message, SC_BAD_REQUEST);
         }
     }
 
