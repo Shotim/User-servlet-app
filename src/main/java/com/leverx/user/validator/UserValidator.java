@@ -2,10 +2,10 @@ package com.leverx.user.validator;
 
 import com.leverx.cat.validator.CatValidator;
 import com.leverx.core.exception.ValidationFailedException;
+import com.leverx.core.validator.EntityValidator;
 import com.leverx.dog.validator.DogValidator;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;
-import com.leverx.core.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import static com.leverx.core.validator.ValidationErrorMessages.EQUAL_SENDER_AND
 import static com.leverx.core.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY;
 import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
 import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
-import static java.lang.Integer.parseInt;
 import static java.util.Collections.emptyList;
 
 @AllArgsConstructor
@@ -57,7 +56,7 @@ public class UserValidator {
                 .collect(Collectors.joining("; "));
     }
 
-    public void validatePointsTransfer(String senderId, String recipientId, String points) throws ValidationFailedException {
+    public void validatePointsTransfer(int senderId, int recipientId, int points) throws ValidationFailedException {
         var errorsList = new ArrayList<Optional<String>>();
         var equalIdsError = validateSenderAndRecipientEqualId(senderId, recipientId);
         errorsList.add(equalIdsError);
@@ -92,18 +91,18 @@ public class UserValidator {
         return errorsList;
     }
 
-    private Optional<String> validateSenderAndRecipientEqualId(String senderId, String recipientId) {
-        if (senderId.equals(recipientId)) {
+    private Optional<String> validateSenderAndRecipientEqualId(int senderId, int recipientId) {
+        if (senderId == recipientId) {
             var message = getLocalizedMessage(EQUAL_SENDER_AND_RECIPIENT);
             return Optional.of(message);
         }
         return Optional.empty();
     }
 
-    private Optional<String> validatePointsBalance(String senderId, String points) {
-        var user = userRepository.findById(parseInt(senderId));
+    private Optional<String> validatePointsBalance(int senderId, int points) {
+        var user = userRepository.findById(senderId);
         var animalPointsBalance = user.orElseThrow().getAnimalPoints();
-        if (animalPointsBalance < parseInt(points)) {
+        if (animalPointsBalance < points) {
             var message = getLocalizedMessage(NOT_ENOUGH_MONEY);
             return Optional.of(message);
         }

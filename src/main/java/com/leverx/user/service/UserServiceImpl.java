@@ -9,10 +9,16 @@ import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.validator.UserValidator;
 import lombok.AllArgsConstructor;
+import org.hibernate.TransactionException;
 
+import javax.persistence.EntityTransaction;
+import javax.persistence.RollbackException;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 
+import static com.leverx.core.config.HibernateEMFConfig.getEntityManager;
+import static com.leverx.core.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
 import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
 import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.lang.Integer.parseInt;
@@ -68,17 +74,23 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void pointsTransfer(String senderIdStr, String recipientIdStr, String pointsStr) {
-        var senderId = parseInt(senderIdStr);
-        var recipientId = parseInt(recipientIdStr);
-        int points = parseInt(pointsStr);
-        var sender = getUserById(senderId);
-        var recipient = getUserById(recipientId);
-        validator.validatePointsTransfer(senderIdStr, recipientIdStr, pointsStr);
-        removePointsFromSender(points, sender);
-        addPointsToRecipient(points, recipient);
-        userRepository.update(sender);
-        userRepository.update(recipient);
+    public void pointsTransfer(int senderId, int recipientId, int points) {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            var sender = getUserById(senderId);
+            var recipient = getUserById(recipientId);
+            validator.validatePointsTransfer(senderId, recipientId, points);
+            removePointsFromUser(points, sender);
+            addPointsToUser(points, recipient);
+            userRepository.update(sender);
+            userRepository.update(recipient);
+            transaction.commit();
+        } catch (RollbackException e) {
+            rollbackTransactionIfActive(transaction);
+            throw new TransactionException(e.getMessage());
+        }
     }
 
     public User getUserById(int id) {
@@ -90,12 +102,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private void addPointsToRecipient(int points, User recipient) {
+    private void addPointsToUser(int points, User recipient) {
         var recipientBalance = recipient.getAnimalPoints();
         recipient.setAnimalPoints(recipientBalance + points);
     }
 
-    private void removePointsFromSender(int points, User sender) {
+    private void removePointsFromUser(int points, User sender) {
         var senderBalance = sender.getAnimalPoints();
         sender.setAnimalPoints(senderBalance - points);
     }

@@ -148,7 +148,10 @@ public class UserServlet extends HttpServlet {
         try {
             var recipientId = request.getParameter(RECIPIENT_ID_PARAMETER);
             var points = request.getParameter(SENT_POINTS_PARAMETER);
-            userService.pointsTransfer(variable, recipientId, points);
+            var variableInt = parseInt(variable);
+            var recipientIdInt = parseInt(recipientId);
+            var pointsInt = parseInt(points);
+            userService.pointsTransfer(variableInt, recipientIdInt, pointsInt);
         } catch (ValidationFailedException e) {
             printValidationErrorMessages(response, e);
         }
