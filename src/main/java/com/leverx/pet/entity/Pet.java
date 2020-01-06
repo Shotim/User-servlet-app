@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.Column;
@@ -22,8 +23,8 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.Collection;
 
-import static com.leverx.validator.EntityValidator.MAX_SIZE;
-import static com.leverx.validator.EntityValidator.MIN_SIZE;
+import static com.leverx.core.validator.EntityValidator.MAX_SIZE;
+import static com.leverx.core.validator.EntityValidator.MIN_SIZE;
 import static java.util.Collections.emptyList;
 import static javax.persistence.FetchType.EAGER;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -31,6 +32,7 @@ import static javax.persistence.InheritanceType.JOINED;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
+@Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE)

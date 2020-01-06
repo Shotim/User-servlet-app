@@ -1,6 +1,6 @@
 package com.leverx.pet.servlet;
 
-import com.leverx.exception.ElementNotFoundException;
+import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.pet.service.PetService;
 
 import javax.servlet.http.HttpServlet;
@@ -9,10 +9,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
-import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.factory.beanFactory.BeanFactory.getPetService;
-import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
+import static com.leverx.core.config.BeanFactory.getPetService;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.core.utils.RequestURLUtils.getPathVariableFromRequest;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;

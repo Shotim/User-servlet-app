@@ -1,9 +1,9 @@
 package com.leverx.dog.servlet;
 
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.service.DogService;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.leverx.converter.EntityJsonConverter.fromEntityCollectionToJson;
-import static com.leverx.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.factory.beanFactory.BeanFactory.getDogService;
-import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
-import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
-import static com.leverx.utils.ServletUtils.readJsonBody;
+import static com.leverx.core.config.BeanFactory.getDogService;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.core.utils.RequestURLUtils.getPathVariableFromRequest;
+import static com.leverx.core.utils.ServletUtils.printValidationErrorMessages;
+import static com.leverx.core.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;

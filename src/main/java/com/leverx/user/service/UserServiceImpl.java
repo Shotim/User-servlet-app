@@ -1,17 +1,26 @@
 package com.leverx.user.service;
 
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
-import com.leverx.user.dto.PointsTransferDto;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.dto.UserOutputDto;
 import com.leverx.user.dto.converter.UserDtoConverter;
+import com.leverx.user.entity.User;
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.validator.UserValidator;
 import lombok.AllArgsConstructor;
+import org.hibernate.TransactionException;
 
+import javax.persistence.EntityTransaction;
+import javax.persistence.RollbackException;
 import java.util.Collection;
+import java.util.NoSuchElementException;
 
+import static com.leverx.core.config.HibernateEMFConfig.getEntityManager;
+import static com.leverx.core.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
+import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
+import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.lang.Integer.parseInt;
 
 
@@ -29,7 +38,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto findById(int id) throws ElementNotFoundException {
+    public UserOutputDto findById(int id) {
         var optionalUser = userRepository.findById(id);
         var user = optionalUser.orElseThrow(ElementNotFoundException::new);
         return converter.userToUserOutputDto(user);
@@ -42,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserOutputDto save(UserInputDto userInputDto) throws ValidationFailedException {
+    public UserOutputDto save(UserInputDto userInputDto) {
         validator.validateCreateUser(userInputDto);
         var user = converter.userInputDtoToUser(userInputDto);
         userRepository.save(user).orElseThrow();
@@ -56,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateById(String id, UserInputDto userInputDto) throws ValidationFailedException {
+    public void updateById(String id, UserInputDto userInputDto) {
         validator.validateUpdateUser(parseInt(id), userInputDto);
         var userId = parseInt(id);
         var user = converter.userInputDtoToUser(userId, userInputDto);
@@ -64,13 +73,42 @@ public class UserServiceImpl implements UserService {
         userRepository.update(user);
     }
 
-    //TODO: not finished
     @Override
-    public void pointsTransfer(String senderIdStr, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
-        validator.validatePointsTransfer(senderIdStr, pointsTransferDto);
-        var senderId = parseInt(senderIdStr);
-        var recipientId = pointsTransferDto.getRecipientId();
-        var animalPoints = pointsTransferDto.getAnimalPoints();
-        userRepository.pointsTransfer(senderId, recipientId, animalPoints);
+    public void pointsTransfer(int senderId, int recipientId, int points) {
+        var entityManager = getEntityManager();
+        EntityTransaction transaction = null;
+        try {
+            transaction = beginTransaction(entityManager);
+            var sender = getUserById(senderId);
+            var recipient = getUserById(recipientId);
+            validator.validatePointsTransfer(senderId, recipientId, points);
+            removePointsFromUser(points, sender);
+            addPointsToUser(points, recipient);
+            userRepository.update(sender);
+            userRepository.update(recipient);
+            transaction.commit();
+        } catch (RollbackException e) {
+            rollbackTransactionIfActive(transaction);
+            throw new TransactionException(e.getMessage());
+        }
+    }
+
+    public User getUserById(int id) {
+        try {
+            return userRepository.findById(id).get();
+        } catch (NoSuchElementException e) {
+            var message = getLocalizedMessage(USER_NOT_FOUND);
+            throw new ValidationFailedException(id + ": " + message);
+        }
+    }
+
+    private void addPointsToUser(int points, User recipient) {
+        var recipientBalance = recipient.getAnimalPoints();
+        recipient.setAnimalPoints(recipientBalance + points);
+    }
+
+    private void removePointsFromUser(int points, User sender) {
+        var senderBalance = sender.getAnimalPoints();
+        sender.setAnimalPoints(senderBalance - points);
     }
 }

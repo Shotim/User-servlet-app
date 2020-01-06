@@ -1,8 +1,8 @@
 package com.leverx.dog.repository;
 
+import com.leverx.core.exception.InternalServerErrorException;
 import com.leverx.dog.entity.Dog;
 import com.leverx.dog.entity.Dog_;
-import com.leverx.exception.InternalServerErrorException;
 import com.leverx.pet.entity.Pet;
 import com.leverx.pet.entity.Pet_;
 import com.leverx.user.entity.User_;
@@ -17,68 +17,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static com.leverx.config.EntityManagerFactoryConfig.getEntityManager;
-import static com.leverx.utils.RepositoryUtils.beginTransaction;
-import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
-import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
+import static com.leverx.core.config.HibernateEMFConfig.getEntityManager;
+import static com.leverx.core.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.core.utils.RepositoryUtils.commitTransactionIfActive;
+import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 
 @Slf4j
 public class DogRepositoryImpl implements DogRepository {
-
-    private static CriteriaQuery<Dog> getDogCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
-
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Dog.class);
-        var root = criteriaQuery.from(Dog.class);
-
-        criteriaQuery.select(root);
-
-        var path = root.get(attribute);
-        var equalCondition = builder.equal(path, id);
-
-        criteriaQuery.where(equalCondition);
-
-        return criteriaQuery;
-    }
-
-    private static List<Dog> getResultList(EntityManager entityManager, CriteriaQuery<Dog> criteriaQuery) {
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
-    private static CriteriaQuery<Dog> getDogCriteriaQuery(EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        return builder.createQuery(Dog.class);
-    }
-
-    private static List<Dog> getAllDogs(EntityManager entityManager) {
-        var criteriaQuery = getDogCriteriaQuery(entityManager);
-        var root = criteriaQuery.from(Dog.class);
-
-        criteriaQuery.select(root);
-
-        return getResultList(entityManager, criteriaQuery);
-    }
-
-    private static Dog getDogById(int id, EntityManager entityManager) {
-        var criteriaQuery = getDogCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getSingleResult();
-    }
-
-    private static Collection<Dog> retrieveDogsByOwner(int ownerId, EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Dog.class);
-
-        var root = criteriaQuery.from(Dog.class);
-        var users = root.join(Dog_.owners);
-        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
-        criteriaQuery.select(root)
-                .where(idEqualToOwnerId);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
 
     @Override
     public Collection<Dog> findAll() {
@@ -162,5 +108,59 @@ public class DogRepositoryImpl implements DogRepository {
         } finally {
             entityManager.close();
         }
+    }
+
+    private CriteriaQuery<Dog> getDogCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
+
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Dog.class);
+        var root = criteriaQuery.from(Dog.class);
+
+        criteriaQuery.select(root);
+
+        var path = root.get(attribute);
+        var equalCondition = builder.equal(path, id);
+
+        criteriaQuery.where(equalCondition);
+
+        return criteriaQuery;
+    }
+
+    private List<Dog> getResultList(EntityManager entityManager, CriteriaQuery<Dog> criteriaQuery) {
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
+    }
+
+    private CriteriaQuery<Dog> getDogCriteriaQuery(EntityManager entityManager) {
+        var builder = entityManager.getCriteriaBuilder();
+        return builder.createQuery(Dog.class);
+    }
+
+    private List<Dog> getAllDogs(EntityManager entityManager) {
+        var criteriaQuery = getDogCriteriaQuery(entityManager);
+        var root = criteriaQuery.from(Dog.class);
+
+        criteriaQuery.select(root);
+
+        return getResultList(entityManager, criteriaQuery);
+    }
+
+    private Dog getDogById(int id, EntityManager entityManager) {
+        var criteriaQuery = getDogCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id);
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getSingleResult();
+    }
+
+    private Collection<Dog> retrieveDogsByOwner(int ownerId, EntityManager entityManager) {
+        var builder = entityManager.getCriteriaBuilder();
+        var criteriaQuery = builder.createQuery(Dog.class);
+
+        var root = criteriaQuery.from(Dog.class);
+        var users = root.join(Dog_.owners);
+        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
+        criteriaQuery.select(root)
+                .where(idEqualToOwnerId);
+        var query = entityManager.createQuery(criteriaQuery);
+        return query.getResultList();
     }
 }

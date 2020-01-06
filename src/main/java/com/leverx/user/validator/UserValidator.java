@@ -1,12 +1,11 @@
 package com.leverx.user.validator;
 
 import com.leverx.cat.validator.CatValidator;
+import com.leverx.core.exception.ValidationFailedException;
+import com.leverx.core.validator.EntityValidator;
 import com.leverx.dog.validator.DogValidator;
-import com.leverx.exception.ValidationFailedException;
-import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.repository.UserRepository;
-import com.leverx.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.ArrayList;
@@ -14,12 +13,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.*;
 
-import static com.leverx.validator.ValidationErrorMessages.EQUAL_SENDER_AND_RECIPIENT;
-import static com.leverx.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY;
-import static com.leverx.validator.ValidationErrorMessages.USER_NOT_FOUND;
-import static com.leverx.validator.ValidationErrorMessages.getLocalizedMessage;
-import static java.lang.Integer.parseInt;
+import static com.leverx.core.validator.ValidationErrorMessages.EQUAL_SENDER_AND_RECIPIENT;
+import static com.leverx.core.validator.ValidationErrorMessages.NOT_ENOUGH_MONEY;
+import static com.leverx.core.validator.ValidationErrorMessages.USER_NOT_FOUND;
+import static com.leverx.core.validator.ValidationErrorMessages.getLocalizedMessage;
 import static java.util.Collections.emptyList;
+import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 
 @AllArgsConstructor
 public class UserValidator {
@@ -58,23 +57,15 @@ public class UserValidator {
                 .collect(Collectors.joining("; "));
     }
 
-    public void validatePointsTransfer(String senderId, PointsTransferDto pointsTransferDto) throws ValidationFailedException {
+    public void validatePointsTransfer(int senderId, int recipientId, int points) throws ValidationFailedException {
         var errorsList = new ArrayList<Optional<String>>();
-        var errors = validator.validate(pointsTransferDto);
-        errorsList.add(errors);
-        var senderExistence = validateSenderExistence(senderId);
-        errorsList.add(senderExistence);
-        var recipientExistence = validateRecipientExistence(pointsTransferDto);
-        errorsList.add(recipientExistence);
-        var equalIdsError = validateSenderAndRecipientEqualId(senderId, pointsTransferDto);
+        var equalIdsError = validateSenderAndRecipientEqualId(senderId, recipientId);
         errorsList.add(equalIdsError);
-        if (recipientExistence.isPresent()) {
-            var balanceError = validatePointsBalance(senderId, pointsTransferDto);
-            errorsList.add(balanceError);
-        }
+        var balanceError = validatePointsBalance(senderId, points);
+        errorsList.add(balanceError);
         String message = createMessageFromList(errorsList);
         if (!message.isEmpty()) {
-            throw new ValidationFailedException(message);
+            throw new ValidationFailedException(message, SC_BAD_REQUEST);
         }
     }
 
@@ -101,30 +92,21 @@ public class UserValidator {
         return errorsList;
     }
 
-    private Optional<String> validateSenderAndRecipientEqualId(String id, PointsTransferDto pointsTransferDto) {
-        if (parseInt(id) == pointsTransferDto.getRecipientId()) {
+    private Optional<String> validateSenderAndRecipientEqualId(int senderId, int recipientId) {
+        if (senderId == recipientId) {
             var message = getLocalizedMessage(EQUAL_SENDER_AND_RECIPIENT);
             return Optional.of(message);
         }
         return Optional.empty();
     }
 
-    private Optional<String> validatePointsBalance(String senderId, PointsTransferDto pointsTransferDto) {
-        var user = userRepository.findById(parseInt(senderId));
+    private Optional<String> validatePointsBalance(int senderId, int points) {
+        var user = userRepository.findById(senderId);
         var animalPointsBalance = user.orElseThrow().getAnimalPoints();
-        if (animalPointsBalance < pointsTransferDto.getAnimalPoints()) {
+        if (animalPointsBalance < points) {
             var message = getLocalizedMessage(NOT_ENOUGH_MONEY);
             return Optional.of(message);
         }
         return Optional.empty();
-    }
-
-    private Optional<String> validateRecipientExistence(PointsTransferDto pointsTransferDto) {
-        var recipientId = pointsTransferDto.getRecipientId();
-        return validateUserId(recipientId);
-    }
-
-    private Optional<String> validateSenderExistence(String senderId) {
-        return validateUserId(parseInt(senderId));
     }
 }

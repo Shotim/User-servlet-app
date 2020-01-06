@@ -4,9 +4,8 @@ import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.dto.converter.CatDtoConverter;
 import com.leverx.cat.repository.CatRepository;
-import com.leverx.exception.ElementNotFoundException;
-import com.leverx.exception.ValidationFailedException;
-import com.leverx.validator.EntityValidator;
+import com.leverx.core.exception.ElementNotFoundException;
+import com.leverx.core.validator.EntityValidator;
 import lombok.AllArgsConstructor;
 
 import java.util.Collection;
@@ -15,9 +14,9 @@ import java.util.Collection;
 @AllArgsConstructor
 public class CatServiceImpl implements CatService {
 
+    private final CatDtoConverter converter = new CatDtoConverter();
     private EntityValidator validator;
     private CatRepository catRepository;
-    private final CatDtoConverter converter = new CatDtoConverter();
 
     @Override
     public Collection<CatOutputDto> findAll() {
@@ -26,7 +25,7 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public CatOutputDto findById(int id) throws ElementNotFoundException {
+    public CatOutputDto findById(int id) {
         var optionalCat = catRepository.findById(id);
         var cat = optionalCat.orElseThrow(ElementNotFoundException::new);
         return converter.catToCatOutputDto(cat);
@@ -39,7 +38,7 @@ public class CatServiceImpl implements CatService {
     }
 
     @Override
-    public CatOutputDto save(CatInputDto catInputDto) throws ValidationFailedException {
+    public CatOutputDto save(CatInputDto catInputDto) {
         validator.validateEntity(catInputDto);
         var cat = converter.catInputDtoToCat(catInputDto);
         catRepository.save(cat);
