@@ -1,6 +1,9 @@
 # Restful Application on Servlet API 2.5
 ## Information
 This project was done to realize how java servlets work. The entity `User` is included in it and simple basic CRUD methods are realized for it.
+There were realized 2 connection pools for connecting to database: HikariCP and TomcatCP.
+HikariCP was configured for Hibernate.
+TomcatCP was configured for establishing connection for PetRepository.
 
 ## Requirements
 * Java 1.8 or later
@@ -15,7 +18,7 @@ This project was done to realize how java servlets work. The entity `User` is in
 
 ## Deployment
 
-#### * Clone git repository `https://github.com/Shotim/User-servlet-app`
+#### * Clone git repository
 
 #### * Build project:
 ```
