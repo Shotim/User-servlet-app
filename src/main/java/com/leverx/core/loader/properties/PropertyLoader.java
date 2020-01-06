@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.props;
+package com.leverx.core.loader.properties;
 
 import com.leverx.core.exception.InternalServerErrorException;
 import lombok.extern.slf4j.Slf4j;
@@ -44,5 +44,9 @@ public class PropertyLoader {
 
     public Map<String, String> getPropertiesMap() {
         return this.propertiesMap;
+    }
+
+    public String getProperty(String propertyName) {
+        return this.propertiesMap.get(propertyName);
     }
 }

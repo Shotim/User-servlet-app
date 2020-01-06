@@ -9,8 +9,8 @@ import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
-import static com.leverx.validator.EntityValidator.MAX_SIZE;
-import static com.leverx.validator.EntityValidator.MIN_SIZE;
+import static com.leverx.core.validator.EntityValidator.MAX_SIZE;
+import static com.leverx.core.validator.EntityValidator.MIN_SIZE;
 import static java.util.Collections.emptyList;
 import static lombok.AccessLevel.PRIVATE;
 

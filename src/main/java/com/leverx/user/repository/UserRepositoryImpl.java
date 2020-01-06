@@ -9,16 +9,15 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.leverx.core.config.EntityManagerFactoryConfig.getEntityManager;
-import static com.leverx.utils.RepositoryUtils.beginTransaction;
-import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
-import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
+import static com.leverx.core.config.HibernateEMFConfig.getEntityManager;
+import static com.leverx.core.utils.RepositoryUtils.beginTransaction;
+import static com.leverx.core.utils.RepositoryUtils.commitTransactionIfActive;
+import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
 
 @Slf4j
 
@@ -175,42 +174,6 @@ public class UserRepositoryImpl implements UserRepository {
         } finally {
             entityManager.close();
         }
-    }
-
-    //TODO: not finished points transfer
-    @Override
-    public void pointsTransfer(int senderId, int recipientId, int points) {
-        var entityManager = getEntityManager();
-        var builder = entityManager.getCriteriaBuilder();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-
-            addAnimalPointsToUser(recipientId, entityManager, builder, points);
-
-            entityManager.joinTransaction();
-
-            addAnimalPointsToUser(senderId, entityManager, builder, -points);
-            transaction.commit();
-        } catch (RuntimeException e) {
-            log.error(e.getMessage());
-            rollbackTransactionIfActive(transaction);
-            throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
-        }
-    }
-
-    private void addAnimalPointsToUser(int userId, EntityManager entityManager, CriteriaBuilder builder, int points) {
-        var criteriaUpdate = builder.createCriteriaUpdate(User.class);
-        var root = criteriaUpdate.from(User.class);
-        var user = builder.equal(root.get(User_.id), userId);
-        var addPoints = builder.sum(root.get(User_.animalPoints), points);
-        criteriaUpdate.where(user)
-                .set(root.get(User_.animalPoints), addPoints);
-        var query = entityManager.createQuery(criteriaUpdate);
-        query.executeUpdate();
     }
 
     private <T> CriteriaQuery<User> getUserCriteriaQueryEqualToParameter(T parameter, SingularAttribute<User, ?> attribute, EntityManager entityManager) {

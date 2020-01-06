@@ -1,4 +1,4 @@
-package com.leverx.validator;
+package com.leverx.core.validator;
 
 import java.util.Locale;
 import java.util.ResourceBundle;

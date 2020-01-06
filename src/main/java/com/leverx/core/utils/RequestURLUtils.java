@@ -1,4 +1,4 @@
-package com.leverx.utils;
+package com.leverx.core.utils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;

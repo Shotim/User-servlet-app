@@ -1,4 +1,4 @@
-package com.leverx.validator;
+package com.leverx.core.validator;
 
 import com.leverx.core.exception.ValidationFailedException;
 import lombok.extern.slf4j.Slf4j;

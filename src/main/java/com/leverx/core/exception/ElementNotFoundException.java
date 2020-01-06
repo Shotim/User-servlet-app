@@ -8,7 +8,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static lombok.AccessLevel.PRIVATE;
 
 @FieldDefaults(level = PRIVATE)
-public class ElementNotFoundException extends Exception {
+public class ElementNotFoundException extends RuntimeException {
 
     static final String message = "Entity was not found in database";
     @Getter

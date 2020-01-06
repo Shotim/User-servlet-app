@@ -1,11 +1,10 @@
 package com.leverx.user.servlet;
 
 import com.leverx.cat.service.CatService;
-import com.leverx.dog.service.DogService;
 import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.core.exception.ValidationFailedException;
+import com.leverx.dog.service.DogService;
 import com.leverx.pet.service.PetService;
-import com.leverx.user.dto.PointsTransferDto;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.service.UserService;
 
@@ -15,19 +14,19 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import static com.leverx.core.config.BeanFactory.getCatService;
+import static com.leverx.core.config.BeanFactory.getDogService;
+import static com.leverx.core.config.BeanFactory.getPetService;
+import static com.leverx.core.config.BeanFactory.getUserService;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
 import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
-import static com.leverx.core.config.beanFactory.BeanFactory.getCatService;
-import static com.leverx.core.config.beanFactory.BeanFactory.getDogService;
-import static com.leverx.core.config.beanFactory.BeanFactory.getPetService;
-import static com.leverx.core.config.beanFactory.BeanFactory.getUserService;
-import static com.leverx.utils.RequestURLUtils.getPathVariableFromRequest;
-import static com.leverx.utils.ServletUtils.initUserServletGetMethodType;
-import static com.leverx.utils.ServletUtils.printEntityCollectionToResponseBody;
-import static com.leverx.utils.ServletUtils.printValidationErrorMessages;
-import static com.leverx.utils.ServletUtils.readJsonBody;
+import static com.leverx.core.utils.RequestURLUtils.getPathVariableFromRequest;
+import static com.leverx.core.utils.ServletUtils.initUserServletGetMethodType;
+import static com.leverx.core.utils.ServletUtils.initUserServletPostMethodType;
+import static com.leverx.core.utils.ServletUtils.printEntityCollectionToResponseBody;
+import static com.leverx.core.utils.ServletUtils.printValidationErrorMessages;
+import static com.leverx.core.utils.ServletUtils.readJsonBody;
 import static java.lang.Integer.parseInt;
-import static java.util.Objects.nonNull;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
@@ -36,7 +35,8 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 
 public class UserServlet extends HttpServlet {
 
-    private static final String TRANSFER_POINTS = "transferPoints";
+    private static final String RECIPIENT_ID_PARAMETER = "recipientId";
+    private static final String SENT_POINTS_PARAMETER = "points";
 
     private UserService userService;
     private CatService catService;
@@ -52,7 +52,6 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
         var responseWriter = response.getWriter();
         var methodTypeWithPathVariable = initUserServletGetMethodType(request);
         var methodType = methodTypeWithPathVariable.getMethodType();
@@ -71,12 +70,12 @@ public class UserServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var userDto = readJsonBody(request, UserInputDto.class);
-        try {
-            userService.save(userDto);
-            response.setStatus(SC_CREATED);
-        } catch (ValidationFailedException e) {
-            printValidationErrorMessages(response, e);
+        var methodTypePlusRequiredVar = initUserServletPostMethodType(request);
+        var methodType = methodTypePlusRequiredVar.getMethodType();
+        var variable = methodTypePlusRequiredVar.getPathVar();
+        switch (methodType) {
+            case CREATE_USER -> createUser(request, response);
+            case TRANSFER_POINTS -> transferPoints(request, response, variable);
         }
     }
 
@@ -87,29 +86,15 @@ public class UserServlet extends HttpServlet {
         response.setStatus(SC_NO_CONTENT);
     }
 
-    //TODO: pointsTransfer refactor
     @Override
     protected void doPut(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        var action = request.getParameter("action");
-        if (nonNull(action)) {
-            if (TRANSFER_POINTS.equals(action)) {
-                var transferPointsDto = readJsonBody(request, PointsTransferDto.class);
-                var variable = getPathVariableFromRequest(request);
-                try {
-                    userService.pointsTransfer(variable, transferPointsDto);
-                } catch (ValidationFailedException e) {
-                    printValidationErrorMessages(response, e);
-                }
-            }
-        } else {
-            var userDto = readJsonBody(request, UserInputDto.class);
-            var variable = getPathVariableFromRequest(request);
-            try {
-                userService.updateById(variable, userDto);
-                response.setStatus(SC_OK);
-            } catch (ValidationFailedException e) {
-                printValidationErrorMessages(response, e);
-            }
+        var userDto = readJsonBody(request, UserInputDto.class);
+        var variable = getPathVariableFromRequest(request);
+        try {
+            userService.updateById(variable, userDto);
+            response.setStatus(SC_OK);
+        } catch (ValidationFailedException e) {
+            printValidationErrorMessages(response, e);
         }
     }
 
@@ -159,4 +144,26 @@ public class UserServlet extends HttpServlet {
         return pets.isEmpty() ? SC_NOT_FOUND : SC_OK;
     }
 
+    private void transferPoints(HttpServletRequest request, HttpServletResponse response, String variable) throws IOException {
+        try {
+            var recipientId = request.getParameter(RECIPIENT_ID_PARAMETER);
+            var points = request.getParameter(SENT_POINTS_PARAMETER);
+            var variableInt = parseInt(variable);
+            var recipientIdInt = parseInt(recipientId);
+            var pointsInt = parseInt(points);
+            userService.pointsTransfer(variableInt, recipientIdInt, pointsInt);
+        } catch (ValidationFailedException e) {
+            printValidationErrorMessages(response, e);
+        }
+    }
+
+    private void createUser(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        var userDto = readJsonBody(request, UserInputDto.class);
+        try {
+            userService.save(userDto);
+            response.setStatus(SC_CREATED);
+        } catch (ValidationFailedException e) {
+            printValidationErrorMessages(response, e);
+        }
+    }
 }

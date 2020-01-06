@@ -15,10 +15,16 @@
         <properties>
             <property name="hibernate.connection.driver_class" value="com.mysql.cj.jdbc.Driver"/>
             <property name="hibernate.dialect" value="org.hibernate.dialect.MySQL8Dialect"/>
-            <property name="hibernate.connection.pool_size" value="10"/>
             <property name="hibernate.show_sql" value="true"/>
             <property name="hibernate.hdm2dd1.auto" value="update"/>
             <property name="javax.persistence.schema-generation.database.action" value="update"/>
+
+            <property name="hibernate.connection.provider_class"
+                      value="org.hibernate.hikaricp.internal.HikariCPConnectionProvider"/>
+            <property name="hibernate.hikari.driverClassName" value="com.mysql.cj.jdbc.Driver"/>
+            <property name="hibernate.hikari.minimumIdle" value="20"/>
+            <property name="hibernate.hikari.maximumPoolSize" value="20"/>
+
         </properties>
     </persistence-unit>
 

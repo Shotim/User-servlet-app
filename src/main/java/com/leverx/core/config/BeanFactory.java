@@ -1,4 +1,4 @@
-package com.leverx.core.config.beanFactory;
+package com.leverx.core.config;
 
 import com.leverx.cat.repository.CatRepository;
 import com.leverx.cat.repository.CatRepositoryImpl;
@@ -20,7 +20,7 @@ import com.leverx.user.repository.UserRepositoryImpl;
 import com.leverx.user.service.UserService;
 import com.leverx.user.service.UserServiceImpl;
 import com.leverx.user.validator.UserValidator;
-import com.leverx.validator.EntityValidator;
+import com.leverx.core.validator.EntityValidator;
 
 public class BeanFactory {
 

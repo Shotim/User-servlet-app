@@ -1,4 +1,4 @@
-package com.leverx.credentialsLoader.envvar;
+package com.leverx.core.loader.environmentVariables;
 
 import java.util.Collection;
 import java.util.Map;
@@ -20,11 +20,11 @@ public class EnvironmentVariableLoader {
                 .collect(Collectors.toMap(identity(), this::getEnvVarValue));
     }
 
-    private String getEnvVarValue(String envVar) {
+    public String getEnvVarValue(String envVar) {
         return getenv(envVar);
     }
 
-    public Map<String, String> getProperties() {
+    public Map<String, String> getPropertiesMap() {
         return this.propertiesMap;
     }
 }

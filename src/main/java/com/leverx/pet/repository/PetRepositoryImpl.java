@@ -1,144 +1,109 @@
 package com.leverx.pet.repository;
 
+import com.leverx.cat.entity.Cat;
 import com.leverx.core.exception.InternalServerErrorException;
+import com.leverx.dog.entity.Dog;
 import com.leverx.pet.entity.Pet;
-import com.leverx.pet.entity.Pet_;
-import com.leverx.user.entity.User_;
 import lombok.extern.slf4j.Slf4j;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.NoResultException;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.metamodel.SingularAttribute;
+import java.lang.reflect.InvocationTargetException;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
-import static com.leverx.core.config.EntityManagerFactoryConfig.getEntityManager;
-import static com.leverx.utils.RepositoryUtils.beginTransaction;
-import static com.leverx.utils.RepositoryUtils.commitTransactionIfActive;
-import static com.leverx.utils.RepositoryUtils.rollbackTransactionIfActive;
+import static com.leverx.core.config.TomcatCPConfig.getConnection;
 
 @Slf4j
 public class PetRepositoryImpl implements PetRepository {
 
-    private static CriteriaQuery<Pet> getPetCriteriaQueryEqualToIdParameter(int id, EntityManager entityManager, SingularAttribute<Pet, ?> attribute) {
-
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Pet.class);
-        var root = criteriaQuery.from(Pet.class);
-
-        criteriaQuery.select(root);
-
-        var path = root.get(attribute);
-        var equalCondition = builder.equal(path, id);
-
-        criteriaQuery.where(equalCondition);
-
-        return criteriaQuery;
-    }
-
-    private static List<Pet> getResultList(EntityManager entityManager, CriteriaQuery<Pet> criteriaQuery) {
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
-    private static CriteriaQuery<Pet> getPetCriteriaQuery(EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        return builder.createQuery(Pet.class);
-    }
-
-    private static List<Pet> getAllPets(EntityManager entityManager) {
-        var criteriaQuery = getPetCriteriaQuery(entityManager);
-        var root = criteriaQuery.from(Pet.class);
-
-        criteriaQuery.select(root);
-
-        return getResultList(entityManager, criteriaQuery);
-    }
-
-    private static Pet getPetById(int id, EntityManager entityManager) {
-        var criteriaQuery = getPetCriteriaQueryEqualToIdParameter(id, entityManager, Pet_.id);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getSingleResult();
-    }
-
-    private static Collection<Pet> retrievePetsByOwner(int ownerId, EntityManager entityManager) {
-        var builder = entityManager.getCriteriaBuilder();
-        var criteriaQuery = builder.createQuery(Pet.class);
-
-        var root = criteriaQuery.from(Pet.class);
-        var users = root.join(Pet_.owners);
-        var idEqualToOwnerId = builder.equal(users.get(User_.id), ownerId);
-        criteriaQuery.select(root)
-                .where(idEqualToOwnerId);
-        var query = entityManager.createQuery(criteriaQuery);
-        return query.getResultList();
-    }
-
     @Override
     public Collection<Pet> findAll() {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var pets = getAllPets(entityManager);
-            transaction.commit();
-            log.debug("{} pets were found in db", pets.size());
-            return pets;
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
+        try (var connection = getConnection();
+             var preparedStatement = connection.prepareStatement("select * from servlet_app.pets left join dogs d on pets.id = d.dogId left join cats c on pets.id = c.catId")) {
+            try (var resultSet = preparedStatement.executeQuery()) {
+                return getPetsCollectionFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            log.error(e.getSQLState());
             throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
         }
     }
 
     @Override
     public Optional<Pet> findById(int id) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var pet = getPetById(id, entityManager);
-            transaction.commit();
-            log.debug("Pet with id = {} was found in db", id);
-            return Optional.of(pet);
-        } catch (NoResultException e) {
-            commitTransactionIfActive(transaction);
-            log.debug("Pet with id = {} was not found in db", id);
-            return Optional.empty();
-
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
+        try (var connection = getConnection();
+             var preparedStatement = connection.prepareStatement("select * from servlet_app.pets left join dogs d on pets.id = d.dogId left join cats c on pets.id = c.catId where id=?")) {
+            preparedStatement.setInt(1, id);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                return getPetFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            log.error(e.getSQLState());
             throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
         }
     }
 
     @Override
     public Collection<Pet> findByOwner(int ownerId) {
-        var entityManager = getEntityManager();
-        EntityTransaction transaction = null;
-        try {
-            transaction = beginTransaction(entityManager);
-            var pets = retrievePetsByOwner(ownerId, entityManager);
-            transaction.commit();
-            log.debug("Pet with ownerId = {} were found in db", ownerId);
-            return pets;
-        } catch (RuntimeException e) {
-            rollbackTransactionIfActive(transaction);
-            log.error(e.getMessage());
+        try (var connection = getConnection();
+             var preparedStatement = connection.prepareStatement("select * from servlet_app.pets left join dogs d on pets.id = d.dogId left join cats c on pets.id = c.catId join user_pet up on pets.id = up.petId where userId=?")) {
+            preparedStatement.setInt(1, ownerId);
+            try (var resultSet = preparedStatement.executeQuery()) {
+                return getPetsCollectionFromResultSet(resultSet);
+            }
+        } catch (SQLException e) {
+            log.error(e.getSQLState());
             throw new InternalServerErrorException(e.getMessage());
-
-        } finally {
-            entityManager.close();
         }
+    }
+
+    private Optional<Pet> getPetFromResultSet(ResultSet resultSet) throws SQLException {
+        var pets = getPetsCollectionFromResultSet(resultSet);
+        return pets.stream().findFirst();
+    }
+
+    private Collection<Pet> getPetsCollectionFromResultSet(ResultSet resultSet) throws SQLException {
+        var pets = new ArrayList<Pet>();
+        while (resultSet.next()) {
+            var id = resultSet.getInt("id");
+            var dateOfBirth = resultSet.getDate("dateOfBirth").toLocalDate();
+            var name = resultSet.getString("name");
+            var miceCaughtNumber = resultSet.getInt("miceCaughtNumber");
+            var isCutEars = resultSet.getBoolean("isCutEars");
+            if (isADog(miceCaughtNumber, isCutEars)) {
+                addPetToCollection(pets, id, dateOfBirth, name, Dog.class);
+            } else {
+                addPetToCollection(pets, id, dateOfBirth, name, Cat.class);
+            }
+        }
+        return pets;
+    }
+
+    private boolean isADog(int miceCaughtNumber, boolean isCutEars) {
+        return isNull(miceCaughtNumber) && !isNull(isCutEars);
+    }
+
+    private <T extends Pet> void addPetToCollection(ArrayList<Pet> pets, int id, LocalDate dateOfBirth, String name, Class<T> tClass) {
+        Pet pet = null;
+        try {
+            pet = tClass.getDeclaredConstructor().newInstance();
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            log.error(e.getMessage());
+        }
+        pet.setId(id);
+        pet.setName(name);
+        pet.setDateOfBirth(dateOfBirth);
+        pets.add(pet);
+    }
+
+    private boolean isNull(int columnValue) {
+        return columnValue == 0;
+    }
+
+    private boolean isNull(boolean columnValue) {
+        return columnValue;
     }
 }
