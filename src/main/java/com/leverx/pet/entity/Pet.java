@@ -1,6 +1,7 @@
 package com.leverx.pet.entity;
 
 import com.leverx.user.entity.User;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
@@ -33,6 +34,7 @@ import static lombok.AccessLevel.PRIVATE;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 @NoArgsConstructor
 @RequiredArgsConstructor
 @FieldDefaults(level = PRIVATE)
