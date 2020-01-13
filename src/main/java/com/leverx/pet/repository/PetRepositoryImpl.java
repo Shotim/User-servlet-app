@@ -4,6 +4,7 @@ import com.leverx.cat.entity.Cat;
 import com.leverx.core.exception.InternalServerErrorException;
 import com.leverx.dog.entity.Dog;
 import com.leverx.pet.entity.Pet;
+import com.leverx.user.entity.User;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationTargetException;
@@ -68,25 +69,52 @@ public class PetRepositoryImpl implements PetRepository {
     private Collection<Pet> getPetsCollectionFromResultSet(ResultSet resultSet) throws SQLException {
         var pets = new ArrayList<Pet>();
         while (resultSet.next()) {
-            var id = resultSet.getInt("id");
-            var dateOfBirth = resultSet.getDate("dateOfBirth").toLocalDate();
-            var name = resultSet.getString("name");
+            var petId = resultSet.getInt("id");
+            var petDateOfBirth = resultSet.getDate("dateOfBirth").toLocalDate();
+            var petName = resultSet.getString("name");
             var miceCaughtNumber = resultSet.getInt("miceCaughtNumber");
             var isCutEars = resultSet.getBoolean("isCutEars");
+            var userCollection = getUserCollectionForPet(petId);
             if (isADog(miceCaughtNumber, isCutEars)) {
-                addPetToCollection(pets, id, dateOfBirth, name, Dog.class);
+                addPetToCollection(pets, petId, petDateOfBirth, petName, userCollection, Dog.class);
             } else {
-                addPetToCollection(pets, id, dateOfBirth, name, Cat.class);
+                addPetToCollection(pets, petId, petDateOfBirth, petName, userCollection, Cat.class);
             }
         }
         return pets;
+    }
+
+    private ArrayList<User> getUserCollectionForPet(int petId) {
+        var userCollection = new ArrayList<User>();
+        try (var connection = getConnection();
+             var preparedStatement = connection.prepareStatement("select * from servlet_app.users join user_pet up on users.id = up.userId where petId=?")) {
+            preparedStatement.setInt(1, petId);
+            try (var userResultSet = preparedStatement.executeQuery()) {
+                while (userResultSet.next()) {
+                    var userId = userResultSet.getInt("id");
+                    var userName = userResultSet.getString("name");
+                    var userEmail = userResultSet.getString("email");
+                    var animalPoints = userResultSet.getInt("animalPoints");
+                    var user = new User();
+                    user.setId(userId);
+                    user.setName(userName);
+                    user.setEmail(userEmail);
+                    user.setAnimalPoints(animalPoints);
+                    userCollection.add(user);
+                }
+            }
+        } catch (SQLException e) {
+            log.error(e.getSQLState());
+            throw new InternalServerErrorException(e.getMessage());
+        }
+        return userCollection;
     }
 
     private boolean isADog(int miceCaughtNumber, boolean isCutEars) {
         return isNull(miceCaughtNumber) && !isNull(isCutEars);
     }
 
-    private <T extends Pet> void addPetToCollection(ArrayList<Pet> pets, int id, LocalDate dateOfBirth, String name, Class<T> tClass) {
+    private <T extends Pet> void addPetToCollection(ArrayList<Pet> pets, int id, LocalDate dateOfBirth, String name, Collection<User> owners, Class<T> tClass) {
         Pet pet = null;
         try {
             pet = tClass.getDeclaredConstructor().newInstance();
@@ -96,6 +124,7 @@ public class PetRepositoryImpl implements PetRepository {
         pet.setId(id);
         pet.setName(name);
         pet.setDateOfBirth(dateOfBirth);
+        pet.setOwners(owners);
         pets.add(pet);
     }
 

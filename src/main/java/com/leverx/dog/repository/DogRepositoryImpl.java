@@ -92,15 +92,15 @@ public class DogRepositoryImpl implements DogRepository {
     }
 
     @Override
-    public Optional<Dog> save(Dog cat) {
+    public Optional<Dog> save(Dog dog) {
         var entityManager = getEntityManager();
         EntityTransaction transaction = null;
         try {
             transaction = beginTransaction(entityManager);
-            entityManager.persist(cat);
+            entityManager.persist(dog);
             transaction.commit();
             log.debug("Dog was saved");
-            return Optional.of(cat);
+            return Optional.of(dog);
         } catch (RuntimeException e) {
             log.error(e.getMessage());
             rollbackTransactionIfActive(transaction);

@@ -13,5 +13,5 @@ public interface DogService {
 
     Collection<DogOutputDto> findByOwner(int id);
 
-    DogOutputDto save(DogInputDto cat);
+    DogOutputDto save(DogInputDto dogInputDto);
 }

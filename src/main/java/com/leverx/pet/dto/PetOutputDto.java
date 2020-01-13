@@ -14,6 +14,7 @@ import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static com.fasterxml.jackson.annotation.JsonFormat.Shape.STRING;
 import static com.leverx.core.validator.EntityValidator.MAX_SIZE;
@@ -43,5 +44,21 @@ public class PetOutputDto {
         this.id = id;
         this.dateOfBirth = dateOfBirth;
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PetOutputDto that = (PetOutputDto) o;
+        return (((PetOutputDto) o).getDateOfBirth().isEqual(that.getDateOfBirth())
+                && ((PetOutputDto) o).getId() == that.getId()
+                && ((PetOutputDto) o).getName().equals(that.getName())
+                && ((PetOutputDto) o).getOwnerIds().equals(that.getOwnerIds()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, dateOfBirth, ownerIds);
     }
 }
