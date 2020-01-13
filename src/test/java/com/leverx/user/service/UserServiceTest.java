@@ -2,11 +2,13 @@ package com.leverx.user.service;
 
 import com.leverx.user.repository.UserRepository;
 import com.leverx.user.repository.UserRepositoryImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 
 import static com.leverx.core.config.BeanFactory.getUserService;
 import static org.mockito.Mockito.mock;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 class UserServiceTest {
 
@@ -14,6 +16,11 @@ class UserServiceTest {
 
     @InjectMocks
     private UserService userService = getUserService();
+
+    @BeforeEach
+    void init() {
+        initMocks(this);
+    }
 
     @Test
     void shouldReturnUserList() {
