@@ -5,6 +5,7 @@ import com.leverx.core.exception.ValidationFailedException;
 import com.leverx.dog.dto.DogInputDto;
 import com.leverx.dog.service.DogService;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,7 @@ import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
+@WebServlet(urlPatterns = {"/dogs","/dogs/*"})
 public class DogServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "dogs";

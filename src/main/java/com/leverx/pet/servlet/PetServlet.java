@@ -3,6 +3,7 @@ package com.leverx.pet.servlet;
 import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.pet.service.PetService;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +18,7 @@ import static java.lang.Integer.parseInt;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
+@WebServlet(urlPatterns = {"/pets","/pets/*"})
 public class PetServlet extends HttpServlet {
 
     private static final String ORIGIN_PATH = "pets";

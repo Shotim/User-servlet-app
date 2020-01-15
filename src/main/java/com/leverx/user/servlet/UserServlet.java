@@ -8,6 +8,7 @@ import com.leverx.pet.service.PetService;
 import com.leverx.user.dto.UserInputDto;
 import com.leverx.user.service.UserService;
 
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -32,7 +33,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 
-
+@WebServlet(urlPatterns = {"/users","/users/*"})
 public class UserServlet extends HttpServlet {
 
     private static final String RECIPIENT_ID_PARAMETER = "recipientId";

@@ -8,11 +8,13 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
 import java.io.IOException;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Slf4j
+@WebFilter(urlPatterns = {"*"})
 public class ServletFilter implements Filter {
 
     private static final String APPLICATION_JSON = "application/json";

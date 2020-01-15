@@ -6,6 +6,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
+import javax.servlet.annotation.WebListener;
 
 import static com.leverx.core.config.HibernateEMFConfig.closeEntityManagerFactory;
 import static com.leverx.core.config.HibernateEMFConfig.getEntityManagerFactory;
@@ -13,6 +14,7 @@ import static com.leverx.core.config.TomcatCPConfig.createConnectionPool;
 import static java.util.Locale.setDefault;
 
 @Slf4j
+@WebListener
 public class ServletListener implements ServletRequestListener, ServletContextListener {
 
     @Override
