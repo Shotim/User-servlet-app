@@ -19,5 +19,5 @@ public interface UserService {
 
     void updateById(String id, UserInputDto user);
 
-    void pointsTransfer(int senderIdStr, int recipientId, int points);
+    void pointsTransfer(int senderId, int recipientId, int points);
 }

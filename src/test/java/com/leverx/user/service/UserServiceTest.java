@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.leverx.core.config.BeanFactory.getUserService;
@@ -596,9 +597,7 @@ class UserServiceTest {
         var senderId = 11;
         var recipientId = 5;
         var transferredAnimalPoints = 30;
-        var errorMessage = "\"11: User with this id was not found\"";
-        var validationFailedException = new ValidationFailedException(errorMessage);
-        when(mockUserRepository.findById(senderId)).thenThrow(validationFailedException);
+        when(mockUserRepository.findById(senderId)).thenThrow(NoSuchElementException.class);
         doNothing().when(mockUserValidator).validatePointsTransfer(senderId, recipientId, transferredAnimalPoints);
         //Then
         assertThrows(ValidationFailedException.class, () -> userService.pointsTransfer(senderId, recipientId, transferredAnimalPoints));
@@ -627,11 +626,9 @@ class UserServiceTest {
 
         var recipientId = 11;
         var transferredAnimalPoints = 30;
-        var errorMessage = "\"11: User with this id was not found\"";
-        var validationFailedException = new ValidationFailedException(errorMessage);
         doNothing().when(mockUserValidator).validatePointsTransfer(senderId, recipientId, transferredAnimalPoints);
         when(mockUserRepository.findById(senderId)).thenReturn(Optional.of(sender));
-        when(mockUserRepository.findById(recipientId)).thenThrow(validationFailedException);
+        when(mockUserRepository.findById(recipientId)).thenThrow(NoSuchElementException.class);
         //Then
         assertThrows(ValidationFailedException.class, () -> userService.pointsTransfer(senderId, recipientId, transferredAnimalPoints));
         verify(mockUserRepository, times(1)).findById(recipientId);

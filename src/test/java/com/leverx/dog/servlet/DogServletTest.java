@@ -24,7 +24,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
@@ -60,7 +59,6 @@ class DogServletTest {
         var dateOfBirth1 = LocalDate.of(2019, 12, 1);
         var isCutEars1 = true;
         var name1 = "petya";
-
         var expectedDogOutputDto1 = new DogOutputDto(id1, name1, dateOfBirth1);
         expectedDogOutputDto1.setOwnerIds(asList(5, 1, 7));
         expectedDogOutputDto1.setCutEars(isCutEars1);
@@ -69,15 +67,15 @@ class DogServletTest {
         var dateOfBirth2 = LocalDate.of(2020, 1, 1);
         var isCutEars2 = false;
         var name2 = "dog";
-
         var expectedDogOutputDto2 = new DogOutputDto(id2, name2, dateOfBirth2);
         expectedDogOutputDto2.setOwnerIds(emptyList());
         expectedDogOutputDto2.setCutEars(isCutEars2);
 
         var expectedDogOutputDtoList = new ArrayList<>(List.of(expectedDogOutputDto1, expectedDogOutputDto2));
 
-        var expectedResult = "{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7],\"cutEars\":true}\n" +
-                "{\"id\":3,\"name\":\"dog\",\"dateOfBirth\":\"2020-01-01\",\"ownerIds\":[],\"cutEars\":false}";
+        var expectedResult = ("{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7],\"cutEars\":true}\n" +
+                "{\"id\":3,\"name\":\"dog\",\"dateOfBirth\":\"2020-01-01\",\"ownerIds\":[],\"cutEars\":false}")
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -86,12 +84,14 @@ class DogServletTest {
         when(mockDogService.findAll()).thenReturn(expectedDogOutputDtoList);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
-//        when(response.getStatus()).thenCallRealMethod();
+
         //When
         dogServlet.doGet(request, response);
+
         //Then
-        var actualResult = stringWriter.getBuffer().toString().trim();
-        assertEquals(SC_OK, response.getStatus());
+        var actualResult = stringWriter.getBuffer().toString().trim()
+                .replaceAll("\n", "").replaceAll("\r", "");
+
         assertEquals(expectedResult, actualResult);
         verify(mockDogService, times(1)).findAll();
         verify(mockDogService).findAll();
@@ -120,8 +120,10 @@ class DogServletTest {
         when(mockDogService.findById(id1)).thenReturn(expectedDogOutputDto1);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
         //When
         dogServlet.doGet(request, response);
+
         //Then
         assertEquals(stringWriter.getBuffer().toString().trim(), expectedResult.trim());
         verify(mockDogService, times(1)).findById(id1);
@@ -139,8 +141,10 @@ class DogServletTest {
         when(mockDogService.findById(id)).thenThrow(ElementNotFoundException.class);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
         //When
         dogServlet.doGet(request, response);
+
         //Then
         assertTrue(stringWriter.getBuffer().toString().isEmpty());
         verify(mockDogService, times(1)).findById(id);
@@ -177,8 +181,10 @@ class DogServletTest {
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(request.getReader()).thenReturn(bufferedReader);
         when(mockDogService.save(dogInputDto)).thenReturn(dogOutputDto);
+
         //When
         dogServlet.doPost(request, response);
+
         //Then
         verify(mockDogService).save(dogInputDto);
         verify(mockDogService, times(1)).save(dogInputDto);
@@ -207,7 +213,8 @@ class DogServletTest {
 
         StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/dogs");
 
-        var errorMessage = "\"Must be a date in the past or in the present; Name 'Dog' should be between 5 and 60 symbols\"";
+        var errorMessage = "Must be a date in the past or in the present; Name 'Dog' should be between 5 and 60 symbols";
+        var expectedResult = "\"Must be a date in the past or in the present; Name 'Dog' should be between 5 and 60 symbols\"";
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -216,10 +223,14 @@ class DogServletTest {
         when(request.getReader()).thenReturn(bufferedReader);
         when(mockDogService.save(dogInputDto)).thenThrow(new ValidationFailedException(errorMessage));
         when(response.getWriter()).thenReturn(printWriter);
-//        when(response.getStatus()).thenCallRealMethod();
+
         //When
         dogServlet.doPost(request, response);
+
         //Then
+        var actualResult = stringWriter.getBuffer().toString().trim();
+
+        assertEquals(expectedResult, actualResult);
         verify(mockDogService).save(dogInputDto);
         verify(mockDogService, times(1)).save(dogInputDto);
     }

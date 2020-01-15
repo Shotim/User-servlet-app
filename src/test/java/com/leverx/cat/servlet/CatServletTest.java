@@ -24,7 +24,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
@@ -72,11 +71,11 @@ class CatServletTest {
         var expectedCatOutputDto2 = new CatOutputDto(id2, name2, dateOfBirth2);
         expectedCatOutputDto2.setOwnerIds(emptyList());
         expectedCatOutputDto2.setMiceCaughtNumber(miceCaughtNumber2);
-
         var expectedCatOutputDtoList = new ArrayList<>(List.of(expectedCatOutputDto1, expectedCatOutputDto2));
 
-        var expectedResult = "{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6],\"miceCaughtNumber\":7}\n" +
-                "{\"id\":4,\"name\":\"cat\",\"dateOfBirth\":\"2020-01-02\",\"ownerIds\":[],\"miceCaughtNumber\":0}";
+        var expectedResult = ("{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6],\"miceCaughtNumber\":7}\n" +
+                "{\"id\":4,\"name\":\"cat\",\"dateOfBirth\":\"2020-01-02\",\"ownerIds\":[],\"miceCaughtNumber\":0}")
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -85,14 +84,17 @@ class CatServletTest {
         when(mockCatService.findAll()).thenReturn(expectedCatOutputDtoList);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
         //When
         catServlet.doGet(request, response);
+
         //Then
-        var actualResult = stringWriter.getBuffer().toString().trim();
+        var actualResult = stringWriter.getBuffer().toString().trim()
+                .replaceAll("\n", "").replaceAll("\r", "");
+
         assertEquals(expectedResult, actualResult);
         verify(mockCatService, times(1)).findAll();
         verify(mockCatService).findAll();
-
     }
 
     @Test
@@ -117,11 +119,13 @@ class CatServletTest {
         when(mockCatService.findById(id1)).thenReturn(expectedCatOutputDto1);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
         //When
         catServlet.doGet(request, response);
+
         //Then
         var actualResult = stringWriter.getBuffer().toString().trim();
-        assertEquals(SC_OK, response.getStatus());
+
         assertEquals(expectedResult, actualResult);
         verify(mockCatService, times(1)).findById(id1);
         verify(mockCatService).findById(id1);
@@ -129,6 +133,7 @@ class CatServletTest {
 
     @Test
     void doGet_GivenUrlFindByIdCat_ShouldReturnEmptyBody() throws IOException {
+
         //Given
         var id = 3;
         StringWriter stringWriter = new StringWriter();
@@ -138,8 +143,10 @@ class CatServletTest {
         when(mockCatService.findById(id)).thenThrow(ElementNotFoundException.class);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
         //When
         catServlet.doGet(request, response);
+
         //Then
         assertTrue(stringWriter.getBuffer().toString().isEmpty());
         verify(mockCatService, times(1)).findById(id);
@@ -155,6 +162,7 @@ class CatServletTest {
                 "\t\"dateOfBirth\":\"2019-09-03\",\n" +
                 "\t\"miceCaughtNumber\": \"13\"\n" +
                 "}";
+
         var stringReader = new StringReader(requestBody);
         var bufferedReader = new BufferedReader(stringReader);
 
@@ -176,8 +184,10 @@ class CatServletTest {
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(request.getReader()).thenReturn(bufferedReader);
         when(mockCatService.save(catInputDto)).thenReturn(catOutputDto);
+
         //When
         catServlet.doPost(request, response);
+
         //Then
         verify(mockCatService).save(catInputDto);
         verify(mockCatService, times(1)).save(catInputDto);
@@ -192,6 +202,7 @@ class CatServletTest {
                 "\t\"dateOfBirth\":\"2021-09-03\",\n" +
                 "\t\"miceCaughtNumber\": \"-13\"\n" +
                 "}";
+
         var stringReader = new StringReader(requestBody);
         var bufferedReader = new BufferedReader(stringReader);
 
@@ -206,7 +217,11 @@ class CatServletTest {
 
         StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats");
 
-        var errorMessage = "\"Must be a date in the past or in the present; Number '-13' must be positive or zero; Name 'Cat' should be between 5 and 60 symbols\"";
+        var errorMessage = "Must be a date in the past or in the present;" +
+                " Number '-13' must be positive or zero; Name 'Cat' should be between 5 and 60 symbols";
+
+        var expectedResult = "\"Must be a date in the past or in the present;" +
+                " Number '-13' must be positive or zero; Name 'Cat' should be between 5 and 60 symbols\"";
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -215,10 +230,14 @@ class CatServletTest {
         when(request.getReader()).thenReturn(bufferedReader);
         when(mockCatService.save(catInputDto)).thenThrow(new ValidationFailedException(errorMessage));
         when(response.getWriter()).thenReturn(printWriter);
-//        when(response.getStatus()).thenCallRealMethod();
+
         //When
         catServlet.doPost(request, response);
+
         //Then
+        var actualResult = stringWriter.getBuffer().toString().trim();
+
+        assertEquals(expectedResult, actualResult);
         verify(mockCatService).save(catInputDto);
         verify(mockCatService, times(1)).save(catInputDto);
     }
