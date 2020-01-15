@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    public User getUserById(int id) {
+    private User getUserById(int id) {
         try {
             return userRepository.findById(id).get();
         } catch (NoSuchElementException e) {
