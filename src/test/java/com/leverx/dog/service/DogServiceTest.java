@@ -42,7 +42,7 @@ class DogServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnDogList() {
+    void findAll_ShouldReturnDogOutputDtoCollection() {
 
         var id1 = 2;
         var dateOfBirth1 = LocalDate.of(2019, 12, 1);
@@ -113,7 +113,7 @@ class DogServiceTest {
     }
 
     @Test
-    void findById_GivenExistingId_ShouldReturnExistingDog() {
+    void findById_GivenExistingId_ShouldReturnExistingDogOutputDto() {
 
         //Given
         var id = 2;
@@ -166,7 +166,7 @@ class DogServiceTest {
     }
 
     @Test
-    void findByOwner_GivenExistingOwnerId_ShouldReturnExistingDogs() {
+    void findByOwner_GivenExistingOwnerId_ShouldReturnExistingDogOutputDtoCollection() {
 
         //Given
         int ownerId = 1;
@@ -222,7 +222,7 @@ class DogServiceTest {
     }
 
     @Test
-    void save_GivenDogInputDto_ShouldSaveItAndReturnDogOutputDto() {
+    void save_GivenCorrectDogInputDto_ShouldSaveItAndReturnDogOutputDto() {
 
         //Given
         var name = "myDog";

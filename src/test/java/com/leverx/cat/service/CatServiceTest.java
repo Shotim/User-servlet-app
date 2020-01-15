@@ -4,6 +4,7 @@ import com.leverx.cat.dto.CatInputDto;
 import com.leverx.cat.dto.CatOutputDto;
 import com.leverx.cat.entity.Cat;
 import com.leverx.cat.repository.CatRepository;
+import com.leverx.core.exception.ElementNotFoundException;
 import com.leverx.user.entity.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.function.Executable;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
-import javax.persistence.NoResultException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ class CatServiceTest {
     }
 
     @Test
-    void findAll_ShouldReturnCatList() {
+    void findAll_ShouldReturnCatOutputDtoCollection() {
 
         var id1 = 2;
         var dateOfBirth1 = LocalDate.of(2019, 12, 1);
@@ -112,7 +112,7 @@ class CatServiceTest {
     }
 
     @Test
-    void findById_GivenExistingId_ShouldReturnExistingCat() {
+    void findById_GivenExistingId_ShouldReturnExistingCatOutputDto() {
 
         //Given
         var id = 2;
@@ -153,19 +153,19 @@ class CatServiceTest {
     void findById_GivenNonexistentId_ShouldThrownElementNotFoundException() {
 
         //Given
-        when(mockCatRepository.findById(anyInt())).thenThrow(NoResultException.class);
+        when(mockCatRepository.findById(anyInt())).thenThrow(ElementNotFoundException.class);
 
         //When
         Executable whenStatement = () -> catService.findById(anyInt());
 
         //Then
-        assertThrows(NoResultException.class, whenStatement);
+        assertThrows(ElementNotFoundException.class, whenStatement);
         verify(mockCatRepository, times(1)).findById(anyInt());
         verify(mockCatRepository).findById(anyInt());
     }
 
     @Test
-    void findByOwner_GivenExistingOwnerId_ShouldReturnExistingCats() {
+    void findByOwner_GivenExistingOwnerId_ShouldReturnExistingCatOutputDtoCollection() {
 
         //Given
         int ownerId = 1;
