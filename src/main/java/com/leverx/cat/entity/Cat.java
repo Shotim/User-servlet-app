@@ -12,8 +12,8 @@ import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.validation.constraints.PositiveOrZero;
 import java.time.LocalDate;
-import java.util.Objects;
 
+import static java.util.Objects.hash;
 import static lombok.AccessLevel.PRIVATE;
 
 @Getter
@@ -48,6 +48,6 @@ public class Cat extends Pet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(miceCaughtNumber);
+        return hash(miceCaughtNumber, getId(), getName(), getDateOfBirth(), getOwners());
     }
 }
