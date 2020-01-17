@@ -46,6 +46,6 @@ public class Dog extends Pet {
 
     @Override
     public int hashCode() {
-        return Objects.hash(isCutEars, this.getId(), getName(), getDateOfBirth(), getOwners());
+        return Objects.hash(isCutEars, this.getId(), getName(), getDateOfBirth());
     }
 }

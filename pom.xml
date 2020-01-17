@@ -12,9 +12,10 @@
     <properties>
         <maven.compiler.source>13</maven.compiler.source>
         <maven.compiler.target>13</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <junit.version>5.5.2</junit.version>
         <mockito.version>3.2.4</mockito.version>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <powermock.version>1.7.4</powermock.version>
         <lombok.version>1.18.10</lombok.version>
         <javax.servlet.version>4.0.0</javax.servlet.version>
         <javax.validation.version>2.0.1.Final</javax.validation.version>
@@ -83,6 +84,12 @@
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jsr310</artifactId>
             <version>${jackson.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>28.2-jre</version>
         </dependency>
 
         <dependency>

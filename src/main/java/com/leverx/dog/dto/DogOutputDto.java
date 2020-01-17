@@ -28,8 +28,7 @@ public class DogOutputDto extends PetOutputDto {
         return (isCutEars == that.isCutEars
                 && ((DogOutputDto) o).getDateOfBirth().isEqual(that.getDateOfBirth())
                 && ((DogOutputDto) o).getId() == that.getId()
-                && ((DogOutputDto) o).getName().equals(that.getName())
-                && ((DogOutputDto) o).getOwnerIds().equals(that.getOwnerIds()));
+                && ((DogOutputDto) o).getName().equals(that.getName()));
     }
 
     @Override

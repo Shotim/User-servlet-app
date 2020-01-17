@@ -13,6 +13,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.PastOrPresent;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -38,7 +39,7 @@ public class PetOutputDto {
     @JsonFormat(shape = STRING, pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;
 
-    List<Integer> ownerIds;
+    List<Integer> ownerIds = new ArrayList<>();
 
     public PetOutputDto(int id, String name, LocalDate dateOfBirth) {
         this.id = id;
@@ -53,8 +54,7 @@ public class PetOutputDto {
         PetOutputDto that = (PetOutputDto) o;
         return (((PetOutputDto) o).getDateOfBirth().isEqual(that.getDateOfBirth())
                 && ((PetOutputDto) o).getId() == that.getId()
-                && ((PetOutputDto) o).getName().equals(that.getName())
-                && ((PetOutputDto) o).getOwnerIds().equals(that.getOwnerIds()));
+                && ((PetOutputDto) o).getName().equals(that.getName()));
     }
 
     @Override

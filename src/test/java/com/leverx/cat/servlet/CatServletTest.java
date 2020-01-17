@@ -18,11 +18,18 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import static java.util.Arrays.asList;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.core.utils.TestUtils.id;
+import static com.leverx.core.utils.TestUtils.invalidDateOfBirth;
+import static com.leverx.core.utils.TestUtils.invalidName;
+import static com.leverx.core.utils.TestUtils.randomInvalidMiceCaughtNumber;
+import static com.leverx.core.utils.TestUtils.validDateOfBirth;
+import static com.leverx.core.utils.TestUtils.validMiceCaughtNumber;
+import static com.leverx.core.utils.TestUtils.validName;
+import static java.lang.String.join;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -54,27 +61,25 @@ class CatServletTest {
     void doGet_GivenUrlFindAllCats_ShouldWriteThemToResponseBody() throws IOException {
 
         //Given
-        var id1 = 1;
-        var dateOfBirth1 = LocalDate.of(2019, 12, 1);
-        var miceCaughtNumber1 = 7;
-        var name1 = "vasya";
+        var id1 = id();
+        var dateOfBirth1 = validDateOfBirth();
+        var miceCaughtNumber1 = validMiceCaughtNumber();
+        var name1 = validName();
 
         var expectedCatOutputDto1 = new CatOutputDto(id1, name1, dateOfBirth1);
-        expectedCatOutputDto1.setOwnerIds(asList(5, 1, 6));
         expectedCatOutputDto1.setMiceCaughtNumber(miceCaughtNumber1);
 
-        var id2 = 4;
-        var dateOfBirth2 = LocalDate.of(2020, 1, 2);
-        var miceCaughtNumber2 = 0;
-        var name2 = "cat";
+        var id2 = id();
+        var dateOfBirth2 = validDateOfBirth();
+        var miceCaughtNumber2 = validMiceCaughtNumber();
+        var name2 = validName();
 
         var expectedCatOutputDto2 = new CatOutputDto(id2, name2, dateOfBirth2);
         expectedCatOutputDto2.setOwnerIds(emptyList());
         expectedCatOutputDto2.setMiceCaughtNumber(miceCaughtNumber2);
-        var expectedCatOutputDtoList = new ArrayList<>(List.of(expectedCatOutputDto1, expectedCatOutputDto2));
+        var expectedCatOutputDtoList = newArrayList(expectedCatOutputDto1, expectedCatOutputDto2);
 
-        var expectedResult = ("{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6],\"miceCaughtNumber\":7}\n" +
-                "{\"id\":4,\"name\":\"cat\",\"dateOfBirth\":\"2020-01-02\",\"ownerIds\":[],\"miceCaughtNumber\":0}")
+        var expectedResult = join("", fromEntityCollectionToJson(expectedCatOutputDtoList))
                 .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
@@ -101,20 +106,20 @@ class CatServletTest {
     void doGet_GivenUrlFindByIdCat_ShouldWriteItToResponseBody() throws IOException {
 
         //Given
-        var id1 = 1;
-        var dateOfBirth1 = LocalDate.of(2019, 12, 1);
-        var miceCaughtNumber1 = 7;
-        var name1 = "vasya";
+        var id1 = id();
+        var dateOfBirth1 = validDateOfBirth();
+        var miceCaughtNumber1 = validMiceCaughtNumber();
+        var name1 = validName();
 
         var expectedCatOutputDto1 = new CatOutputDto(id1, name1, dateOfBirth1);
-        expectedCatOutputDto1.setOwnerIds(asList(5, 1, 6));
         expectedCatOutputDto1.setMiceCaughtNumber(miceCaughtNumber1);
 
-        var expectedResult = "{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6],\"miceCaughtNumber\":7}";
+        var expectedResult = join("", fromEntityToJson(expectedCatOutputDto1))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
-        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats/1");
+        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats/" + id1);
 
         when(mockCatService.findById(id1)).thenReturn(expectedCatOutputDto1);
         when(request.getRequestURL()).thenReturn(stringBuffer);
@@ -135,10 +140,10 @@ class CatServletTest {
     void doGet_GivenUrlFindByIdCat_ShouldReturnEmptyBody() throws IOException {
 
         //Given
-        var id = 3;
+        var id = id();
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
-        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats/3");
+        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats/" + id);
 
         when(mockCatService.findById(id)).thenThrow(ElementNotFoundException.class);
         when(request.getRequestURL()).thenReturn(stringBuffer);
@@ -157,29 +162,22 @@ class CatServletTest {
     void doPost_GivenSaveUrlWithCorrectCatBody_ShouldSaveIt() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Caaaaaaaaat\",\n" +
-                "\t\"dateOfBirth\":\"2019-09-03\",\n" +
-                "\t\"miceCaughtNumber\": \"13\"\n" +
-                "}";
 
-        var stringReader = new StringReader(requestBody);
-        var bufferedReader = new BufferedReader(stringReader);
+        var id = id();
+        var name = validName();
+        var dateOfBirth = validDateOfBirth();
+        var miceCaughtNumber = validMiceCaughtNumber();
 
-        var id = 3;
-        var name = "Caaaaaaaaat";
-        var dateOfBirth = LocalDate.of(2019, 9, 3);
-        var miceCaughtNumber = 13;
-
-        var catInputDto = new CatInputDto();
-        catInputDto.setName(name);
-        catInputDto.setDateOfBirth(dateOfBirth);
-        catInputDto.setMiceCaughtNumber(miceCaughtNumber);
+        var catInputDto = new CatInputDto(name, dateOfBirth, miceCaughtNumber);
 
         var catOutputDto = new CatOutputDto(id, name, dateOfBirth);
         catOutputDto.setMiceCaughtNumber(miceCaughtNumber);
 
         StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats");
+        var requestBody = fromEntityToJson(catInputDto);
+
+        var stringReader = new StringReader(requestBody);
+        var bufferedReader = new BufferedReader(stringReader);
 
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(request.getReader()).thenReturn(bufferedReader);
@@ -197,24 +195,17 @@ class CatServletTest {
     void doPost_GivenSaveUrlCatBody_ShouldThrownValidationFailedException() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Cat\",\n" +
-                "\t\"dateOfBirth\":\"2021-09-03\",\n" +
-                "\t\"miceCaughtNumber\": \"-13\"\n" +
-                "}";
+
+        var name = invalidName();
+        var dateOfBirth = invalidDateOfBirth();
+        var miceCaughtNumber = randomInvalidMiceCaughtNumber();
+
+        var catInputDto = new CatInputDto(name, dateOfBirth, miceCaughtNumber);
+
+        var requestBody = fromEntityToJson(catInputDto);
 
         var stringReader = new StringReader(requestBody);
         var bufferedReader = new BufferedReader(stringReader);
-
-        var name = "Cat";
-        var dateOfBirth = LocalDate.of(2021, 9, 3);
-        var miceCaughtNumber = -13;
-
-        var catInputDto = new CatInputDto();
-        catInputDto.setName(name);
-        catInputDto.setDateOfBirth(dateOfBirth);
-        catInputDto.setMiceCaughtNumber(miceCaughtNumber);
-
         StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/cats");
 
         var errorMessage = "Must be a date in the past or in the present;" +

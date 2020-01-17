@@ -15,9 +15,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -75,13 +77,9 @@ class PetServletTest {
         var expectedPetOutputDto4 = new PetOutputDto(id4, name4, dateOfBirth4);
         expectedPetOutputDto4.setOwnerIds(emptyList());
 
-        var expectedPetOutputDtoList = new ArrayList<>(
-                List.of(expectedPetOutputDto1, expectedPetOutputDto4, expectedPetOutputDto2, expectedPetOutputDto3));
+        var expectedPetOutputDtoList = newArrayList(expectedPetOutputDto1, expectedPetOutputDto4, expectedPetOutputDto2, expectedPetOutputDto3);
 
-        var expectedResult = ("{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}\n" +
-                "{\"id\":4,\"name\":\"cat\",\"dateOfBirth\":\"2020-01-02\",\"ownerIds\":[]}\n" +
-                "{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]}\n" +
-                "{\"id\":3,\"name\":\"dog\",\"dateOfBirth\":\"2020-01-01\",\"ownerIds\":[]}")
+        var expectedResult = join("", fromEntityCollectionToJson(expectedPetOutputDtoList))
                 .replaceAll("\n", "").replaceAll("\r", "");
 
         var stringWriter = new StringWriter();
@@ -116,7 +114,8 @@ class PetServletTest {
         var expectedPetOutputDto1 = new PetOutputDto(id1, name1, dateOfBirth1);
         expectedPetOutputDto1.setOwnerIds(asList(5, 1, 6));
 
-        var expectedResult = "{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}";
+        var expectedResult = join("", fromEntityToJson(expectedPetOutputDto1))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);

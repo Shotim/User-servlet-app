@@ -31,8 +31,7 @@ public class CatOutputDto extends PetOutputDto {
         return (miceCaughtNumber == that.miceCaughtNumber
                 && ((CatOutputDto) o).getDateOfBirth().isEqual(that.getDateOfBirth())
                 && ((CatOutputDto) o).getId() == that.getId()
-                && ((CatOutputDto) o).getName().equals(that.getName())
-                && ((CatOutputDto) o).getOwnerIds().equals(that.getOwnerIds()));
+                && ((CatOutputDto) o).getName().equals(that.getName()));
     }
 
     @Override

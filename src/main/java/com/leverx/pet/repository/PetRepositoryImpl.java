@@ -16,6 +16,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 import static com.leverx.core.config.TomcatCPConfig.getConnection;
+import static java.util.Comparator.comparingInt;
 
 @Slf4j
 public class PetRepositoryImpl implements PetRepository {
@@ -81,6 +82,7 @@ public class PetRepositoryImpl implements PetRepository {
                 addPetToCollection(pets, petId, petDateOfBirth, petName, userCollection, Cat.class);
             }
         }
+        pets.sort(comparingInt(Pet::getId));
         return pets;
     }
 
@@ -111,7 +113,7 @@ public class PetRepositoryImpl implements PetRepository {
     }
 
     private boolean isADog(int miceCaughtNumber, boolean isCutEars) {
-        return isNull(miceCaughtNumber) && !isNull(isCutEars);
+        return isNull(miceCaughtNumber) && isNull(isCutEars);
     }
 
     private <T extends Pet> void addPetToCollection(ArrayList<Pet> pets, int id, LocalDate dateOfBirth, String name, Collection<User> owners, Class<T> tClass) {
@@ -133,6 +135,6 @@ public class PetRepositoryImpl implements PetRepository {
     }
 
     private boolean isNull(boolean columnValue) {
-        return columnValue;
+        return !columnValue;
     }
 }

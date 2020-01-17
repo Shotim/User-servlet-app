@@ -22,7 +22,6 @@ import static com.leverx.core.utils.RepositoryUtils.beginTransaction;
 import static com.leverx.core.utils.RepositoryUtils.commitTransactionIfActive;
 import static com.leverx.core.utils.RepositoryUtils.rollbackTransactionIfActive;
 
-
 @Slf4j
 public class DogRepositoryImpl implements DogRepository {
 

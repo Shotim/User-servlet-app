@@ -48,6 +48,6 @@ public class Cat extends Pet {
 
     @Override
     public int hashCode() {
-        return hash(miceCaughtNumber, getId(), getName(), getDateOfBirth(), getOwners());
+        return hash(miceCaughtNumber, getId(), getName(), getDateOfBirth());
     }
 }

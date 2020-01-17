@@ -25,9 +25,12 @@ import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -69,12 +72,6 @@ class UserServletTest {
     void doGet_GivenURlFindAllUsers_ShouldWriteThemToResponseBody() throws IOException {
 
         //Given
-        var expectedResult = ("{\"id\":1,\"name\":\"Updated4\",\"email\":\"qwert@qwer\",\"animalPoints\":157,\"" +
-                "pets\":[{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]},{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}]}\n" +
-                "{\"id\":5,\"name\":\"Noweqwert\",\"email\":\"qwerty@qwerty\",\"animalPoints\":207,\"" +
-                "pets\":[{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]},{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}]}")
-                .replaceAll("\n", "").replaceAll("\r", "");
-
 
         var userId1 = 1;
         var userName1 = "Updated4";
@@ -98,10 +95,13 @@ class UserServletTest {
         var petOwnerIds2 = List.of(5, 1, 6);
         var petOutputDto2 = new PetOutputDto(petId2, petName2, petDateOfBirth2, petOwnerIds2);
 
-        var petOutputDtoList = new ArrayList<>(List.of(petOutputDto1, petOutputDto2));
+        var petOutputDtoList = newArrayList(petOutputDto1, petOutputDto2);
         var userOutputDto1 = new UserOutputDto(userId1, userName1, userEmail1, userAnimalPoints1, petOutputDtoList);
         var userOutputDto2 = new UserOutputDto(userId2, userName2, userEmail2, userAnimalPoints2, petOutputDtoList);
         var expectedUserOutputDtoList = List.of(userOutputDto1, userOutputDto2);
+
+        var expectedResult = join("", fromEntityCollectionToJson(expectedUserOutputDtoList))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);
@@ -128,8 +128,6 @@ class UserServletTest {
     void doGet_GivenURLFindById_ShouldWriteUserToResponseBody() throws IOException {
 
         //Given
-        var expectedResult = "{\"id\":1,\"name\":\"Updated4\",\"email\":\"qwert@qwer\",\"animalPoints\":157,\"" +
-                "pets\":[{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]},{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}]}";
 
         var userId1 = 1;
         var userName1 = "Updated4";
@@ -148,12 +146,15 @@ class UserServletTest {
         var petOwnerIds2 = List.of(5, 1, 6);
         var petOutputDto2 = new PetOutputDto(petId2, petName2, petDateOfBirth2, petOwnerIds2);
 
-        var petOutputDtoList = new ArrayList<>(List.of(petOutputDto1, petOutputDto2));
+        var petOutputDtoList = newArrayList(petOutputDto1, petOutputDto2);
         var userOutputDto = new UserOutputDto(userId1, userName1, userEmail1, userAnimalPoints1, petOutputDtoList);
 
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);
         var stringBuffer = new StringBuffer("http://localhost:8080/users/1");
+
+        var expectedResult = join("", fromEntityToJson(userOutputDto))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         when(mockUserService.findById(userId1)).thenReturn(userOutputDto);
         when(request.getRequestURL()).thenReturn(stringBuffer);
@@ -193,11 +194,8 @@ class UserServletTest {
 
     @Test
     void doGet_GivenURlFindByNameUsers_ShouldWriteThemToResponseBody() throws IOException {
-        var expectedResult = ("{\"id\":1,\"name\":\"Updated\",\"email\":\"qwert@qwer\",\"animalPoints\":157,\"" +
-                "pets\":[{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]},{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}]}\n" +
-                "{\"id\":5,\"name\":\"Updated\",\"email\":\"qwerty@qwerty\",\"animalPoints\":207,\"" +
-                "pets\":[{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]},{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}]}")
-                .replaceAll("\n", "").replaceAll("\r", "");
+
+        //Given
 
         var userId1 = 1;
         var userName1 = "Updated";
@@ -221,7 +219,7 @@ class UserServletTest {
         var petOwnerIds2 = List.of(5, 1, 6);
         var petOutputDto2 = new PetOutputDto(petId2, petName2, petDateOfBirth2, petOwnerIds2);
 
-        var petOutputDtoList = new ArrayList<>(List.of(petOutputDto1, petOutputDto2));
+        var petOutputDtoList = newArrayList(petOutputDto1, petOutputDto2);
         var userOutputDto1 = new UserOutputDto(userId1, userName1, userEmail1, userAnimalPoints1, petOutputDtoList);
         var userOutputDto2 = new UserOutputDto(userId2, userName2, userEmail2, userAnimalPoints2, petOutputDtoList);
         var expectedUserOutputDtoList = List.of(userOutputDto1, userOutputDto2);
@@ -234,6 +232,9 @@ class UserServletTest {
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(request.getParameter("name")).thenReturn("Updated");
         when(response.getWriter()).thenReturn(printWriter);
+
+        var expectedResult = join("", fromEntityCollectionToJson(expectedUserOutputDtoList))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         //When
         userServlet.doGet(request, response);
@@ -269,11 +270,7 @@ class UserServletTest {
         expectedCatOutputDto2.setOwnerIds(asList(5, 1, 7));
         expectedCatOutputDto2.setMiceCaughtNumber(miceCaughtNumber2);
 
-        var expectedCatOutputDtoList = new ArrayList<>(List.of(expectedCatOutputDto1, expectedCatOutputDto2));
-
-        var expectedResult = ("{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6],\"miceCaughtNumber\":7}\n" +
-                "{\"id\":4,\"name\":\"cat\",\"dateOfBirth\":\"2020-01-02\",\"ownerIds\":[5,1,7],\"miceCaughtNumber\":0}")
-                .replaceAll("\n", "").replaceAll("\r", "");
+        var expectedCatOutputDtoList = newArrayList(expectedCatOutputDto1, expectedCatOutputDto2);
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -282,6 +279,9 @@ class UserServletTest {
         when(mockCatService.findByOwner(1)).thenReturn(expectedCatOutputDtoList);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
+        var expectedResult = join("", fromEntityCollectionToJson(expectedCatOutputDtoList))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         //When
         userServlet.doGet(request, response);
@@ -317,11 +317,8 @@ class UserServletTest {
         expectedDogOutputDto2.setOwnerIds(asList(5, 1, 6));
         expectedDogOutputDto2.setCutEars(isCutEars2);
 
-        var expectedDogOutputDtoList = new ArrayList<>(List.of(expectedDogOutputDto1, expectedDogOutputDto2));
+        var expectedDogOutputDtoList = newArrayList(expectedDogOutputDto1, expectedDogOutputDto2);
 
-        var expectedResult = ("{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7],\"cutEars\":true}\n" +
-                "{\"id\":3,\"name\":\"dog\",\"dateOfBirth\":\"2020-01-01\",\"ownerIds\":[5,1,6],\"cutEars\":false}")
-                .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
@@ -330,6 +327,9 @@ class UserServletTest {
         when(mockDogService.findByOwner(1)).thenReturn(expectedDogOutputDtoList);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
+        var expectedResult = join("", fromEntityCollectionToJson(expectedDogOutputDtoList))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         //When
         userServlet.doGet(request, response);
@@ -359,11 +359,7 @@ class UserServletTest {
         var expectedPetOutputDto2 = new PetOutputDto(id2, name2, dateOfBirth2);
         expectedPetOutputDto2.setOwnerIds(asList(5, 1, 7));
 
-        var expectedPetOutputDtoList = new ArrayList<>(List.of(expectedPetOutputDto1, expectedPetOutputDto2));
-
-        var expectedResult = ("{\"id\":1,\"name\":\"vasya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,6]}\n" +
-                "{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7]}")
-                .replaceAll("\n", "").replaceAll("\r", "");
+        var expectedPetOutputDtoList = newArrayList(expectedPetOutputDto1, expectedPetOutputDto2);
 
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);
@@ -372,6 +368,9 @@ class UserServletTest {
         when(mockPetService.findByOwner(1)).thenReturn(expectedPetOutputDtoList);
         when(request.getRequestURL()).thenReturn(stringBuffer);
         when(response.getWriter()).thenReturn(printWriter);
+
+        var expectedResult = join("", fromEntityCollectionToJson(expectedPetOutputDtoList))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         //When
         userServlet.doGet(request, response);
@@ -389,16 +388,6 @@ class UserServletTest {
     void doPost_GivenCorrectUserData_ShouldSaveIt() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Nowqwe\",\n" +
-                "\t\"email\":\"qwert@yrty\",\n" +
-                "\t\"animalPoints\": 78,\n" +
-                "\t\"catsIds\":[1],\n" +
-                "\t\"dogsIds\":[2]\n" +
-                "}";
-
-        var stringReader = new StringReader(requestBody);
-        var bufferedReader = new BufferedReader(stringReader);
 
         var name = "Nowqwe";
         var email = "qwert@yrty";
@@ -407,12 +396,12 @@ class UserServletTest {
         var dogsIds = List.of(2);
 
         var id = 3;
-        var userInputDto = new UserInputDto();
-        userInputDto.setName(name);
-        userInputDto.setEmail(email);
-        userInputDto.setAnimalPoints(animalPoints);
-        userInputDto.setCatsIds(catsIds);
-        userInputDto.setDogsIds(dogsIds);
+        var userInputDto = new UserInputDto(name, email, animalPoints, catsIds, dogsIds);
+
+        var requestBody = fromEntityToJson(userInputDto);
+
+        var stringReader = new StringReader(requestBody);
+        var bufferedReader = new BufferedReader(stringReader);
 
         var petOutputDto1 = new PetOutputDto(1, "vasya", LocalDate.of(2019, 12, 1), List.of(1, 2, 3));
         var petOutputDto2 = new PetOutputDto(2, "petya", LocalDate.of(2019, 12, 1), List.of(1, 2, 3));
@@ -440,13 +429,6 @@ class UserServletTest {
     void doPost_GivenIncorrectUserData_ShouldWriteErrorMessages() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Now\",\n" +
-                "\t\"email\":\"qwertyrty\",\n" +
-                "\t\"animalPoints\": -78,\n" +
-                "\t\"catsIds\":[2],\n" +
-                "\t\"dogsIds\":[1]\n" +
-                "}";
         var expectedResult = "\"This email is not valid;" +
                 " Number '-78' must be positive or zero;" +
                 " Name 'Now' should be between 5 and 60 symbols;" +
@@ -457,8 +439,6 @@ class UserServletTest {
                 " Name 'Now' should be between 5 and 60 symbols;" +
                 " 2: Cat with this id does not exist in database;" +
                 " 1: Dog with this id does not exist in database";
-        var stringReader = new StringReader(requestBody);
-        var bufferedReader = new BufferedReader(stringReader);
 
         var name = "Now";
         var email = "qwertyrty";
@@ -466,12 +446,11 @@ class UserServletTest {
         var catsIds = List.of(2);
         var dogsIds = List.of(1);
 
-        var userInputDto = new UserInputDto();
-        userInputDto.setName(name);
-        userInputDto.setEmail(email);
-        userInputDto.setAnimalPoints(animalPoints);
-        userInputDto.setCatsIds(catsIds);
-        userInputDto.setDogsIds(dogsIds);
+        var userInputDto = new UserInputDto(name, email, animalPoints, catsIds, dogsIds);
+
+        var requestBody = fromEntityToJson(userInputDto);
+        var stringReader = new StringReader(requestBody);
+        var bufferedReader = new BufferedReader(stringReader);
 
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);
@@ -570,16 +549,6 @@ class UserServletTest {
     void doPut_GivenCorrectData_ShouldUpdateUserAndReturnEmptyBody() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Nowqwe\",\n" +
-                "\t\"email\":\"qwert@yrty\",\n" +
-                "\t\"animalPoints\": 78,\n" +
-                "\t\"catsIds\":[1],\n" +
-                "\t\"dogsIds\":[2]\n" +
-                "}";
-
-        var stringReader = new StringReader(requestBody);
-        var bufferedReader = new BufferedReader(stringReader);
 
         var name = "Nowqwe";
         var email = "qwert@yrty";
@@ -588,12 +557,11 @@ class UserServletTest {
         var dogsIds = List.of(2);
 
         var id = "5";
-        var userInputDto = new UserInputDto();
-        userInputDto.setName(name);
-        userInputDto.setEmail(email);
-        userInputDto.setAnimalPoints(animalPoints);
-        userInputDto.setCatsIds(catsIds);
-        userInputDto.setDogsIds(dogsIds);
+        var userInputDto = new UserInputDto(name, email, animalPoints, catsIds, dogsIds);
+
+        var requestBody = fromEntityToJson(userInputDto);
+        var stringReader = new StringReader(requestBody);
+        var bufferedReader = new BufferedReader(stringReader);
 
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);
@@ -617,13 +585,6 @@ class UserServletTest {
     void doPut_GivenIncorrectData_ShouldWriteErrorMessagesToResponseBody() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Now\",\n" +
-                "\t\"email\":\"qwertyrty\",\n" +
-                "\t\"animalPoints\": -78,\n" +
-                "\t\"catsIds\":[2],\n" +
-                "\t\"dogsIds\":[1]\n" +
-                "}";
         var expectedResult = "\"This email is not valid;" +
                 " Number '-78' must be positive or zero;" +
                 " Name 'Now' should be between 5 and 60 symbols;" +
@@ -634,8 +595,6 @@ class UserServletTest {
                 " Name 'Now' should be between 5 and 60 symbols;" +
                 " 2: Cat with this id does not exist in database;" +
                 " 1: Dog with this id does not exist in database";
-        var stringReader = new StringReader(requestBody);
-        var bufferedReader = new BufferedReader(stringReader);
 
         var id = "5";
         var name = "Now";
@@ -644,12 +603,11 @@ class UserServletTest {
         var catsIds = List.of(2);
         var dogsIds = List.of(1);
 
-        var userInputDto = new UserInputDto();
-        userInputDto.setName(name);
-        userInputDto.setEmail(email);
-        userInputDto.setAnimalPoints(animalPoints);
-        userInputDto.setCatsIds(catsIds);
-        userInputDto.setDogsIds(dogsIds);
+        var userInputDto = new UserInputDto(name, email, animalPoints, catsIds, dogsIds);
+
+        var requestBody = fromEntityToJson(userInputDto);
+        var stringReader = new StringReader(requestBody);
+        var bufferedReader = new BufferedReader(stringReader);
 
         var stringWriter = new StringWriter();
         var printWriter = new PrintWriter(stringWriter);

@@ -18,12 +18,17 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityCollectionToJson;
+import static com.leverx.core.converter.EntityJsonConverter.fromEntityToJson;
+import static com.leverx.core.utils.TestUtils.cutEars;
+import static com.leverx.core.utils.TestUtils.id;
+import static com.leverx.core.utils.TestUtils.invalidDateOfBirth;
+import static com.leverx.core.utils.TestUtils.invalidName;
+import static com.leverx.core.utils.TestUtils.validDateOfBirth;
+import static com.leverx.core.utils.TestUtils.validName;
+import static java.lang.String.join;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.times;
@@ -55,26 +60,23 @@ class DogServletTest {
     void doGet_GivenUrlFindAllDogs_ShouldWriteThemToResponseBody() throws IOException {
 
         //Given
-        var id1 = 2;
-        var dateOfBirth1 = LocalDate.of(2019, 12, 1);
-        var isCutEars1 = true;
-        var name1 = "petya";
+        var id1 = id();
+        var dateOfBirth1 = validDateOfBirth();
+        var isCutEars1 = cutEars();
+        var name1 = validName();
         var expectedDogOutputDto1 = new DogOutputDto(id1, name1, dateOfBirth1);
-        expectedDogOutputDto1.setOwnerIds(asList(5, 1, 7));
         expectedDogOutputDto1.setCutEars(isCutEars1);
 
-        var id2 = 3;
-        var dateOfBirth2 = LocalDate.of(2020, 1, 1);
-        var isCutEars2 = false;
-        var name2 = "dog";
+        var id2 = id();
+        var dateOfBirth2 = validDateOfBirth();
+        var isCutEars2 = cutEars();
+        var name2 = validName();
         var expectedDogOutputDto2 = new DogOutputDto(id2, name2, dateOfBirth2);
-        expectedDogOutputDto2.setOwnerIds(emptyList());
         expectedDogOutputDto2.setCutEars(isCutEars2);
 
-        var expectedDogOutputDtoList = new ArrayList<>(List.of(expectedDogOutputDto1, expectedDogOutputDto2));
+        var expectedDogOutputDtoList = newArrayList(expectedDogOutputDto1, expectedDogOutputDto2);
 
-        var expectedResult = ("{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7],\"cutEars\":true}\n" +
-                "{\"id\":3,\"name\":\"dog\",\"dateOfBirth\":\"2020-01-01\",\"ownerIds\":[],\"cutEars\":false}")
+        var expectedResult = join("", fromEntityCollectionToJson(expectedDogOutputDtoList))
                 .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
@@ -102,20 +104,20 @@ class DogServletTest {
     void doGet_GivenUrlFindByIdDog_ShouldWriteItToResponseBody() throws IOException {
 
         //Given
-        var id1 = 2;
-        var dateOfBirth1 = LocalDate.of(2019, 12, 1);
-        var isCutEars1 = true;
-        var name1 = "petya";
+        var id1 = id();
+        var dateOfBirth1 = validDateOfBirth();
+        var isCutEars1 = cutEars();
+        var name1 = validName();
 
         var expectedDogOutputDto1 = new DogOutputDto(id1, name1, dateOfBirth1);
-        expectedDogOutputDto1.setOwnerIds(asList(5, 1, 7));
         expectedDogOutputDto1.setCutEars(isCutEars1);
 
-        var expectedResult = "{\"id\":2,\"name\":\"petya\",\"dateOfBirth\":\"2019-12-01\",\"ownerIds\":[5,1,7],\"cutEars\":true}";
+        var expectedResult = join("", fromEntityToJson(expectedDogOutputDto1))
+                .replaceAll("\n", "").replaceAll("\r", "");
 
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
-        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/dogs/2");
+        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/dogs/" + id1);
 
         when(mockDogService.findById(id1)).thenReturn(expectedDogOutputDto1);
         when(request.getRequestURL()).thenReturn(stringBuffer);
@@ -133,10 +135,10 @@ class DogServletTest {
     @Test
     void doGet_GivenUrlFindByIdDog_ShouldReturnEmptyBody() throws IOException {
         //Given
-        var id = 1;
+        var id = id();
         StringWriter stringWriter = new StringWriter();
         PrintWriter printWriter = new PrintWriter(stringWriter);
-        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/dogs/1");
+        StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/dogs/"+id);
 
         when(mockDogService.findById(id)).thenThrow(ElementNotFoundException.class);
         when(request.getRequestURL()).thenReturn(stringBuffer);
@@ -155,24 +157,17 @@ class DogServletTest {
     void doPost_GivenUrlSaveDogWithBody_ShouldSaveIt() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"NewDog\",\n" +
-                "\t\"dateOfBirth\":\"2019-09-03\",\n" +
-                "\t\"cutEars\": true\n" +
-                "}";
+
+        var id = id();
+        var name = validName();
+        var dateOfBirth = validDateOfBirth();
+        var isCutEars = cutEars();
+        var dogInputDto = new DogInputDto(name, dateOfBirth, isCutEars);
+
+        var requestBody = fromEntityToJson(dogInputDto);
+
         var stringReader = new StringReader(requestBody);
         var bufferedReader = new BufferedReader(stringReader);
-
-        var id = 3;
-        var name = "NewDog";
-        var dateOfBirth = LocalDate.of(2019, 9, 3);
-        var isCutEars = true;
-
-        var dogInputDto = new DogInputDto();
-        dogInputDto.setName(name);
-        dogInputDto.setDateOfBirth(dateOfBirth);
-        dogInputDto.setCutEars(isCutEars);
-
         var dogOutputDto = new DogOutputDto(id, name, dateOfBirth);
         dogOutputDto.setCutEars(isCutEars);
 
@@ -194,23 +189,17 @@ class DogServletTest {
     void doPost_GivenSaveUrlDogBody_ShouldThrownValidationFailedException() throws IOException {
 
         //Given
-        var requestBody = "{\n" +
-                "\t\"name\":\"Dog\",\n" +
-                "\t\"dateOfBirth\":\"2021-09-03\",\n" +
-                "\t\"cutEars\": \"false\"\n" +
-                "}";
+
+        var name = invalidName();
+        var dateOfBirth = invalidDateOfBirth();
+        var isCutEars = cutEars();
+
+        var dogInputDto = new DogInputDto(name, dateOfBirth, isCutEars);
+
+        var requestBody = fromEntityToJson(dogInputDto);
+
         var stringReader = new StringReader(requestBody);
         var bufferedReader = new BufferedReader(stringReader);
-
-        var name = "Dog";
-        var dateOfBirth = LocalDate.of(2021, 9, 3);
-        var isCutEars = false;
-
-        var dogInputDto = new DogInputDto();
-        dogInputDto.setName(name);
-        dogInputDto.setDateOfBirth(dateOfBirth);
-        dogInputDto.setCutEars(isCutEars);
-
         StringBuffer stringBuffer = new StringBuffer("http://localhost:8080/dogs");
 
         var errorMessage = "Must be a date in the past or in the present; Name 'Dog' should be between 5 and 60 symbols";

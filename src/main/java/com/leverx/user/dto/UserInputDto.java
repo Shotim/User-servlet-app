@@ -1,6 +1,8 @@
 package com.leverx.user.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import javax.validation.constraints.Email;
@@ -15,6 +17,8 @@ import static java.util.Collections.emptyList;
 import static lombok.AccessLevel.PRIVATE;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = PRIVATE)
 public class UserInputDto {
 
