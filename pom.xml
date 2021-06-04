@@ -22,7 +22,7 @@
         <apache.commoms.version>3.9</apache.commoms.version>
         <javax.ws.version>2.1.1</javax.ws.version>
         <hibernate.version>5.4.9.Final</hibernate.version>
-        <hibernate.validator.version>6.1.0.Final</hibernate.validator.version>
+        <hibernate.validator.version>6.1.5.Final</hibernate.validator.version>
         <jackson.version>2.10.1</jackson.version>
         <hikariCP.version>3.4.1</hikariCP.version>
         <tomcat-jdbc.version>9.0.30</tomcat-jdbc.version>
